@@ -2,7 +2,7 @@ package com.ls.in.messenger.controller;
 
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.messenger.service.RoomService;
-import com.ls.in.messenger.util.MessageUtil;
+//import com.ls.in.messenger.util.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +22,21 @@ public class RoomController {
 	 * 채팅방 목록 조회
 	 * @return
 	 */
+//	@GetMapping(value = "/rooms")
+//	public Map<Integer, List<Emp>> rooms(){
+//		log.info("# 채팅방 목록 가져오기");
+//		return roomService.getRooms(MessageUtil.getCurrentEmpId());
+//	}
+
+
+	/**
+	 * Spring Security가 구축되지 않아서 넣은 임의의 PK값.
+	 * @return
+	 */
 	@GetMapping(value = "/rooms")
-	public Map<Integer, List<Emp>> rooms(){
+	public Map<Integer, List<String>> rooms(){
 		log.info("# 채팅방 목록 가져오기");
-		return roomService.getRooms(MessageUtil.getCurrentEmpId());
+		return roomService.getRooms(1);
 	}
 
 }
