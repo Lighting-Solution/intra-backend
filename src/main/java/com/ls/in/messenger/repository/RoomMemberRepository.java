@@ -18,7 +18,10 @@ public interface RoomMemberRepository extends JpaRepository<RoomMember, Integer>
 	@Query("select rm.emp from RoomMember rm where rm.room.roomId = :id")
 	List<Emp> findEmpByRoomId(@Param("id") Integer id);
 
-	@Query("select rm from RoomMember rm where rm.room.roomId = :roomid and rm.emp.empId =:empId")
+
+	@Query("select rm.emp from RoomMember rm where rm.room.roomId = :roomId and rm.emp.empId <> :empId")
+	List<Emp> findEmpByRoomIdExceptionMe(@Param("roomId") Integer roomId, @Param("empId") Integer empId);
+	@Query("select rm from RoomMember rm where rm.room.roomId = :roomId and rm.emp.empId =:empId")
 	RoomMember findByRoomIdAndEmpId(@Param("roomId")Integer roomId, @Param("empId")Integer empId);
 
 }

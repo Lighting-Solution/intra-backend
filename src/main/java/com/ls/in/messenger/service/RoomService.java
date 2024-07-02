@@ -17,11 +17,11 @@ public class RoomService {
 	private final RoomMemberRepository roomMemberRepository;
 
 	@Transactional
-	public List<ChatRoomDTO> getRooms(Integer id) {
-		List<Integer> rooms = roomMemberRepository.findRoomIdsByEmpId(id);
+	public List<ChatRoomDTO> getRooms(Integer empId) {
+		List<Integer> rooms = roomMemberRepository.findRoomIdsByEmpId(empId);
 		Map<Integer, List<Emp>> roomAndEmp = rooms.stream().collect(Collectors.toMap(
 				roomId -> roomId,
-				roomMemberRepository::findEmpByRoomId
+				roomId -> roomMemberRepository.findEmpByRoomIdExceptionMe(roomId, empId)
 		));
 		return ChatRoomDTO.create(roomAndEmp);
 	}
