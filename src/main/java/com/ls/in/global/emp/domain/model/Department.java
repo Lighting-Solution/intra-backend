@@ -1,14 +1,12 @@
 package com.ls.in.global.emp.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
-@Data
+@Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "department")
@@ -16,7 +14,6 @@ public class Department {
 
     @Id
     @Column(name = "department_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer departmentId;
 
     @Column(name = "name")

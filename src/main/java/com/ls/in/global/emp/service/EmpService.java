@@ -33,4 +33,6 @@ public interface EmpService {
      * @throws EmpNotFoundException
      */
     public EmpDTO getEmpByPosition(Integer id) throws EmpNotFoundException;
+
+
 }

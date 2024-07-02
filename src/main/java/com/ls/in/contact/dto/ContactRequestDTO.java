@@ -22,11 +22,6 @@ public class ContactRequestDTO {
     private String personalContactPhoneCall;
     private String personalContactMemo;
     private LocalDate personalContactBirthday;
-
-    private String companyName;
-    private String companyAddress;
-    private String companyURL;
-    private String companyNumber;
-    private String companyFax;
+    private CompanyDTO company;
 }
 

@@ -14,24 +14,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PersonalContactDTO {
     private int personalContactId;
-
     private String positionName;
-
     private String departmentName;
-
     private String personalContactName;
-
     private String personalContactNickName;
-
     private String personalContactEmail;
-
     private String personalContactMP;
-
     private String personalContactMemo;
-
     private LocalDate personalContactBirthday;
-
     private CompanyDTO company;
-
     private EmpDTO emp;
 }

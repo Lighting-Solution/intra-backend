@@ -1,19 +1,17 @@
 package com.ls.in.global.emp.domain.model;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum PositionType {
-    ceo(1),
-    departmentHead(2),
-    manager(3),
-    assistantManager(4),
-    staff(5);
+    CEO(1, "대표이사"),
+    DEPARTMENT_HEAD(2, "부장"),
+    MANAGER(3, "과장"),
+    ASSISTANT_MANAGER(4, "대리"),
+    STAFF(5, "사원");
 
     private final Integer ID;
-
-    PositionType(Integer ID) {
-        this.ID = ID;
-    }
-
-    public Integer getID() {
-        return ID;
-    }
+    private final String NAME;
 }

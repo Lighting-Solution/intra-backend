@@ -2,11 +2,11 @@ package com.ls.in.contact.service.impl;
 
 import com.ls.in.contact.domain.dao.PersonalContactDAO;
 import com.ls.in.contact.domain.model.PersonalContact;
-import com.ls.in.contact.dto.ContactRequestDTO;
 import com.ls.in.contact.dto.PersonalContactDTO;
 import com.ls.in.contact.exception.PersonalContactNotFoundException;
 import com.ls.in.contact.service.PersonalContactService;
 import com.ls.in.contact.util.mapper.PersonalContactMapper;
+import com.ls.in.global.util.Formats;
 import com.ls.in.global.util.PageNation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,11 +27,10 @@ public class PersonalContactServiceImpl implements PersonalContactService {
 
 
     @Override
-    public boolean createPersonalContact(ContactRequestDTO requestDTO) throws PersonalContactNotFoundException {
-//        PersonalContact personalContact = PersonalContact.builder()
-//                .
-//        PersonalContact result = personalContactDAO.save()
-        return true;
+    public boolean createPersonalContact(PersonalContactDTO requestDTO) throws PersonalContactNotFoundException {
+        PersonalContact personalContact = PersonalContactMapper.toEntity(requestDTO);
+        PersonalContact result = personalContactDAO.save(personalContact);
+        return result != null;
     }
 
     @Override
@@ -43,5 +42,18 @@ public class PersonalContactServiceImpl implements PersonalContactService {
             responseList.add(tempDTO);
         }
         return responseList;
+    }
+
+    @Override
+    public PersonalContactDTO updatePersonalContact(PersonalContactDTO requestDTO) throws PersonalContactNotFoundException {
+        PersonalContact personalContact = PersonalContactMapper.toEntity(requestDTO);
+        PersonalContact result = personalContactDAO.save(personalContact);
+        return PersonalContactMapper.toDTO(result);
+    }
+
+    @Override
+    public boolean deletePersonalContact(int contactId) throws PersonalContactNotFoundException {
+        Integer id = Formats.toInteger(contactId);
+        return personalContactDAO.deleteById(contactId);
     }
 }

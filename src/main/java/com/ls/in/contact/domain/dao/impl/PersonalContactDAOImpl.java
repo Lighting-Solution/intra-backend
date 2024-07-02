@@ -29,4 +29,14 @@ public class PersonalContactDAOImpl implements PersonalContactDAO {
     public Page<PersonalContact> findAll(Pageable pageable) throws DataAccessException {
         return personalContactRepository.findAll(pageable);
     }
+
+    @Override
+    public boolean deleteById(Integer contactId) throws DataAccessException {
+        try{
+            personalContactRepository.deleteById(contactId);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

@@ -2,16 +2,15 @@ package com.ls.in.global.emp.service.impl;
 
 import com.ls.in.global.emp.domain.dao.EmpDAO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
-import com.ls.in.global.emp.util.EmpMapper;
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.exception.EmpNotFoundException;
 import com.ls.in.global.emp.service.EmpService;
+import com.ls.in.global.emp.util.EmpMapper;
 import com.ls.in.global.util.Formats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service("empService")
@@ -48,16 +47,13 @@ public class EmpServiceImpl implements EmpService {
         Integer empPk = Formats.toInteger(empId);
         Integer positionPk = Formats.toInteger(positionId);
         Emp result = empDAO.findByIdAndDepartmentAndPosition(empPk, positionPk);
-        EmpDTO returnDTO = EmpMapper.toDto(result);
-        return returnDTO;
+        return EmpMapper.toDto(result);
     }
 
     @Override
     public EmpDTO getEmpByPosition(Integer id) throws EmpNotFoundException {
-//        if(id > 2) return null;
         Emp result = empDAO.findByPosition(id);
-        EmpDTO returnDTO = EmpMapper.toDto(result);
-        return returnDTO;
+        return EmpMapper.toDto(result);
     }
 
 
