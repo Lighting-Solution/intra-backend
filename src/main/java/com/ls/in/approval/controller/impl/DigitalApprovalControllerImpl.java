@@ -1,138 +1,142 @@
 package com.ls.in.approval.controller.impl;
 
+
+import com.lowagie.text.DocumentException;
 import com.ls.in.approval.controller.DigitalApprovalController;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.file.Files;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1/lighting_solutions")
+@RequestMapping("/api/v1/lighting_solutions/digital/approval")
 @CrossOrigin(origins = "http://localhost:3000")
 public class DigitalApprovalControllerImpl implements DigitalApprovalController {
 
     private DigitalApprovalService approvalService;
+
     private final LoadHtml loadHtml = new LoadHtml();
 
     @Autowired
-    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService) {
+    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService){
         this.approvalService = approvalService;
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
-
-    // html 양식 가져오기
+    /**
+     * @apiNote resources에 저장되어 있는 html 폼 가져오기
+     * @param status
+     * @return
+     */
     @GetMapping("/form")
     public ResponseEntity<String> getHtmlContent(@RequestParam Integer status) {
         String htmlContent = "";
-
+        System.out.println(status);
         switch (status) {
             case 0:
                 // 기안문
                 htmlContent = loadHtml.load("forms/draftForm.html");
-                System.out.println("기안문" + status);
                 break;
             case 1:
                 // 회의록
                 htmlContent = loadHtml.load("forms/meetingForm.html");
-                System.out.println("회의록" + status);
                 break;
             case 2:
                 // 협조문
                 htmlContent = loadHtml.load("forms/cooperationForm.html");
-                System.out.println("협조문" + status);
                 break;
+            case 3:
+                htmlContent = loadHtml.load("forms/test.html");
             default:
-                // 다른 상황 처리
-                htmlContent = "Not found";
                 break;
         }
 
         return ResponseEntity.ok(htmlContent);
     }
 
-
-    // 결재 요청
-    @PostMapping("/approval/request")
-    public ResponseEntity<String> approvalRequest(@RequestBody Map<String, String> request) {
+    /**
+     * @apiNote 사용자가 작성한 전재결재 저장하고, pdf 변환하고 해당 사용자의 sign pdf에 저장
+     * @param request
+     * @return
+     */
+    @PostMapping("/request")
+    public ResponseEntity<String> approvalRequest(@RequestBody Map<String, String> request) throws IOException, DocumentException {
+        // 양식 상태
         String status = request.get("status");
-        System.out.println(status);
 
-        // 서버에 작성한 전자결재 저장하기
+        String fontPath = "src/main/resources/fonts/NotoSansKR-Regular.ttf";
+        String filePath = "";
+
+        // 사용자 결재 서명 추가하기
+        String pdfFilePath = "src/main/resources/approvalWaiting/saved_approval.pdf";
+        String imagePath = "src/main/resources/signs/sign3.png";
+        String outputPdfPath = "src/main/resources/approvalWaiting/signed_approval.pdf";
+
+        //서버에 작성한 전자결재 저장하기
         switch (status) {
-            case "0" ->
+            case "0":
                 // 기안문
-                    loadHtml.save(request, "src/main/resources/writeForms/draftForm.html");
-            case "1" ->
+                filePath = "src/main/resources/writeForms/draftForm.html";
+                loadHtml.save(request, filePath);
+                break;
+            case "1":
                 // 회의록
-                    loadHtml.save(request, "src/main/resources/writeForms/meetingForm.html");
-            case "2" ->
+                filePath = "src/main/resources/writeForms/meetingForm.html";
+                loadHtml.save(request, filePath);
+                break;
+            case "2":
                 // 협조문
-                    loadHtml.save(request, "src/main/resources/writeForms/cooperationForm.html");
+                filePath = "src/main/resources/writeForms/cooperationForm.html";
+                loadHtml.save(request, filePath);
+                break;
         }
 
+        // html 파일 PDF 저장
+        loadHtml.htmlToPdf(filePath, fontPath, request);
 
-        // html -> pdf 변경하기 (결재진행중 저장)
-
-
+        // PDF 파일 Sign 저장
+        LoadHtml.addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
 
         return ResponseEntity.ok("HTML content received and processed successfully");
     }
 
-// 예시 메소드: 부서명을 조회하는 메소드
-    private String getDepartmentName() {
-        // 여기에 실제 데이터베이스에서 부서명을 조회하는 로직을 구현
-        return "영업부";
-    }
 
-    //예시 메소드: 이름 조회하는 메소드
-    private String getName() {
-        return "냥냥냥";
-    }
-}
-    /*
-    // 결재 요청
-    @GetMapping("/approval/request")
-    public ResponseEntity<String> getApprovalRequest() {
-        Map<String, String> data = new HashMap<>();
-        data.put("createdDate", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
-
+    /**
+     * @apiNote PDF Viewer Api 를 활용해서 PDF 화면 띄우기
+     * @param projectName
+     * @return
+     */
+    @GetMapping("/pdf/{projectName}")
+    public ResponseEntity<Resource> getPdf(@PathVariable String projectName) {
         try {
-            Resource resource = new ClassPathResource("forms/draftForm.html");
-            String htmlContent = new String(Files.readAllBytes(resource.getFile().toPath()));
+            // 프로젝트 이름을 기반으로 PDF 파일 경로 설정 (이 예시에서는 고정된 경로 사용)
+            Path pdfPath = Paths.get("src/main/resources/approvalWaiting/signed_approval.pdf");
+            Resource resource = new UrlResource(pdfPath.toUri());
 
-            // 데이터를 HTML에 삽입
-            for (Map.Entry<String, String> entry : data.entrySet()) {
-                htmlContent = htmlContent.replace("${" + entry.getKey() + "}", entry.getValue());
+            if (resource.exists()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "PDF not found");
             }
-            // 부서명 추가 로직
-            String departmentName = getDepartmentName(); // 예시: 실제 데이터베이스에서 부서명을 조회하는 로직 필요
-
-            // 이름 추가 로직
-            String name = getName();
-
-            htmlContent = htmlContent.replace("${departmentName}", departmentName);
-            htmlContent = htmlContent.replace( "${name}", name);
-            return ResponseEntity.ok(htmlContent);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Error loading the HTML content");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving PDF", e);
         }
     }
-}
 
-     */
+}
