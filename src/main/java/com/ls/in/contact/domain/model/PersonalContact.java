@@ -1,5 +1,6 @@
 package com.ls.in.contact.domain.model;
 
+import com.ls.in.global.emp.domain.model.Emp;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,4 +49,8 @@ public class PersonalContact {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emp_id")
+    private Emp emp;
 }
