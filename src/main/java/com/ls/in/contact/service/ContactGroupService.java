@@ -1,9 +1,13 @@
 package com.ls.in.contact.service;
 
 import com.ls.in.contact.dto.ContactGroupDTO;
+import com.ls.in.contact.dto.PersonalContactDTO;
+import com.ls.in.contact.exception.PersonalContactNotFoundException;
 
 import java.util.List;
 
 public interface ContactGroupService {
-    public List<ContactGroupDTO> getAllContact(int empId);
+//    public List<ContactGroupDTO> getAllContact(int empId);
+    public List<ContactGroupDTO> getAllPersonalContactByGroup(int empId, int groupId) throws PersonalContactNotFoundException;
+
 }

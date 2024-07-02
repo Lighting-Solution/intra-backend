@@ -1,8 +1,20 @@
 package com.ls.in.global.emp.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+import com.ls.in.global.emp.service.EmpService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+@RestController("empController")
+@RequestMapping("/api/v1/intranet/contact")
+@CrossOrigin(origins = "http://localhost:3000")
 public class EmpController {
-    // 관리자 페이지에서 사원 추가할 시 필요
+    @Autowired
+    private EmpService empService;
+
+    @GetMapping("/test")
+    public void test(@RequestParam("empId") int empId,
+                     @RequestParam("positionId") int positionId) {
+        empService.getEmpByIdAndDepartmentAndPosition(empId, 9);
+        empService.getEmpByPosition(positionId);
+    }
 }

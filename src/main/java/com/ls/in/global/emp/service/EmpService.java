@@ -8,5 +8,29 @@ import java.util.List;
 
 public interface EmpService {
     public List<EmpDTO> getAllEmp() throws EmpNotFoundException;
+
+    /**
+     * empId와 일치하는 사원 정보
+     * @param empId
+     * @return
+     * @throws EmpNotFoundException
+     */
     public EmpDTO getEmpById(int empId) throws EmpNotFoundException;
+
+    /**
+     * @apiNote empId와 일치하는 사원의 부서의 특정 직급과 일치하는 사원 정보
+     * @param empId
+     * @param positionId
+     * @return
+     * @throws EmpNotFoundException
+     */
+    public EmpDTO getEmpByIdAndDepartmentAndPosition(int empId, int positionId) throws EmpNotFoundException;
+
+    /**
+     * position의 id가 일치하는 사원의 정보
+     * @param id
+     * @return
+     * @throws EmpNotFoundException
+     */
+    public EmpDTO getEmpByPosition(Integer id) throws EmpNotFoundException;
 }

@@ -5,6 +5,7 @@ import com.ls.in.global.emp.domain.dto.DepartmentDTO;
 import com.ls.in.global.emp.domain.model.Department;
 import com.ls.in.global.emp.exception.DepartmentNotFoundException;
 import com.ls.in.global.emp.service.DepartmentService;
+import com.ls.in.global.util.Formats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDTO getDepartmentById(int departmentId) throws DepartmentNotFoundException {
-        Integer id = Integer.valueOf(departmentId);
+        Integer id = Formats.toInteger(departmentId);
         Department result = departmentDAO.findById(id);
         return new DepartmentDTO(result.getDepartmentId(), result.getDepartmentName());
     }

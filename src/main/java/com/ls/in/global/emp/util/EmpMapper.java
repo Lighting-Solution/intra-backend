@@ -1,6 +1,10 @@
-package com.ls.in.global.emp.domain.dto;
+package com.ls.in.global.emp.util;
 
 import com.ls.in.contact.dto.CompanyDTO;
+import com.ls.in.contact.util.mapper.CompanyMapper;
+import com.ls.in.global.emp.domain.dto.DepartmentDTO;
+import com.ls.in.global.emp.domain.dto.EmpDTO;
+import com.ls.in.global.emp.domain.dto.PositionDTO;
 import com.ls.in.global.emp.domain.model.Emp;
 
 public class EmpMapper {
@@ -21,35 +25,20 @@ public class EmpMapper {
         empDTO.setEmpAdmin(emp.isEmpAdmin());
 
         if(emp.getCompany() != null) {
-            CompanyDTO companyDTO = new CompanyDTO();
-            companyDTO.setCompanyId(emp.getCompany().getCompanyId());
-            companyDTO.setCompanyName(emp.getCompany().getCompanyName());
-            companyDTO.setCompanyAddress(emp.getCompany().getCompanyAddress());
-            companyDTO.setCompanyURL(emp.getCompany().getCompanyURL());
-            companyDTO.setCompanyNumber(emp.getCompany().getCompanyNumber());
-            companyDTO.setCompanyFax(emp.getCompany().getCompanyFax());
+            CompanyDTO companyDTO = CompanyMapper.toDTO(emp.getCompany());
             empDTO.setCompany(companyDTO);
         }
 
         if(emp.getPosition() != null) {
-            PositionDTO positionDTO = new PositionDTO();
-            positionDTO.setPositionId(emp.getPosition().getPositionId());
-            positionDTO.setPositionName(emp.getPosition().getPositionName());
+            PositionDTO positionDTO = PositionMapper.toDTO(emp.getPosition());
             empDTO.setPosition(positionDTO);
         }
 
         if(emp.getDepartment() != null) {
-            DepartmentDTO departmentDTO = new DepartmentDTO();
-            departmentDTO.setDepartmentId(emp.getDepartment().getDepartmentId());
-            departmentDTO.setDepartmentName(emp.getDepartment().getDepartmentName());
+            DepartmentDTO departmentDTO = DepartmentMapper.toDTO(emp.getDepartment());
             empDTO.setDepartment(departmentDTO);
         }
 
         return empDTO;
     }
-
-    public static Emp toEmp(EmpDTO empDTO) {
-        return null;
-    }
-
 }

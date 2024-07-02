@@ -8,4 +8,6 @@ import java.util.List;
 public interface EmpDAO {
     public List<Emp> findAll() throws DataAccessException;
     public Emp findById(Integer id) throws DataAccessException;
+    public Emp findByIdAndDepartmentAndPosition(Integer empId, Integer positionId) throws DataAccessException;
+    public Emp findByPosition(Integer positionId) throws DataAccessException;
 }

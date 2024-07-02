@@ -6,6 +6,7 @@ import com.ls.in.global.emp.domain.dto.PositionDTO;
 import com.ls.in.global.emp.domain.model.Position;
 import com.ls.in.global.emp.exception.PositionNotFoundException;
 import com.ls.in.global.emp.service.PositionService;
+import com.ls.in.global.util.Formats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public PositionDTO getPositionById(int positionId) throws PositionNotFoundException {
-        Integer id = Integer.valueOf(positionId);
+        Integer id = Formats.toInteger(positionId);
         Position resultPosition = positionDAO.findById(id);
         return new PositionDTO(resultPosition.getPositionId(), resultPosition.getPositionName());
     }

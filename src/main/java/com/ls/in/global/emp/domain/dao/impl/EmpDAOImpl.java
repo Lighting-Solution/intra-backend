@@ -32,4 +32,14 @@ public class EmpDAOImpl implements EmpDAO {
         if(result.isEmpty()) return null;
         return result.get();
     }
+
+    @Override
+    public Emp findByIdAndDepartmentAndPosition(Integer empId, Integer positionId) throws DataAccessException {
+        return empRepository.findByEmpIdAndDepartmentAndPosition(empId, positionId);
+    }
+
+    @Override
+    public Emp findByPosition(Integer positionId) throws DataAccessException {
+        return empRepository.findByPosition(positionId);
+    }
 }
