@@ -1,6 +1,7 @@
 package com.ls.in.messenger.controller;
 
 import com.ls.in.global.emp.domain.model.Emp;
+import com.ls.in.messenger.dto.ChatRoomDTO;
 import com.ls.in.messenger.service.RoomService;
 //import com.ls.in.messenger.util.MessageUtil;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/chat")
 @Log4j2
 public class RoomController {
 
@@ -23,7 +23,7 @@ public class RoomController {
 	 * @return
 	 */
 //	@GetMapping(value = "/rooms")
-//	public Map<Integer, List<Emp>> rooms(){
+//	public Map<Integer, List<String>> rooms(){
 //		log.info("# 채팅방 목록 가져오기");
 //		return roomService.getRooms(MessageUtil.getCurrentEmpId());
 //	}
@@ -33,8 +33,8 @@ public class RoomController {
 	 * Spring Security가 구축되지 않아서 넣은 임의의 PK값.
 	 * @return
 	 */
-	@GetMapping(value = "/rooms")
-	public Map<Integer, List<String>> rooms(){
+	@GetMapping(value = "/api/rooms")
+	public List<ChatRoomDTO> rooms(){
 		log.info("# 채팅방 목록 가져오기");
 		return roomService.getRooms(1);
 	}
