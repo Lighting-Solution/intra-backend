@@ -1,5 +1,7 @@
 package com.ls.in.messenger.service;
 
+import com.ls.in.global.emp.domain.model.Emp;
+import com.ls.in.messenger.dto.ChatRoomDTO;
 import com.ls.in.messenger.repository.RoomMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,12 @@ public class RoomService {
 	private final RoomMemberRepository roomMemberRepository;
 
 	@Transactional
-	public Map<Integer, List<String>> getRooms(Integer id) {
+	public List<ChatRoomDTO> getRooms(Integer id) {
 		List<Integer> rooms = roomMemberRepository.findRoomIdsByEmpId(id);
-		return rooms.stream().collect(Collectors.toMap(
+		Map<Integer, List<Emp>> roomAndEmp = rooms.stream().collect(Collectors.toMap(
 				roomId -> roomId,
-				roomMemberRepository::findEmpNamesByRoomId
+				roomMemberRepository::findEmpByRoomId
 		));
+		return ChatRoomDTO.create(roomAndEmp);
 	}
 }
