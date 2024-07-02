@@ -20,7 +20,7 @@ public class Calendar {
     private Integer calendarId;
 
     @Column(name = "title")
-    private Integer calendarTitle;
+    private String calendarTitle;
 
     @Column(name = "createAt")
     private LocalDateTime calendarCreateAt;
