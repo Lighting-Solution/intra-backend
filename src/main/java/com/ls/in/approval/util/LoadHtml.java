@@ -16,10 +16,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -27,6 +24,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @NoArgsConstructor
 public class LoadHtml {
@@ -38,12 +37,13 @@ public class LoadHtml {
             File file = new File(getClass().getClassLoader().getResource(filePath).getFile());
             String html = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
-            // Parse the HTML file using Jsoup with XML parser
+            // HTML -> Jsoup 변경 (xmlParser 이용)
             Document document = Jsoup.parse(html, "", org.jsoup.parser.Parser.xmlParser());
 
-            // Extract the content inside the <body> tag
+            // html body 내용 가져오기
             Element body = document.body();
             htmlContent = body.html();
+
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -86,8 +86,23 @@ public class LoadHtml {
 
         // Convert input fields and text areas with values
         htmlContent = htmlContent.replaceAll("<input type=\"text\" placeholder=\"[^\"]*\" value=\"([^\"]*)\" />", "$1");
-        htmlContent = htmlContent.replaceAll("<textarea[^>]*>(.*?)</textarea>", "$1");
         htmlContent = htmlContent.replaceAll("<input[^>]*id=\"([^\"]*)\"[^>]*value=\"([^\"]*)\"[^>]*>", "$2");
+
+        // Handle <textarea> elements specifically
+        Pattern pattern = Pattern.compile("(?s)<textarea[^>]*>(.*?)</textarea>");
+        Matcher matcher = pattern.matcher(htmlContent);
+        StringBuffer sb = new StringBuffer();
+
+        while (matcher.find()) {
+            String textareaContent = matcher.group(1);
+            textareaContent = textareaContent.replace("\n", "<br />");
+            matcher.appendReplacement(sb, "<div>" + textareaContent + "</div>");
+        }
+        matcher.appendTail(sb);
+        htmlContent = sb.toString();
+        System.out.println("--------------------------------------------------------");
+        System.out.println(htmlContent);
+
 
         // Convert HTML to PDF using ITextRenderer
         ITextRenderer renderer = new ITextRenderer();
@@ -142,4 +157,33 @@ public class LoadHtml {
             Files.deleteIfExists(pngPath);
         }
     }
+
+    // 전자 결재 서명
+    public static void addSignToPDF(String pdfFilePath, String imagePath, String outputPdfPath) throws IOException {
+        try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
+            PDPage page = document.getPage(0); // Add signature to the first page
+
+            PDImageXObject pdImage = PDImageXObject.createFromFile(imagePath, document);
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true)) {
+                // 1번째 사인 위치
+                contentStream.drawImage(pdImage, 470, 800, 40, 35);
+
+                // 2번째 사인 위치
+                //contentStream.drawImage(pdImage, 550, 790, 40, 35);
+
+                // 3번째 사인 위치
+                // contentStream.drawImage(pdImage, 630, 790, 40, 35);
+            }
+
+            // Save the signed PDF to the output path
+            try (OutputStream os = new FileOutputStream(outputPdfPath)) {
+                document.save(os);
+            }
+        }
+    }
+
+
+
+
+
 }
