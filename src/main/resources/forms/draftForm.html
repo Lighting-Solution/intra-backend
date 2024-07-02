@@ -68,14 +68,14 @@
             border-collapse: collapse;
             padding: 0;
             border-spacing: 0;
-            width: 60px;
+            width: 70px;
             font-size: 12px;
         }
         .sign_rank,
         .sign_stamp,
         .sign_name,
         .sign_date {
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid black; /* Add border only at the bottom */
             border-collapse: collapse;
             display: block;
             text-align: center;
@@ -251,17 +251,17 @@
     <tbody>
     <tr>
         <td class="title_cell" colspan="2">합의 부서</td>
-        <td colspan="3" class="reason_cell"><input type="text" placeholder="" id="input1"/></td>
+        <td colspan="3" class="reason_cell"><input type="text" id="input1"/></td>
     </tr>
     <tr>
         <td class="title_cell" colspan="2">제목</td>
-        <td colspan="3" class="reason_cell"><input type="text" placeholder="" id="input2"/></td>
+        <td colspan="3" class="reason_cell"><input type="text" id="input2"/></td>
     </tr>
     <tr>
         <td colspan="5" class="title_cell">상세 내용</td>
     </tr>
     <tr>
-        <td colspan="5" class="reason_cell"><textarea></textarea></td>
+        <td colspan="5" class="reason_cell"><textarea placeholder="내용을 입력하세요" style="white-space:pre;"></textarea></td>
     </tr>
     </tbody>
 </table>
