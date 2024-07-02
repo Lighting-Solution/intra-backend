@@ -13,9 +13,12 @@ import java.util.List;
 public interface RoomMemberRepository extends JpaRepository<RoomMember, Integer> {
 
 	@Query("select rm.room.roomId from RoomMember rm where rm.emp.empId = :id")
-	public List<Integer> findRoomIdsByEmpId(@Param("id") Integer id);
+	List<Integer> findRoomIdsByEmpId(@Param("id") Integer id);
 
 	@Query("select rm.emp from RoomMember rm where rm.room.roomId = :id")
-	public List<Emp> findEmpByRoomId(@Param("id") Integer id);
+	List<Emp> findEmpByRoomId(@Param("id") Integer id);
+
+	@Query("select rm from RoomMember rm where rm.room.roomId = :roomid and rm.emp.empId =:empId")
+	RoomMember findByRoomIdAndEmpId(@Param("roomId")Integer roomId, @Param("empId")Integer empId);
 
 }

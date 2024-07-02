@@ -20,16 +20,6 @@ public class RoomController {
 
 	/**
 	 * 채팅방 목록 조회
-	 * @return
-	 */
-//	@GetMapping(value = "/rooms")
-//	public Map<Integer, List<String>> rooms(){
-//		log.info("# 채팅방 목록 가져오기");
-//		return roomService.getRooms(MessageUtil.getCurrentEmpId());
-//	}
-
-
-	/**
 	 * Spring Security가 구축되지 않아서 넣은 임의의 PK값.
 	 * @return
 	 */
@@ -37,6 +27,6 @@ public class RoomController {
 	public List<ChatRoomDTO> rooms(){
 		log.info("# 채팅방 목록 가져오기");
 		return roomService.getRooms(1);
+//		return roomService.getRooms(MessageUtil.getCurrentEmpId());
 	}
-
 }
