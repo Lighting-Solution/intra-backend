@@ -12,5 +12,5 @@ import java.util.List;
 @ToString
 public class ChatRoomCreationRequest {
 	private List<Integer> empIds;
-	private String name;
+	private String roomName;
 }

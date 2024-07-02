@@ -34,7 +34,7 @@ public class RoomController {
 	 * @param group : List<Integers> empIds, String name
 	 * @return String
 	 */
-	@PostMapping
+	@PostMapping("/api/room")
 	public String createChatRoom(@RequestBody ChatRoomCreationRequest group) {
 		log.info("Employee IDs: {}", group.getEmpIds());
 		roomService.createChattingRoom(group);

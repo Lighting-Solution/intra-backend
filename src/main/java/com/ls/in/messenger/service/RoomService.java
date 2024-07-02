@@ -35,13 +35,13 @@ public class RoomService {
 
 	@Transactional
 	public void createChattingRoom(ChatRoomCreationRequest group) {
-		Room room = Room.createRoom(group.getName());
+		Room room = Room.createRoom(group.getRoomName());
 		roomRepository.save(room);
 		group.getEmpIds().stream()
 				.map(empRepository::findById)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.map(emp -> RoomMember.createRoomMember(emp, room))
-				.map(roomMemberRepository::save);
+				.forEach(roomMemberRepository::save);
 	}
 }
