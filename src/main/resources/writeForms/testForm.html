@@ -1,0 +1,286 @@
+<html><head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Login</title>
+            <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 12px;
+            color: black;
+            margin: 0;
+            padding: 20px;
+        }
+        .tbl_outer {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: white;
+            border: 1px solid black;
+        }
+        .tbl_inner {
+            width: 100%;
+            border: 1px solid black;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        .header_cell {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            vertical-align: middle;
+            padding: 10px;
+            border: 1px solid black;
+            background-color: #f0f0f0;
+        }
+        .content_cell, .title_cell {
+            padding: 5px;
+            vertical-align: middle;
+            border: 1px solid black;
+        }
+        .title_cell {
+            text-align: center;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+        .sign_type1 {
+            font-size: 12px;
+            background-color: white;
+            width: 100%;
+        }
+        .tb_sign_type1 {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+            margin: 5px 0;
+        }
+        .sign_member {
+            border-bottom: 1px solid black;
+            border-collapse: collapse;
+            padding: 0;
+            width: 100%;
+            font-size: 12px;
+        }
+        .sign_rank, .sign_stamp, .sign_name, .sign_date {
+            border-bottom: 1px solid black;
+            display: block;
+            text-align: center;
+            width: 100%;
+            font-size: 12px;
+            padding: 2px 4px;
+        }
+        .stamp_approved img {
+            width: auto;
+            height: 40px;
+        }
+        .reason_cell {
+            padding: 5px;
+            vertical-align: middle;
+            border: 1px solid black;
+            text-align: left;
+        }
+        .tb_sign_type1 th {
+            background-color: #ddd;
+            text-align: center;
+            padding: 5px;
+        }
+        .tb_sign_type1 tbody {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            box-sizing: border-box;
+            resize: none;
+            border: 1px solid black;
+            padding: 5px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 12px;
+        }
+        #meeting_title {
+            width: 100%;
+            height: 26px;
+            padding: 3px;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 12px;
+            border: 1px solid black;
+        }
+        .sign_container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .sign_item {
+            margin: 5px 0;
+        }
+    </style>
+        </head><body><div xmlns="http://www.w3.org/1999/xhtml" id="html-content-container">
+<div id="html-content-container">
+    <table class="tbl_outer">
+        <tbody>
+        <tr>
+            <td colspan="2" class="header_cell">기안문</td>
+        </tr>
+        <tr>
+            <td style="width: 60%;">
+                <table class="tbl_inner">
+                    <tbody>
+                    <tr>
+                        <td class="title_cell">문서번호</td>
+                        <td class="content_cell">관리자 데모-2024-00007</td>
+                    </tr>
+                    <tr>
+                        <td class="title_cell">부서</td>
+                        <td class="content_cell"></td>
+                    </tr>
+                    <tr>
+                        <td class="title_cell">담당자</td>
+                        <td class="content_cell"></td>
+                    </tr>
+                    <tr>
+                        <td class="title_cell">작성일자</td>
+                        <td class="content_cell"></td>
+                    </tr>
+                    <tr>
+                        <td class="title_cell">결재일자</td>
+                        <td class="content_cell"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td style="text-align: left; vertical-align: top; padding: 0;">
+                <div class="sign_type1 sign_type_new" data-group-seq="0" data-group-name="신청">
+                    <div class="sign_container">
+                        <div class="sign_item">
+                            <table class="tb_sign_type1">
+                                <thead>
+                                <tr>
+                                    <th>승인</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table class="sign_member">
+                                            <tbody>
+                                            <tr>
+                                                <td><span class="sign_rank">Section Manager</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="wrap_name wrap_sign">
+                                                                    <span class="sign_stamp stamp_approved">
+                                                                        <img src="http://adm.daouoffice.com:80/thumb/user/stamp/6192-1879" />
+                                                                    </span>
+                                                    <span class="sign_name"><strong>김다우</strong></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="last"><span class="sign_date">2024/06/25</span></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="sign_item">
+                            <table class="tb_sign_type1">
+                                <thead>
+                                <tr>
+                                    <th>결재</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table class="sign_member">
+                                            <tbody>
+                                            <tr>
+                                                <td><span class="sign_rank" style="height:20px;"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="wrap_name wrap_sign">
+                                                                    <span class="sign_stamp stamp_approved" style="height:40px;">
+                                                                        <img src="" />
+                                                                    </span>
+                                                    <span class="sign_name"><strong>김다우</strong></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="last"><span class="sign_date" style="height:14px;"></span></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="sign_item">
+                            <table class="tb_sign_type1">
+                                <thead>
+                                <tr>
+                                    <th>결재</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table class="sign_member">
+                                            <tbody>
+                                            <tr>
+                                                <td><span class="sign_rank" style="height:20px;"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="wrap_name wrap_sign">
+                                                                    <span class="sign_stamp stamp_approved" style="height:40px;">
+                                                                        <img src="" />
+                                                                    </span>
+                                                    <span class="sign_name"><strong>김다우</strong></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="last"><span class="sign_date" style="height:14px;"></span></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br />
+    <table class="tbl_outer">
+        <tbody>
+        <tr>
+            <td class="title_cell" style="width: 20%;">합의 부서</td>
+            <td class="reason_cell" style="width: 30%;"><input type="text" placeholder="" style="width: 100%; border: none;" /></td>
+            <td class="title_cell" style="width: 20%;">제목</td>
+            <td class="reason_cell" style="width: 30%;"><input type="text" placeholder="" style="width: 100%; border: none;" /></td>
+        </tr>
+        <tr>
+            <td colspan="4" class="title_cell">상세 내용</td>
+        </tr>
+        <tr>
+            <td colspan="4" class="reason_cell"><textarea placeholder="내용을 입력하세요"></textarea></td>
+        </tr>
+        </tbody>
+    </table>
+    <br />
+</div>
+</div></body></html>
