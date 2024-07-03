@@ -1,17 +1,17 @@
 package com.ls.in.contact.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ls.in.global.emp.domain.model.Emp;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Builder
-@Data
+@Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "personalContact")
@@ -53,4 +53,8 @@ public class PersonalContact {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emp_id")
     private Emp emp;
+
+    @OneToMany(mappedBy = "personalContact", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<ContactGroup> contactGroups;
 }

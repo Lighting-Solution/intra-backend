@@ -26,6 +26,6 @@ public class ContactEmpDAOImpl implements ContactEmpDAO {
 
     @Override
     public Page<Emp> findByDepartmentId(Pageable pageable, Integer id) throws DataAccessException {
-        return empRepository.findByDepartment(pageable, id);
+        return empRepository.findAllByDepartment(pageable, id);
     }
 }

@@ -12,6 +12,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class PersonalGroupDTO {
     private int personalGroupId;
-    private EmpDTO emp;
+    private int empId;
     private String personalGroupName;
 }

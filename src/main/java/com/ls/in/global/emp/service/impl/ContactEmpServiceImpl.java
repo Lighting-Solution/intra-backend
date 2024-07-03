@@ -30,7 +30,6 @@ public class ContactEmpServiceImpl implements ContactEmpService {
         Page<Emp> result = contactEmpDAO.findAll(PageNation.setPage(0, 10));
         List<EmpDTO> responseDTO = new ArrayList<>();
         for(Emp emp : result) {
-            System.out.println("테스트 : " + emp.toString());
             EmpDTO tempDTO = EmpMapper.toDto(emp);
             responseDTO.add(tempDTO);
         }

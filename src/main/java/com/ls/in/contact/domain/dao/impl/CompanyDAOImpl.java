@@ -21,16 +21,14 @@ public class CompanyDAOImpl implements CompanyDAO {
 
     @Override
     public Company save(Company company) throws DataAccessException {
-        Company result = companyRepository.save(company);
-        return result;
+        return companyRepository.save(company);
     }
 
     @Override
     public boolean deleteById(Integer id) throws DataAccessException {
         companyRepository.deleteById(id);
         Optional<Company> result = companyRepository.findById(id);
-        if(result.isPresent()) return false;
-        return true;
+        return result.isEmpty();
     }
 
 
