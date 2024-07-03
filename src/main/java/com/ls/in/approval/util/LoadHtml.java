@@ -2,6 +2,7 @@ package com.ls.in.approval.util;
 
 import com.itextpdf.text.pdf.BaseFont;
 import com.lowagie.text.DocumentException;
+import com.ls.in.global.emp.domain.dto.EmpDTO;
 import lombok.NoArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -50,7 +51,7 @@ public class LoadHtml {
         return htmlContent;
     }
 
-    public Map<String, String> save(Map<String, String> request, String filePath){
+    public Map<String, String> save(Map<String, String> request, String filePath, EmpDTO empDTO){
         String encodedHtmlContent = request.get("html");
         String htmlContent;
         try {
@@ -60,6 +61,8 @@ public class LoadHtml {
             e.printStackTrace();
             return Map.of("status", "error", "message", "Failed to decode HTML.");
         }
+
+        htmlContent = htmlContent.replace("{empName}", empDTO.getEmpName());
 
         try {
             Files.write(Paths.get(filePath), htmlContent.getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);

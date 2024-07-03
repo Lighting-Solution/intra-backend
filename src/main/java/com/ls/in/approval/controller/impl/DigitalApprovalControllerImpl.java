@@ -6,6 +6,8 @@ import com.ls.in.approval.controller.DigitalApprovalController;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
+import com.ls.in.global.emp.domain.dto.EmpDTO;
+import com.ls.in.global.emp.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -26,24 +28,23 @@ import java.util.Map;
 @RequestMapping("/api/v1/lighting_solutions/digital/approval")
 @CrossOrigin(origins = "http://localhost:3000")
 public class DigitalApprovalControllerImpl implements DigitalApprovalController {
-
+    @Autowired
     private DigitalApprovalService approvalService;
+
+    @Autowired
+    private EmpService empService;
 
     private final LoadHtml loadHtml = new LoadHtml();
 
     @Autowired
-    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService){
+    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService){
         this.approvalService = approvalService;
+        this.empService = empService;
     }
 
-
-     /**
-     * @apiNote resources에 저장되어 있는 html 폼 가져오기
-     * @param status
-     * @return
-     */
+    @Override
     @GetMapping("/form")
-    public ResponseEntity<String> getHtmlContent(@RequestParam Integer status) {
+    public ResponseEntity<String> getHtmlContent(Integer status) {
         String htmlContent = "";
         System.out.println(status);
         switch (status) {
@@ -68,13 +69,9 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         return ResponseEntity.ok(htmlContent);
     }
 
-    /**
-     * @apiNote 사용자가 작성한 전재결재 저장하고, pdf 변환하고 해당 사용자의 sign pdf에 저장
-     * @param request
-     * @return
-     */
+    @Override
     @PostMapping("/request")
-    public ResponseEntity<String> approvalRequest(@RequestBody Map<String, String> request) throws IOException, DocumentException {
+    public ResponseEntity<String> approvalRequest(Map<String, String> request) throws IOException, DocumentException {
         // 양식 상태
         String status = request.get("status");
 
@@ -86,22 +83,29 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         String imagePath = "src/main/resources/signs/sign3.png";
         String outputPdfPath = "src/main/resources/approvalWaiting/signed_approval.pdf";
 
+        // 사원 정보 가져오기
+        //int empId = Integer.parseInt(request.get("empId"));
+        int empId = 1;
+        EmpDTO empDTO = empService.getEmpById(empId);
+        String empName = empDTO.getEmpName();
+        System.out.println(empName);
+
         //서버에 작성한 전자결재 저장하기
         switch (status) {
             case "0":
                 // 기안문
                 filePath = "src/main/resources/writeForms/draftForm.html";
-                loadHtml.save(request, filePath);
+                loadHtml.save(request, filePath, empDTO);
                 break;
             case "1":
                 // 회의록
                 filePath = "src/main/resources/writeForms/meetingForm.html";
-                loadHtml.save(request, filePath);
+                loadHtml.save(request, filePath, empDTO);
                 break;
             case "2":
                 // 협조문
                 filePath = "src/main/resources/writeForms/cooperationForm.html";
-                loadHtml.save(request, filePath);
+                loadHtml.save(request, filePath, empDTO);
                 break;
         }
 
@@ -114,14 +118,9 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         return ResponseEntity.ok("HTML content received and processed successfully");
     }
 
-
-    /**
-     * @apiNote PDF Viewer Api 를 활용해서 PDF 화면 띄우기
-     * @param projectName
-     * @return
-     */
+    @Override
     @GetMapping("/pdf/{projectName}")
-    public ResponseEntity<Resource> getPdf(@PathVariable String projectName) {
+    public ResponseEntity<Resource> getPdf(String projectName) {
         try {
             // 프로젝트 이름을 기반으로 PDF 파일 경로 설정 (이 예시에서는 고정된 경로 사용)
             Path pdfPath = Paths.get("src/main/resources/approvalWaiting/signed_approval.pdf");
