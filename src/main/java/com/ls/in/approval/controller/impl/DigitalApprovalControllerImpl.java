@@ -125,7 +125,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         }
     }
 
-    @GetMapping("/testing/")
+    @GetMapping("/testing")
     public void test() {
         // 전자 결재 테이블 data insert
         DigitalApprovalDTO digitalApprovalDTO = new DigitalApprovalDTO();

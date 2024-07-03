@@ -52,6 +52,7 @@ public class LoadHtml {
 
     public Map<String, String> save(Map<String, String> request, String filePath){
         String encodedHtmlContent = request.get("html");
+
         String htmlContent;
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());

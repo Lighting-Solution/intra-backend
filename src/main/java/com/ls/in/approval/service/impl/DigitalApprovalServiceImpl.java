@@ -32,10 +32,9 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
 
         empDTO = empService.getEmpById(empId);
 
-        //Emp emp = EmpMapper.toEntity(empDTO);
+        Emp emp = EmpMapper.toEntity(empDTO);
 
-        DigitalApproval digitalApproval = new DigitalApproval();
-        digitalApproval.builder()
+        DigitalApproval digitalApproval = DigitalApproval.builder()
                 .drafterId(empDTO.getEmpId())
                 .digitalApprovalName(digitalApprovalName)
                 .digitalApprovalPath(empDTO.getEmpSign())
@@ -43,16 +42,16 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
                 .drafterStatus(false)
                 .managerStatus(false)
                 .ceoStatus(false)
-                //.emp(emp)
+                .emp(emp)
                 .build();
 
         DigitalApproval digitalApproval2 = approvalDao.save(digitalApproval);
 
         //---------------------------------------------------------
-        DigitalApprovalDTO responseDigitalApprovalDTO = new DigitalApprovalDTO();
         EmpDTO change = EmpMapper.toDto(digitalApproval2.getEmp());
 
-        responseDigitalApprovalDTO.builder()
+        return DigitalApprovalDTO.builder()
+                .digitalApprovalId(digitalApproval2.getDigitalApprovalId())
                 .drafterId(digitalApproval2.getEmp().getEmpId())
                 .digitalApprovalName(digitalApprovalName)
                 .digitalApprovalPath(digitalApproval2.getEmp().getEmpSign())
@@ -62,7 +61,5 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
                 .ceoStatus(false)
                 .empDTO(change)
                 .build();
-
-        return responseDigitalApprovalDTO;
     }
 }
