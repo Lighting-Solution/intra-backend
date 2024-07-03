@@ -6,4 +6,5 @@ import com.ls.in.global.emp.domain.model.Emp;
 
 public interface DigitalApprovalDao {
     DigitalApproval save(DigitalApproval digitalApproval);
+
 }

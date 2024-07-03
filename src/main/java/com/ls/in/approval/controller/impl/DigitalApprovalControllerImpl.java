@@ -6,6 +6,8 @@ import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
+import com.ls.in.global.emp.domain.dto.EmpDTO;
+import com.ls.in.global.emp.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -26,11 +28,13 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class DigitalApprovalControllerImpl implements DigitalApprovalController {
 
+
     private final DigitalApprovalService approvalService;
 
     private final LoadHtml loadHtml = new LoadHtml();
 
     @Autowired
+
     public DigitalApprovalControllerImpl(DigitalApprovalService approvalService) {
         this.approvalService = approvalService;
     }
@@ -76,22 +80,23 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         String imagePath = "src/main/resources/signs/sign3.png";
         String outputPdfPath = "src/main/resources/approvalWaiting/signed_approval.pdf";
 
+
         // 서버에 작성한 전자결재 저장하기
         switch (status) {
             case "0":
                 // 기안문
                 filePath = "src/main/resources/writeForms/draftForm.html";
-                loadHtml.save(request, filePath);
+                loadHtml.save(request, filePath, empDTO);
                 break;
             case "1":
                 // 회의록
                 filePath = "src/main/resources/writeForms/meetingForm.html";
-                loadHtml.save(request, filePath);
+                loadHtml.save(request, filePath, empDTO);
                 break;
             case "2":
                 // 협조문
                 filePath = "src/main/resources/writeForms/cooperationForm.html";
-                loadHtml.save(request, filePath);
+                loadHtml.save(request, filePath, empDTO);
                 break;
         }
 

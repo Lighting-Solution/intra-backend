@@ -1,5 +1,6 @@
 package com.ls.in.approval.dto;
 
+
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import com.ls.in.global.emp.domain.model.Emp;
 import lombok.AllArgsConstructor;
@@ -29,4 +30,5 @@ public class DigitalApprovalDTO {
     private boolean ceoStatus;
 
     private EmpDTO empDTO;
+
 }
