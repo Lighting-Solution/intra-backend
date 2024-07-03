@@ -42,17 +42,10 @@ public class MessageService {
 						message.getRoomMember().getRoom().getRoomId(),
 						message.getRoomMember().getEmp().getEmpId(),
 						message.getRoomMember().getEmp().getEmpName(),
-						message.getMessageContent()
+						message.getMessageContent(),
+						message.getMessageSendTime()
+
 				))
 				.collect(Collectors.toList());
 	}
 }
-//		List<Message> messages = messageRepository.findByRoomMemberRoomRoomId(roomId);
-//		return messages.stream()
-//				.map(message -> new ChatMessageDTO(
-//						message.getRoomMember().getRoom().getRoomId(),
-//						message.getRoomMember().getEmp().getEmpId(),
-//						message.getRoomMember().getEmp().getEmpName(),
-//						message.getMessageContent()
-//				))
-//				.collect(Collectors.toList());    }

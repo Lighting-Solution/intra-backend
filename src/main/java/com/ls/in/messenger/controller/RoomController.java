@@ -1,5 +1,6 @@
 package com.ls.in.messenger.controller;
 
+import com.ls.in.messenger.dto.ChatMessageDTO;
 import com.ls.in.messenger.dto.ChatRoomCreationRequest;
 import com.ls.in.messenger.dto.ChatRoomDTO;
 import com.ls.in.messenger.service.MessageService;

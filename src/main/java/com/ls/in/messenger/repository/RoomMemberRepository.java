@@ -8,22 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-/*
-@Repository
-public interface RoomMemberRepository extends JpaRepository<RoomMember, Integer> {
 
-	@Query("select rm.room.roomId from RoomMember rm where rm.emp.empId = :id")
-	List<Integer> findRoomIdsByEmpId(@Param("id") Integer id);
-
-	@Query("select rm.emp from RoomMember rm where rm.room.roomId = :id")
-	List<Emp> findEmpByRoomId(@Param("id") Integer id);
-
-
-	@Query("select rm.emp from RoomMember rm where rm.room.roomId = :roomId and rm.emp.empId <> :empId")
-	List<Emp> findEmpByRoomIdExceptionMe(@Param("roomId") Integer roomId, @Param("empId") Integer empId);
-
-	@Query("select rm from RoomMember rm where rm.room.roomId = :roomId and rm.emp.empId =:empId")
-	RoomMember findByRoomIdAndEmpId(@Param("roomId")Integer roomId, @Param("empId")Integer empId);*/
 
 @Repository
 public interface RoomMemberRepository extends JpaRepository<RoomMember, Integer> {
