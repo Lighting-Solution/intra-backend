@@ -3,6 +3,7 @@ package com.ls.in.approval.controller.impl;
 import com.lowagie.text.DocumentException;
 import com.ls.in.approval.controller.DigitalApprovalController;
 import com.ls.in.approval.dto.DigitalApprovalDTO;
+import com.ls.in.approval.dto.FormDTO;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
@@ -21,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,11 +87,16 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         // html 문서로 부터 데이터 받아오기
         Map<String, String> successResult = new HashMap<>();
 
-
         Integer empId = Integer.parseInt(request.get("empId")); // 로그인한 사원 ID
 
         // 사원 정보 가져오기 (직급, 부서)
         EmpDTO empDTO = empService.getEmpById(empId);
+
+        // HTML 들어갈 정보 (FormDTO)
+        FormDTO formDTO = new FormDTO();
+        formDTO.setDepartment(empDTO.getDepartment().getDepartmentName());
+        formDTO.setName(empDTO.getEmpName());
+        formDTO.setDigitalApprovalCreatedAt(LocalDateTime.now());
 
 
         // 서버에 작성한 전자결재 저장하기
@@ -97,17 +104,17 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
             case "0":
                 // 기안문
                 filePath = "src/main/resources/writeForms/draftForm.html";
-                successResult = loadHtml.save(request, filePath);
+                successResult = loadHtml.save(request, filePath, formDTO);
                 break;
             case "1":
                 // 회의록
                 filePath = "src/main/resources/writeForms/meetingForm.html";
-                successResult = loadHtml.save(request, filePath);
+                successResult = loadHtml.save(request, filePath, formDTO);
                 break;
             case "2":
                 // 협조문
                 filePath = "src/main/resources/writeForms/cooperationForm.html";
-                successResult = loadHtml.save(request, filePath);
+                successResult = loadHtml.save(request, filePath, formDTO);
                 break;
         }
 
