@@ -1,6 +1,5 @@
 package com.ls.in.approval.controller.impl;
 
-
 import com.lowagie.text.DocumentException;
 import com.ls.in.approval.controller.DigitalApprovalController;
 import com.ls.in.approval.dto.DigitalApprovalDTO;
@@ -22,7 +21,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/api/v1/lighting_solutions/digital/approval")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -33,7 +31,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     private final LoadHtml loadHtml = new LoadHtml();
 
     @Autowired
-    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService){
+    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService) {
         this.approvalService = approvalService;
     }
 
@@ -78,7 +76,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         String imagePath = "src/main/resources/signs/sign3.png";
         String outputPdfPath = "src/main/resources/approvalWaiting/signed_approval.pdf";
 
-        //서버에 작성한 전자결재 저장하기
+        // 서버에 작성한 전자결재 저장하기
         switch (status) {
             case "0":
                 // 기안문
@@ -99,12 +97,6 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
         // html 파일 PDF 저장
         loadHtml.htmlToPdf(filePath, fontPath, request);
-
-
-
-
-
-
 
         // PDF 파일 Sign 저장
         LoadHtml.addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
@@ -134,7 +126,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     }
 
     @GetMapping("/testing/")
-    public void test(){
+    public void test() {
         // 전자 결재 테이블 data insert
         DigitalApprovalDTO digitalApprovalDTO = new DigitalApprovalDTO();
 
@@ -148,6 +140,3 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     }
 
 }
-
-
-
