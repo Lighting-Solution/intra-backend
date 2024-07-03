@@ -17,8 +17,10 @@ public class DigitalApprovalMapper {
                 .drafterStatus(digitalApproval.isDrafterStatus())
                 .managerStatus(digitalApproval.isManagerStatus())
                 .ceoStatus(digitalApproval.isCeoStatus())
+
                 .digitalApprovalCreateAt(digitalApproval.getDigitalApprovalCreateAt())
                 .digitalApprovalAt(digitalApproval.getDigitalApprovalAt())
+
                 .empDTO(EmpMapper.toDto(digitalApproval.getEmp()))
                 .build();
 
@@ -37,8 +39,10 @@ public class DigitalApprovalMapper {
                 .drafterStatus(digitalApprovalDTO.isDrafterStatus())
                 .managerStatus(digitalApprovalDTO.isManagerStatus())
                 .ceoStatus(digitalApprovalDTO.isCeoStatus())
+
                 .digitalApprovalCreateAt(digitalApprovalDTO.getDigitalApprovalCreateAt())
                 .digitalApprovalAt(digitalApprovalDTO.getDigitalApprovalAt())
+
                 .emp(EmpMapper.toEntity(digitalApprovalDTO.getEmpDTO()))
                 .build();
     }

@@ -51,13 +51,13 @@ public class LoadHtml {
             Element body = document.body();
             htmlContent = body.html();
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return htmlContent;
     }
 
-    public Map<String, String> save(Map<String, String> request, String filePath, FormDTO formDTO){
+    public Map<String, String> save(Map<String, String> request, String filePath, FormDTO formDTO) {
 
         String encodedHtmlContent = request.get("html");
 
@@ -70,8 +70,8 @@ public class LoadHtml {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = digitalApprovalCreatedAt.format(formatter);
 
-        System.out.println("name :"+ name);
-        System.out.println("department :"+ department);
+        System.out.println("name :" + name);
+        System.out.println("department :" + department);
 
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());
@@ -83,35 +83,35 @@ public class LoadHtml {
             Element inputElement = document.getElementById("title");
             if (inputElement != null) {
                 String inputValue = inputElement.attr("value");
+
                 title = inputValue;
+
             } else {
                 System.err.println("Input element with id 'title' not found.");
             }
 
             // ID가 "digitalApprovalEmpName"인 요소 찾기
-            this.changeValue(document, "digitalApprovalEmpName","div",name);
+            this.changeValue(document, "digitalApprovalEmpName", "div", name);
 
             // ID가 "digitalApprovalDepartment"인 요소 찾기
-            this.changeValue(document, "digitalApprovalDepartment","div",department);
+            this.changeValue(document, "digitalApprovalDepartment", "div", department);
 
             // ID가 "digitalApprovalCreatedAt" 인 요소 찾기
             this.changeValue(document, "digitalApprovalCreatedAt", "div", formattedDate);
 
             // ID가 approvalDepartment1 인 요소 찾기
-            this.changeValue(document, "approvalDepartment1" , "span", "솔루션 개발부");
+            this.changeValue(document, "approvalDepartment1", "span", "솔루션 개발부");
 
             // ID가 approvalName1 인 요소 찾기
-            this.changeValue(document, "approvalName1" , "span", name);
+            this.changeValue(document, "approvalName1", "span", name);
 
             // ID가 approvalDate1 인 요소 찾기
             this.changeValue(document, "approvalDate1", "span", formattedDate);
 
-
-
             document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
             document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
 
-            //System.out.println(htmlContent);
+            // System.out.println(htmlContent);
             htmlContent = document.html();
 
         } catch (UnsupportedEncodingException e) {
@@ -120,7 +120,8 @@ public class LoadHtml {
         }
 
         try {
-            Files.write(Paths.get(filePath), htmlContent.getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+            Files.write(Paths.get(filePath), htmlContent.getBytes(StandardCharsets.UTF_8),
+                    StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
             Map<String, String> successResult = new HashMap<>();
             successResult.put("status", "success");
             successResult.put("message", "HTML saved successfully.");
@@ -133,10 +134,10 @@ public class LoadHtml {
 
     }
 
-    private Document changeValue(Document document, String elementId, String type, String value){
+    private Document changeValue(Document document, String elementId, String type, String value) {
         Element inputElement = document.getElementById(elementId);
         if (inputElement != null) {
-            if(type.equals("div") || type.equals("span")){
+            if (type.equals("div") || type.equals("span")) {
                 inputElement.text(value);
             }
         } else {
@@ -145,7 +146,8 @@ public class LoadHtml {
         return document;
     }
 
-    public void htmlToPdf(String filePath, String fontPath, Map<String, String> request) throws IOException, DocumentException {
+    public void htmlToPdf(String filePath, String fontPath, Map<String, String> request)
+            throws IOException, DocumentException {
         // html -> pdf 변경하기 (결재진행중 저장)
 
         // Ensure HTML content is read as UTF-8
@@ -176,7 +178,6 @@ public class LoadHtml {
         htmlContent = sb.toString();
         System.out.println("--------------------------------------------------------");
         System.out.println(htmlContent);
-
 
         // Convert HTML to PDF using ITextRenderer
         ITextRenderer renderer = new ITextRenderer();
@@ -238,12 +239,13 @@ public class LoadHtml {
             PDPage page = document.getPage(0); // Add signature to the first page
 
             PDImageXObject pdImage = PDImageXObject.createFromFile(imagePath, document);
-            try (PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true)) {
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page,
+                    PDPageContentStream.AppendMode.APPEND, true, true)) {
                 // 1번째 사인 위치
                 contentStream.drawImage(pdImage, 470, 795, 40, 35);
 
                 // 2번째 사인 위치
-                //contentStream.drawImage(pdImage, 550, 795, 40, 35);
+                // contentStream.drawImage(pdImage, 550, 795, 40, 35);
 
                 // 3번째 사인 위치
                 // contentStream.drawImage(pdImage, 630, 795, 40, 35);
@@ -255,9 +257,5 @@ public class LoadHtml {
             }
         }
     }
-
-
-
-
 
 }

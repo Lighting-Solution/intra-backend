@@ -98,23 +98,25 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         formDTO.setName(empDTO.getEmpName());
         formDTO.setDigitalApprovalCreatedAt(LocalDateTime.now());
 
-
         // 서버에 작성한 전자결재 저장하기
         switch (status) {
             case "0":
                 // 기안문
                 filePath = "src/main/resources/writeForms/draftForm.html";
                 successResult = loadHtml.save(request, filePath, formDTO);
+
                 break;
             case "1":
                 // 회의록
                 filePath = "src/main/resources/writeForms/meetingForm.html";
                 successResult = loadHtml.save(request, filePath, formDTO);
+
                 break;
             case "2":
                 // 협조문
                 filePath = "src/main/resources/writeForms/cooperationForm.html";
                 successResult = loadHtml.save(request, filePath, formDTO);
+
                 break;
         }
 
@@ -123,7 +125,6 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
         // 전자 결재 테이블 data insert
         digitalApprovalDTO = approvalService.approvalRequest(empId, documentTitle, empDTO);
-
 
         // html 파일 PDF 저장
         loadHtml.htmlToPdf(filePath, fontPath, request);

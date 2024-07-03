@@ -29,6 +29,7 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
     }
 
     @Override
+
     public DigitalApprovalDTO approvalRequest(Integer empId, String digitalApprovalName, EmpDTO empDTO) {
         Emp emp = EmpMapper.toEntity(empDTO);
 
@@ -42,13 +43,16 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
                 .managerStatus(false)
                 .ceoStatus(false)
                 .digitalApprovalCreateAt(LocalDateTime.now())
+
                 .digitalApprovalAt(null)
+
                 .emp(emp)
                 .build();
 
         DigitalApproval digitalApproval2 = approvalDao.save(digitalApproval);
 
         //---------------------------------------------------------
+
         return DigitalApprovalMapper.toDto(digitalApproval2);
 
     }
