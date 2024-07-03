@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -40,6 +42,12 @@ public class DigitalApproval {
 
     @Column(name = "ceoStatus")
     private boolean ceoStatus;
+
+    @Column(name = "createdAt")
+    private LocalDateTime digitalApprovalCreateAt;
+
+    @Column(name ="approvalAt")
+    private LocalDateTime digitalApprovalAt;
 
     @ManyToOne
     @JoinColumn(name = "emp_id")

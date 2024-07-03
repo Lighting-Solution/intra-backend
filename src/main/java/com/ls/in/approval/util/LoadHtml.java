@@ -2,6 +2,7 @@ package com.ls.in.approval.util;
 
 import com.itextpdf.text.pdf.BaseFont;
 import com.lowagie.text.DocumentException;
+import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import lombok.NoArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -24,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,23 +53,43 @@ public class LoadHtml {
         return htmlContent;
     }
 
-    public Map<String, String> save(Map<String, String> request, String filePath, EmpDTO empDTO){
+    public Map<String, String> save(Map<String, String> request, String filePath){
+
         String encodedHtmlContent = request.get("html");
 
         String htmlContent;
+        String title = "";
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());
-            System.out.println(htmlContent);
+
+            // Jsoup을 사용하여 HTML 파싱
+            Document document = Jsoup.parse(htmlContent);
+
+            // ID가 "title"인 input 요소 찾기
+            Element inputElement = document.getElementById("title");
+            if (inputElement != null) {
+                // digitalApprovalDTO.getDigitalApprovalName() 값을 설정
+                String inputValue = inputElement.attr("value");
+                title = inputValue;
+                //String approvalName = digitalApprovalDTO.getDigitalApprovalName(); // 이 부분을 실제 값으로 변경
+                //inputElement.attr("value", approvalName);
+            } else {
+                System.err.println("Input element with id 'title' not found.");
+            }
+            //System.out.println(htmlContent);
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return Map.of("status", "error", "message", "Failed to decode HTML.");
         }
 
-        htmlContent = htmlContent.replace("{empName}", empDTO.getEmpName());
-
         try {
             Files.write(Paths.get(filePath), htmlContent.getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-            return Map.of("status", "success", "message", "HTML saved successfully.");
+            Map<String, String> successResult = new HashMap<>();
+            successResult.put("status", "success");
+            successResult.put("message", "HTML saved successfully.");
+            successResult.put("title", title);
+            return successResult;
         } catch (IOException e) {
             e.printStackTrace();
             return Map.of("status", "error", "message", "Failed to save HTML.");
