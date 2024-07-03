@@ -70,13 +70,17 @@ public class LoadHtml {
             if (inputElement != null) {
                 // digitalApprovalDTO.getDigitalApprovalName() 값을 설정
                 String inputValue = inputElement.attr("value");
+
                 title = inputValue;
+
                 //String approvalName = digitalApprovalDTO.getDigitalApprovalName(); // 이 부분을 실제 값으로 변경
                 //inputElement.attr("value", approvalName);
             } else {
                 System.err.println("Input element with id 'title' not found.");
             }
+
             //System.out.println(htmlContent);
+
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

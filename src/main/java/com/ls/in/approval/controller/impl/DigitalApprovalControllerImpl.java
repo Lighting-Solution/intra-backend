@@ -97,17 +97,23 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
             case "0":
                 // 기안문
                 filePath = "src/main/resources/writeForms/draftForm.html";
+
                 successResult = loadHtml.save(request, filePath);
+
                 break;
             case "1":
                 // 회의록
                 filePath = "src/main/resources/writeForms/meetingForm.html";
+
                 successResult = loadHtml.save(request, filePath);
+
                 break;
             case "2":
                 // 협조문
                 filePath = "src/main/resources/writeForms/cooperationForm.html";
+
                 successResult = loadHtml.save(request, filePath);
+
                 break;
         }
 

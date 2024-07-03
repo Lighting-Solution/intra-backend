@@ -3,6 +3,7 @@ package com.ls.in.approval.dto;
 
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import com.ls.in.global.emp.domain.model.Emp;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
