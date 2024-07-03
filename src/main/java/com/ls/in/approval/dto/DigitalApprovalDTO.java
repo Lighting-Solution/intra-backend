@@ -38,4 +38,5 @@ public class DigitalApprovalDTO {
 
     private EmpDTO empDTO;
 
+
 }

@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -28,22 +29,23 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class DigitalApprovalControllerImpl implements DigitalApprovalController {
 
-
     private final DigitalApprovalService approvalService;
 
     private final LoadHtml loadHtml = new LoadHtml();
 
+    private EmpService empService;
+
     @Autowired
 
-    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService) {
+    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService) {
         this.approvalService = approvalService;
+        this.empService = empService;
     }
 
     @Override
     @GetMapping("/form")
     public ResponseEntity<String> getHtmlContent(Integer status) {
         String htmlContent = "";
-        System.out.println(status);
         switch (status) {
             case 0:
                 // 기안문
@@ -80,25 +82,47 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         String imagePath = "src/main/resources/signs/sign3.png";
         String outputPdfPath = "src/main/resources/approvalWaiting/signed_approval.pdf";
 
+        // html 문서로 부터 데이터 받아오기
+        Map<String, String> successResult = new HashMap<>();
+
+
+        Integer empId = Integer.parseInt(request.get("empId")); // 로그인한 사원 ID
+
+        // 사원 정보 가져오기 (직급, 부서)
+        EmpDTO empDTO = empService.getEmpById(empId);
+
 
         // 서버에 작성한 전자결재 저장하기
         switch (status) {
             case "0":
                 // 기안문
                 filePath = "src/main/resources/writeForms/draftForm.html";
-                loadHtml.save(request, filePath);
+
+                successResult = loadHtml.save(request, filePath);
+
                 break;
             case "1":
                 // 회의록
                 filePath = "src/main/resources/writeForms/meetingForm.html";
-                loadHtml.save(request, filePath);
+
+                successResult = loadHtml.save(request, filePath);
+
                 break;
             case "2":
                 // 협조문
                 filePath = "src/main/resources/writeForms/cooperationForm.html";
-                loadHtml.save(request, filePath);
+
+                successResult = loadHtml.save(request, filePath);
+
                 break;
         }
+
+        String documentTitle = successResult.get("title");
+        DigitalApprovalDTO digitalApprovalDTO = new DigitalApprovalDTO();
+
+        // 전자 결재 테이블 data insert
+        digitalApprovalDTO = approvalService.approvalRequest(empId, documentTitle, empDTO);
+
 
         // html 파일 PDF 저장
         loadHtml.htmlToPdf(filePath, fontPath, request);
@@ -128,20 +152,6 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving PDF", e);
         }
-    }
-
-    @GetMapping("/testing")
-    public void test() {
-        // 전자 결재 테이블 data insert
-        DigitalApprovalDTO digitalApprovalDTO = new DigitalApprovalDTO();
-
-        Integer empId = 1;
-        String digitalApprovalName = "test 문서";
-
-        digitalApprovalDTO = approvalService.approvalRequest(empId, digitalApprovalName);
-        System.out.println(digitalApprovalDTO);
-        System.out.println(digitalApprovalDTO.getEmpDTO());
-
     }
 
 }

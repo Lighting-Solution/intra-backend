@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,6 +58,7 @@ public class LoadHtml {
         String encodedHtmlContent = request.get("html");
 
         String htmlContent;
+        String title = "";
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());
 
@@ -68,19 +70,18 @@ public class LoadHtml {
             if (inputElement != null) {
                 // digitalApprovalDTO.getDigitalApprovalName() 값을 설정
                 String inputValue = inputElement.attr("value");
-                System.out.println(inputValue);
+
+                title = inputValue;
+
                 //String approvalName = digitalApprovalDTO.getDigitalApprovalName(); // 이 부분을 실제 값으로 변경
                 //inputElement.attr("value", approvalName);
             } else {
                 System.err.println("Input element with id 'title' not found.");
             }
 
+            //System.out.println(htmlContent);
 
 
-
-
-            System.out.println(htmlContent);
-            // 이 부분
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return Map.of("status", "error", "message", "Failed to decode HTML.");
@@ -88,7 +89,11 @@ public class LoadHtml {
 
         try {
             Files.write(Paths.get(filePath), htmlContent.getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-            return Map.of("status", "success", "message", "HTML saved successfully.");
+            Map<String, String> successResult = new HashMap<>();
+            successResult.put("status", "success");
+            successResult.put("message", "HTML saved successfully.");
+            successResult.put("title", title);
+            return successResult;
         } catch (IOException e) {
             e.printStackTrace();
             return Map.of("status", "error", "message", "Failed to save HTML.");

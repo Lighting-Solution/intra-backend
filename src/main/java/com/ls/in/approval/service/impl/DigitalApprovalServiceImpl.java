@@ -22,20 +22,17 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
 
     private DigitalApprovalDao approvalDao;
 
-    private EmpService empService;
-
     @Autowired
-    public DigitalApprovalServiceImpl(DigitalApprovalDao approvalDao, EmpService empService) {
+    public DigitalApprovalServiceImpl(DigitalApprovalDao approvalDao) {
         this.approvalDao = approvalDao;
-        this.empService = empService;
 
     }
 
     @Override
-    public DigitalApprovalDTO approvalRequest(Integer empId, String digitalApprovalName) {
-        EmpDTO empDTO = empService.getEmpById(empId);
 
+    public DigitalApprovalDTO approvalRequest(Integer empId, String digitalApprovalName, EmpDTO empDTO) {
         Emp emp = EmpMapper.toEntity(empDTO);
+
 
         DigitalApproval digitalApproval = DigitalApproval.builder()
                 .drafterId(empDTO.getEmpId())
@@ -46,6 +43,9 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
                 .managerStatus(false)
                 .ceoStatus(false)
                 .digitalApprovalCreateAt(LocalDateTime.now())
+
+                .digitalApprovalAt(null)
+
                 .emp(emp)
                 .build();
 
@@ -53,22 +53,8 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
 
         //---------------------------------------------------------
 
-        EmpDTO change = EmpMapper.toDto(digitalApproval2.getEmp());
-        /**
-         *  여기 리턴하는 EMP 값이 부장의 값인지 기안자의 값인지?
-         *  사원의 값이면 바꿀 필요가 없을 거라고 생각하는뎅...
-         */
-        return DigitalApprovalDTO.builder()
-                .digitalApprovalId(digitalApproval2.getDigitalApprovalId())
-                .drafterId(digitalApproval2.getEmp().getEmpId())
-                .digitalApprovalName(digitalApprovalName)
-                .digitalApprovalPath(digitalApproval2.getEmp().getEmpSign())
-                .digitalApprovalType(false)
-                .drafterStatus(false)
-                .managerStatus(false)
-                .ceoStatus(false)
-                .empDTO(change)
-                .build();
+        return DigitalApprovalMapper.toDto(digitalApproval2);
+
     }
 
 }
