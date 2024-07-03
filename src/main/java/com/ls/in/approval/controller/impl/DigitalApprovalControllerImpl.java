@@ -1,8 +1,8 @@
 package com.ls.in.approval.controller.impl;
 
-
 import com.lowagie.text.DocumentException;
 import com.ls.in.approval.controller.DigitalApprovalController;
+import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
@@ -23,23 +23,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/api/v1/lighting_solutions/digital/approval")
 @CrossOrigin(origins = "http://localhost:3000")
 public class DigitalApprovalControllerImpl implements DigitalApprovalController {
-    @Autowired
-    private DigitalApprovalService approvalService;
 
-    @Autowired
-    private EmpService empService;
+
+    private final DigitalApprovalService approvalService;
 
     private final LoadHtml loadHtml = new LoadHtml();
 
     @Autowired
-    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService){
+
+    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService) {
         this.approvalService = approvalService;
-        this.empService = empService;
     }
 
     @Override
@@ -83,14 +80,8 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         String imagePath = "src/main/resources/signs/sign3.png";
         String outputPdfPath = "src/main/resources/approvalWaiting/signed_approval.pdf";
 
-        // 사원 정보 가져오기
-        //int empId = Integer.parseInt(request.get("empId"));
-        int empId = 1;
-        EmpDTO empDTO = empService.getEmpById(empId);
-        String empName = empDTO.getEmpName();
-        System.out.println(empName);
 
-        //서버에 작성한 전자결재 저장하기
+        // 서버에 작성한 전자결재 저장하기
         switch (status) {
             case "0":
                 // 기안문
@@ -137,6 +128,20 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving PDF", e);
         }
+    }
+
+    @GetMapping("/testing")
+    public void test() {
+        // 전자 결재 테이블 data insert
+        DigitalApprovalDTO digitalApprovalDTO = new DigitalApprovalDTO();
+
+        Integer empId = 1;
+        String digitalApprovalName = "test 문서";
+
+        digitalApprovalDTO = approvalService.approvalRequest(empId, digitalApprovalName);
+        System.out.println(digitalApprovalDTO);
+        System.out.println(digitalApprovalDTO.getEmpDTO());
+
     }
 
 }

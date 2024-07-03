@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 
 @Component
 public class DigitalApprovalDaoImpl implements DigitalApprovalDao {
@@ -19,7 +17,10 @@ public class DigitalApprovalDaoImpl implements DigitalApprovalDao {
         this.digitalApprovalRepository = digitalApprovalRepository;
     }
 
-    public List<DigitalApproval> findAll() throws DataAccessException {
-        return digitalApprovalRepository.findAll();
+    @Override
+    public DigitalApproval save(DigitalApproval digitalApproval) {
+        DigitalApproval responseDigitalApproval = digitalApprovalRepository.save(digitalApproval);
+        return responseDigitalApproval;
+
     }
 }

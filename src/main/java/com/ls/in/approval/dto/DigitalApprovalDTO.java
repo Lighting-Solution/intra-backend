@@ -1,18 +1,34 @@
 package com.ls.in.approval.dto;
 
-import lombok.Data;
-import org.springframework.stereotype.Component;
 
-@Component
+import com.ls.in.global.emp.domain.dto.EmpDTO;
+import com.ls.in.global.emp.domain.model.Emp;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DigitalApprovalDTO {
-    private int digital_approval_id;
-    private boolean ceo_status;
-    private String name;
-    private String path;
-    private boolean type;
-    private int draft_id;
-    private boolean drafter_status;
-    private boolean manager_status;
-    private int emp_id;
+    private Integer digitalApprovalId;
+
+    private Integer drafterId;
+
+    private String digitalApprovalName;
+
+    private String digitalApprovalPath;
+
+    private boolean digitalApprovalType;
+
+    private boolean drafterStatus;
+
+    private boolean managerStatus;
+
+    private boolean ceoStatus;
+
+    private EmpDTO empDTO;
+
 }

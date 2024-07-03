@@ -53,6 +53,7 @@ public class LoadHtml {
 
     public Map<String, String> save(Map<String, String> request, String filePath, EmpDTO empDTO){
         String encodedHtmlContent = request.get("html");
+
         String htmlContent;
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());
@@ -172,10 +173,10 @@ public class LoadHtml {
                 contentStream.drawImage(pdImage, 470, 800, 40, 35);
 
                 // 2번째 사인 위치
-                //contentStream.drawImage(pdImage, 550, 790, 40, 35);
+                //contentStream.drawImage(pdImage, 550, 800, 40, 35);
 
                 // 3번째 사인 위치
-                // contentStream.drawImage(pdImage, 630, 790, 40, 35);
+                // contentStream.drawImage(pdImage, 630, 800, 40, 35);
             }
 
             // Save the signed PDF to the output path

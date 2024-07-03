@@ -1,16 +1,14 @@
 package com.ls.in.contact.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Builder
+@Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Table(name = "contactGroup")
 public class ContactGroup {
 
@@ -26,6 +24,5 @@ public class ContactGroup {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "personalContact_id")
     private PersonalContact personalContact;
-
 }
 

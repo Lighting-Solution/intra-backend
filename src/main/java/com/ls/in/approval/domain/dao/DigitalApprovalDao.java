@@ -1,10 +1,10 @@
 package com.ls.in.approval.domain.dao;
 
 import com.ls.in.approval.domain.model.DigitalApproval;
-import org.springframework.dao.DataAccessException;
-
-import java.util.List;
+import com.ls.in.approval.dto.DigitalApprovalDTO;
+import com.ls.in.global.emp.domain.model.Emp;
 
 public interface DigitalApprovalDao {
-    List<DigitalApproval> findAll() throws DataAccessException;
+    DigitalApproval save(DigitalApproval digitalApproval);
+
 }
