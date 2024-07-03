@@ -27,4 +27,11 @@ public class RoomMember {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
+
+    public static RoomMember createRoomMember(Emp emp, Room room) {
+        return RoomMember.builder()
+                .emp(emp)
+                .room(room)
+                .build();
+    }
 }
