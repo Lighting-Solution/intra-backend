@@ -1,12 +1,16 @@
 package com.ls.in.contact.service.impl;
 
 import com.ls.in.contact.domain.dao.PersonalContactDAO;
+import com.ls.in.contact.domain.model.Company;
 import com.ls.in.contact.domain.model.PersonalContact;
-import com.ls.in.contact.dto.ContactRequestDTO;
+import com.ls.in.contact.dto.CompanyDTO;
 import com.ls.in.contact.dto.PersonalContactDTO;
 import com.ls.in.contact.exception.PersonalContactNotFoundException;
+import com.ls.in.contact.service.CompanyService;
 import com.ls.in.contact.service.PersonalContactService;
+import com.ls.in.contact.util.mapper.CompanyMapper;
 import com.ls.in.contact.util.mapper.PersonalContactMapper;
+import com.ls.in.global.util.Formats;
 import com.ls.in.global.util.PageNation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,29 +23,47 @@ import java.util.List;
 public class PersonalContactServiceImpl implements PersonalContactService {
 
     private final PersonalContactDAO personalContactDAO;
+    private final CompanyService companyService;
 
     @Autowired
-    public PersonalContactServiceImpl(PersonalContactDAO personalContactDAO) {
+    public PersonalContactServiceImpl(PersonalContactDAO personalContactDAO, CompanyService companyService) {
         this.personalContactDAO = personalContactDAO;
-    }
-
-
-    @Override
-    public boolean createPersonalContact(ContactRequestDTO requestDTO) throws PersonalContactNotFoundException {
-//        PersonalContact personalContact = PersonalContact.builder()
-//                .
-//        PersonalContact result = personalContactDAO.save()
-        return true;
+        this.companyService = companyService;
     }
 
     @Override
-    public List<PersonalContactDTO> getAllPersonalContact() throws PersonalContactNotFoundException {
-        Page<PersonalContact> result = personalContactDAO.findAll(PageNation.setPage(0,10));
+    public boolean createPersonalContact(PersonalContactDTO requestDTO) throws PersonalContactNotFoundException {
+        Company company = CompanyMapper.toEntity(requestDTO.getCompany());
+        CompanyDTO companyDTO = CompanyMapper.toDTO(company);
+        CompanyDTO resultDTO = companyService.createCompany(companyDTO);
+        requestDTO.setCompany(resultDTO);
+        PersonalContact personalContact = PersonalContactMapper.toEntity(requestDTO);
+        PersonalContact result = personalContactDAO.save(personalContact);
+        return result != null;
+    }
+
+    @Override
+    public List<PersonalContactDTO> getAllPersonalContact(int empId) throws PersonalContactNotFoundException {
+        Integer id = Formats.toInteger(empId);
+        Page<PersonalContact> result = personalContactDAO.findAllByEmpId(PageNation.setPage(0,10), id);
         List<PersonalContactDTO> responseList = new ArrayList<>();
         for(PersonalContact personalContact : result) {
             PersonalContactDTO tempDTO = PersonalContactMapper.toDTO(personalContact);
             responseList.add(tempDTO);
         }
         return responseList;
+    }
+
+    @Override
+    public PersonalContactDTO updatePersonalContact(PersonalContactDTO requestDTO) throws PersonalContactNotFoundException {
+        PersonalContact personalContact = PersonalContactMapper.toEntity(requestDTO);
+        PersonalContact result = personalContactDAO.save(personalContact);
+        return PersonalContactMapper.toDTO(result);
+    }
+
+    @Override
+    public boolean deletePersonalContact(int contactId) throws PersonalContactNotFoundException {
+        Integer id = Formats.toInteger(contactId);
+        return personalContactDAO.deleteById(contactId);
     }
 }

@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ContactRequestDTO {
     private int empId;
-    private int companyId;
     private String positionName;
     private String departmentName;
     private String personalContactName;
@@ -22,11 +21,6 @@ public class ContactRequestDTO {
     private String personalContactPhoneCall;
     private String personalContactMemo;
     private LocalDate personalContactBirthday;
-
-    private String companyName;
-    private String companyAddress;
-    private String companyURL;
-    private String companyNumber;
-    private String companyFax;
+    private CompanyDTO company;
 }
 

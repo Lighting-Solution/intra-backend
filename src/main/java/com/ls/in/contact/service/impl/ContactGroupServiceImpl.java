@@ -5,10 +5,12 @@ import com.ls.in.contact.domain.model.ContactGroup;
 import com.ls.in.contact.domain.model.PersonalContact;
 import com.ls.in.contact.dto.ContactGroupDTO;
 import com.ls.in.contact.dto.PersonalContactDTO;
+import com.ls.in.contact.exception.ContactGroupNotFoundException;
 import com.ls.in.contact.exception.PersonalContactNotFoundException;
 import com.ls.in.contact.service.ContactGroupService;
 import com.ls.in.contact.util.mapper.ContactGroupMapper;
 import com.ls.in.contact.util.mapper.PersonalContactMapper;
+import com.ls.in.global.util.Formats;
 import com.ls.in.global.util.PageNation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,7 +47,7 @@ public class ContactGroupServiceImpl implements ContactGroupService {
 
     @Override
     public List<ContactGroupDTO> getAllPersonalContactByGroup(int empId, int groupId) throws PersonalContactNotFoundException {
-        Page<ContactGroup> result = contactGroupDAO.getAllPersonalContactByGroup(PageNation.setPage(0,10), empId,groupId);
+        Page<ContactGroup> result = contactGroupDAO.findAllPersonalContactByGroup(PageNation.setPage(0,10), empId,groupId);
         List<ContactGroupDTO> responseList = new ArrayList<>();
         for(ContactGroup contactGroup : result) {
             ContactGroupDTO tempDTO = ContactGroupMapper.toDTO(contactGroup);
@@ -53,5 +55,4 @@ public class ContactGroupServiceImpl implements ContactGroupService {
         }
         return responseList;
     }
-
 }

@@ -28,9 +28,9 @@ public class ContactGroupDAOImpl implements ContactGroupDAO {
         this.contactGroupRepository = contactGroupRepository;
     }
 
-
     @Override
-    public Page<ContactGroup> getAllPersonalContactByGroup(Pageable pageable, Integer empId, Integer groupId) throws DataAccessException {
+    public Page<ContactGroup> findAllPersonalContactByGroup(Pageable pageable, Integer empId, Integer groupId) throws DataAccessException {
         return contactGroupRepository.findAllByEmpIdByGroupId(pageable, empId, groupId);
     }
+
 }
