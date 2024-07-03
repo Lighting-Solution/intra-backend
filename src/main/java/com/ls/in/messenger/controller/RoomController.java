@@ -1,7 +1,6 @@
 package com.ls.in.messenger.controller;
 
-import com.ls.in.global.emp.domain.model.Emp;
-import com.ls.in.messenger.dto.ChatMessageDTO;
+import com.ls.in.messenger.dto.ChatRoomCreationRequest;
 import com.ls.in.messenger.dto.ChatRoomDTO;
 import com.ls.in.messenger.service.MessageService;
 import com.ls.in.messenger.service.RoomService;
@@ -11,7 +10,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 //@RestController
 //@RequiredArgsConstructor
@@ -47,9 +45,9 @@ public class RoomController {
 	private final MessageService messageService;
 
 	/**
-	 * 채팅방 목록 조회
-	 * Spring Security가 구축되지 않아서 넣은 임의의 PK값.
-	 * @return
+	 * description : 채팅방 목록 조회 기능
+	 * Note: Spring Security가 구축되지 않아서 넣은 임의의 PK값.
+	 * @return List<ChatRoomDTO>
 	 */
 	@GetMapping(value = "/api/rooms")
 	public List<ChatRoomDTO> rooms(){
@@ -61,5 +59,17 @@ public class RoomController {
 	public List<ChatMessageDTO> getMessagesByRoomId(@PathVariable Integer roomId) {
 		log.info("# 채팅방 메시지 가져오기, roomId: " + roomId);
 		return messageService.getMessagesByRoomId(roomId);
+	}
+
+	/**
+	 * description : 채팅방 생성하는 로직
+	 * @param group : List<Integers> empIds, String name
+	 * @return String
+	 */
+	@PostMapping("/api/room")
+	public String createChatRoom(@RequestBody ChatRoomCreationRequest group) {
+		log.info("Employee IDs: {}", group.getEmpIds());
+		roomService.createChattingRoom(group);
+		return "Chat room created successfully!";
 	}
 }
