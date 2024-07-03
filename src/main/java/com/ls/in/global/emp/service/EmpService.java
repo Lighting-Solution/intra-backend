@@ -10,9 +10,9 @@ public interface EmpService {
     public List<EmpDTO> getAllEmp() throws EmpNotFoundException;
 
     /**
-     * empId와 일치하는 사원 정보
+     * @apiNote empId와 일치하는 사원 정보
      * @param empId
-     * @return
+     * @return EmpDTO
      * @throws EmpNotFoundException
      */
     public EmpDTO getEmpById(int empId) throws EmpNotFoundException;
@@ -21,15 +21,15 @@ public interface EmpService {
      * @apiNote empId와 일치하는 사원의 부서의 특정 직급과 일치하는 사원 정보
      * @param empId
      * @param positionId
-     * @return
+     * @return EmpDTO
      * @throws EmpNotFoundException
      */
     public EmpDTO getEmpByIdAndDepartmentAndPosition(int empId, int positionId) throws EmpNotFoundException;
 
     /**
-     * position의 id가 일치하는 사원의 정보
+     * @apiNote position의 id가 일치하는 사원의 정보
      * @param id
-     * @return
+     * @return EmpDTO
      * @throws EmpNotFoundException
      */
     public EmpDTO getEmpByPosition(Integer id) throws EmpNotFoundException;

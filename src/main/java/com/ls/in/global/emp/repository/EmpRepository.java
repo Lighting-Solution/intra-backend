@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface EmpRepository extends JpaRepository<Emp, Integer> {
 
     @Query("SELECT e FROM Emp e WHERE e.department.departmentId = :departmentId")
-    Page<Emp> findByDepartment( Pageable pageable, @Param("departmentId") Integer departmentId);
+    Page<Emp> findAllByDepartment( Pageable pageable, @Param("departmentId") Integer departmentId);
 
     @Query("SELECT e FROM Emp e WHERE e.position.positionId = :positionId")
     Emp findByPosition(@Param("positionId") Integer positionId);

@@ -2,6 +2,7 @@ package com.ls.in.contact.util.mapper;
 
 import com.ls.in.contact.domain.model.PersonalGroup;
 import com.ls.in.contact.dto.PersonalGroupDTO;
+import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.util.EmpMapper;
 import com.ls.in.global.util.Formats;
 
@@ -13,7 +14,7 @@ public class PersonalGroupMapper {
         personalGroupDTO.setPersonalGroupName(personalGroup.getPersonalGroupName());
 
         if(personalGroup.getEmp() != null)
-            personalGroupDTO.setEmp(EmpMapper.toDto(personalGroup.getEmp()));
+            personalGroupDTO.setEmpId(personalGroup.getEmp().getEmpId());
         return personalGroupDTO;
     }
 
@@ -23,7 +24,7 @@ public class PersonalGroupMapper {
         return PersonalGroup.builder()
                 .personalGroupId(id)
                 .personalGroupName(personalGroupDTO.getPersonalGroupName())
-                .emp(EmpMapper.toEntity(personalGroupDTO.getEmp()))
+                .emp(Emp.builder().empId(personalGroupDTO.getEmpId()).build())
                 .build();
     }
 }

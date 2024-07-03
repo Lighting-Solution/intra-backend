@@ -23,5 +23,5 @@ public class PersonalContactDTO {
     private String personalContactMemo;
     private LocalDate personalContactBirthday;
     private CompanyDTO company;
-    private EmpDTO emp;
+    private int empId;
 }

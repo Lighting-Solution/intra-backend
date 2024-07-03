@@ -9,7 +9,7 @@ import com.ls.in.global.util.Formats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service("personalGroup")
+@Service("personalGroupService")
 public class PersonalGroupServiceImpl implements PersonalGroupService {
 
     private final PersonalGroupDAO personalGroupDAO;
