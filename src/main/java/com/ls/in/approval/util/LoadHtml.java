@@ -169,10 +169,10 @@ public class LoadHtml {
                 contentStream.drawImage(pdImage, 470, 800, 40, 35);
 
                 // 2번째 사인 위치
-                //contentStream.drawImage(pdImage, 550, 790, 40, 35);
+                //contentStream.drawImage(pdImage, 550, 800, 40, 35);
 
                 // 3번째 사인 위치
-                // contentStream.drawImage(pdImage, 630, 790, 40, 35);
+                // contentStream.drawImage(pdImage, 630, 800, 40, 35);
             }
 
             // Save the signed PDF to the output path

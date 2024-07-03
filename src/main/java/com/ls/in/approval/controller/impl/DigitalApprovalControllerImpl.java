@@ -3,6 +3,7 @@ package com.ls.in.approval.controller.impl;
 
 import com.lowagie.text.DocumentException;
 import com.ls.in.approval.controller.DigitalApprovalController;
+import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
@@ -27,7 +28,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class DigitalApprovalControllerImpl implements DigitalApprovalController {
 
-    private DigitalApprovalService approvalService;
+    private final DigitalApprovalService approvalService;
 
     private final LoadHtml loadHtml = new LoadHtml();
 
@@ -36,13 +37,9 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         this.approvalService = approvalService;
     }
 
-     /**
-     * @apiNote resources에 저장되어 있는 html 폼 가져오기
-     * @param status
-     * @return
-     */
+    @Override
     @GetMapping("/form")
-    public ResponseEntity<String> getHtmlContent(@RequestParam Integer status) {
+    public ResponseEntity<String> getHtmlContent(Integer status) {
         String htmlContent = "";
         System.out.println(status);
         switch (status) {
@@ -67,13 +64,9 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         return ResponseEntity.ok(htmlContent);
     }
 
-    /**
-     * @apiNote 사용자가 작성한 전재결재 저장하고, pdf 변환하고 해당 사용자의 sign pdf에 저장
-     * @param request
-     * @return
-     */
+    @Override
     @PostMapping("/request")
-    public ResponseEntity<String> approvalRequest(@RequestBody Map<String, String> request) throws IOException, DocumentException {
+    public ResponseEntity<String> approvalRequest(Map<String, String> request) throws IOException, DocumentException {
         // 양식 상태
         String status = request.get("status");
 
@@ -107,20 +100,21 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         // html 파일 PDF 저장
         loadHtml.htmlToPdf(filePath, fontPath, request);
 
+
+
+
+
+
+
         // PDF 파일 Sign 저장
         LoadHtml.addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
 
         return ResponseEntity.ok("HTML content received and processed successfully");
     }
 
-
-    /**
-     * @apiNote PDF Viewer Api 를 활용해서 PDF 화면 띄우기
-     * @param projectName
-     * @return
-     */
+    @Override
     @GetMapping("/pdf/{projectName}")
-    public ResponseEntity<Resource> getPdf(@PathVariable String projectName) {
+    public ResponseEntity<Resource> getPdf(String projectName) {
         try {
             // 프로젝트 이름을 기반으로 PDF 파일 경로 설정 (이 예시에서는 고정된 경로 사용)
             Path pdfPath = Paths.get("src/main/resources/approvalWaiting/signed_approval.pdf");
@@ -139,4 +133,21 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         }
     }
 
+    @GetMapping("/testing/")
+    public void test(){
+        // 전자 결재 테이블 data insert
+        DigitalApprovalDTO digitalApprovalDTO = new DigitalApprovalDTO();
+
+        Integer empId = 1;
+        String digitalApprovalName = "test 문서";
+
+        digitalApprovalDTO = approvalService.approvalRequest(empId, digitalApprovalName);
+        System.out.println(digitalApprovalDTO);
+        System.out.println(digitalApprovalDTO.getEmpDTO());
+
+    }
+
 }
+
+
+

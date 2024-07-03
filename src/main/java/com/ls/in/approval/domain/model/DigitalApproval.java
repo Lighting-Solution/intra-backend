@@ -3,6 +3,7 @@ package com.ls.in.approval.domain.model;
 import com.ls.in.global.emp.domain.model.Emp;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "digitalApproval")
 public class DigitalApproval {
 
