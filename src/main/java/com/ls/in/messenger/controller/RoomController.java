@@ -1,5 +1,6 @@
 package com.ls.in.messenger.controller;
 
+import com.ls.in.messenger.dto.ChatMessageDTO;
 import com.ls.in.messenger.dto.ChatRoomCreationRequest;
 import com.ls.in.messenger.dto.ChatRoomDTO;
 import com.ls.in.messenger.service.MessageService;
@@ -46,13 +47,14 @@ public class RoomController {
 
 	/**
 	 * description : 채팅방 목록 조회 기능
+	 * @Param Integer EmpId
 	 * Note: Spring Security가 구축되지 않아서 넣은 임의의 PK값.
 	 * @return List<ChatRoomDTO>
 	 */
 	@GetMapping(value = "/api/rooms")
 	public List<ChatRoomDTO> rooms(){
 		log.info("# 채팅방 목록 가져오기");
-		return roomService.getRooms(1);
+		return roomService.getRooms(2);
 	}
 
 	@GetMapping(value = "/api/rooms/{roomId}/messages")

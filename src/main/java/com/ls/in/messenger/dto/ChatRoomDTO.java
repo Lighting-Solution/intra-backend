@@ -15,11 +15,12 @@ import java.util.stream.Collectors;
 public class ChatRoomDTO {
 
 	private Integer roomId;
+	private Integer myEmpId;
 	private String name;
 
-	public static List<ChatRoomDTO> create(Map<Integer, List<Emp>> roomAndEmp){
+	public static List<ChatRoomDTO> create(Map<Integer, List<Emp>> roomAndEmp, Integer myId){
 		return roomAndEmp.entrySet().stream()
-				.map(i -> new ChatRoomDTO(i.getKey(),
+				.map(i -> new ChatRoomDTO(i.getKey(), myId,
 						i.getValue().stream().map(Emp::getEmpName)
 						.collect(Collectors.joining(","))))
 				.collect(Collectors.toList());

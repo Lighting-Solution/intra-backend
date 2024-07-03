@@ -30,7 +30,7 @@ public class RoomService {
 				roomId -> roomId,
 				roomId -> roomMemberRepository.findEmpByRoomIdExceptionMe(roomId, empId)
 		));
-		return ChatRoomDTO.create(roomAndEmp);
+		return ChatRoomDTO.create(roomAndEmp, empId);
 	}
 
 	@Transactional

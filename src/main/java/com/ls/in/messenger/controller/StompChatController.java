@@ -1,6 +1,7 @@
 package com.ls.in.messenger.controller;
 
 import com.ls.in.messenger.dto.ChatMessageDTO;
+import com.ls.in.messenger.service.MessageService;
 import com.ls.in.messenger.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ public class StompChatController {
 
 	private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 	private final RoomService roomService;
+	private final MessageService messageService;
 	//Client가 SEND할 수 있는 경로
 	//stompConfig에서 설정한 applicationDestinationPrefixes와 @MessageMapping 경로가 병합됨
 	//"/pub/chat/enter"
@@ -35,5 +37,6 @@ public class StompChatController {
 	public void message(ChatMessageDTO message){
 		messageService.saveMessage(message);
 		template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
+
 	}
 }
