@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,10 +33,8 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
     }
 
     @Override
-
     public DigitalApprovalDTO approvalRequest(Integer empId, String digitalApprovalName, EmpDTO empDTO) {
         Emp emp = EmpMapper.toEntity(empDTO);
-
             DigitalApproval digitalApproval = DigitalApproval.builder()
                     .drafterId(empDTO.getEmpId())
                     .digitalApprovalName(digitalApprovalName)
@@ -47,6 +47,7 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
 
                     .digitalApprovalAt(null)
 
+
                     .emp(emp)
                     .build();
             DigitalApproval digitalApproval2 = approvalDao.save(digitalApproval);
@@ -56,6 +57,13 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
 
     }
 
+    @Override
+    public List<DigitalApprovalDTO> getApprovalWaitingList(Integer empId) {
+        List<DigitalApproval> digitalApprovalList = approvalDao.findByEmpEmpId(empId);
+        return digitalApprovalList.stream()
+                .map(DigitalApprovalMapper::toDto) // 엔티티를 DTO로 변환
+                .collect(Collectors.toList());
+    }
     @Override
     public List<DigitalApprovalDTO> getApprovalWaitingList(Integer empId) {
         List<DigitalApproval> digitalApprovalList = approvalDao.findByEmpEmpId(empId);

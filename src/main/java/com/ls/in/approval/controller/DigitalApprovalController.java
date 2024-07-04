@@ -1,7 +1,9 @@
 package com.ls.in.approval.controller;
 
 import com.lowagie.text.DocumentException;
+
 import com.ls.in.approval.domain.model.DigitalApproval;
+
 import com.ls.in.approval.dto.DigitalApprovalDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,8 @@ public interface DigitalApprovalController {
      * @param request
      * @return
      */
-    ResponseEntity<String> approvalRequest(@RequestBody Map<String, String> request) throws IOException, DocumentException;
+    ResponseEntity<String> approvalRequest(@RequestBody Map<String, String> request)
+            throws IOException, DocumentException;
 
     /**
      * @apiNote PDF Viewer Api 를 활용해서 PDF 화면 띄우기
@@ -36,7 +39,6 @@ public interface DigitalApprovalController {
      */
     ResponseEntity<Resource> getPdf(@PathVariable String projectName, @PathVariable Integer digitalApprovalId);
 
-
     /**
      * @apiNote empId를 조회해서 결재 대기 문서 조회
      * @param empId
@@ -44,11 +46,19 @@ public interface DigitalApprovalController {
      */
     ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId);
 
-
     /**
-     * @apiNote empId를 조회해서 sign PDF에 서명 및 날짜 추가
+     *      * @apiNote empId를 조회해서 sign PDF에 서명 및 날짜 추가
+     * 
      * @param request
      * @return
      */
     ResponseEntity<String> approvalRequestPermission(@RequestBody Map<String, String> request) throws IOException, DocumentException;
-}
+
+            }
+
+    
+    
+    
+    
+
+     

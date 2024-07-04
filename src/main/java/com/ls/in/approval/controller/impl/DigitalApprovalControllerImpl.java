@@ -41,6 +41,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     private EmpService empService;
 
     private Integer documentCount = 1;
+
     @Autowired
 
     public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService) {
@@ -91,7 +92,6 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         formDTO.setName(empDTO.getEmpName());
         formDTO.setDigitalApprovalCreatedAt(LocalDateTime.now());
 
-
         // empId와 일치하는 사원의 부서의 특정 직급과 일치하는 사원 정보 (직급, 이름) - 부장
         EmpDTO empDTO1 = empService.getEmpByIdAndDepartmentAndPosition(empId, 2);
         ManagerDTO managerDTO = new ManagerDTO();
@@ -100,7 +100,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         managerDTO.setDepartment(empDTO1.getPosition().getPositionName());
 
         // position의 id가 일치하는 사원의 정보 - CEO
-        EmpDTO empDTO2 = empService.getEmpByPosition( 1);
+        EmpDTO empDTO2 = empService.getEmpByPosition(1);
         CeoDTO ceoDTO = new CeoDTO();
         ceoDTO.setName(empDTO2.getEmpName());
         ceoDTO.setPosition(empDTO2.getPosition().getPositionName());
@@ -124,16 +124,19 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
                 // 기안문
                 filePath = "src/main/resources/writeForms/draftForm.html";
                 successResult = loadHtml.save(request, filePath, formDTO, managerDTO, ceoDTO);
+
                 break;
             case "1":
                 // 회의록
                 filePath = "src/main/resources/writeForms/meetingForm.html";
                 successResult = loadHtml.save(request, filePath, formDTO, managerDTO, ceoDTO);
+
                 break;
             case "2":
                 // 협조문
                 filePath = "src/main/resources/writeForms/cooperationForm.html";
                 successResult = loadHtml.save(request, filePath, formDTO, managerDTO, ceoDTO);
+
                 break;
         }
 
@@ -147,7 +150,8 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         loadHtml.htmlToPdf(filePath, fontPath, request);
 
         // sign PDF 가 저장되는 경로
-        String outputPdfPath = "src/main/resources/approvalWaiting/signed" +digitalApprovalDTO.getDigitalApprovalId()+".pdf";
+        String outputPdfPath = "src/main/resources/approvalWaiting/signed" + digitalApprovalDTO.getDigitalApprovalId()
+                + ".pdf";
 
         // PDF 파일 Sign 저장
         LoadHtml.addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
@@ -159,9 +163,11 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     @GetMapping("/pdf/{digitalApprovalId}/{projectName}")
     public ResponseEntity<Resource> getPdf(@PathVariable String projectName, @PathVariable Integer digitalApprovalId) {
         System.out.println("digitalApprovalId" + digitalApprovalId);
+
         try {
             // 프로젝트 이름을 기반으로 PDF 파일 경로 설정 (이 예시에서는 고정된 경로 사용)
-            Path pdfPath = Paths.get("src/main/resources/approvalWaiting/signed"+ digitalApprovalId.toString()+".pdf");
+            Path pdfPath = Paths
+                    .get("src/main/resources/approvalWaiting/signed" + digitalApprovalId.toString() + ".pdf");
             Resource resource = new UrlResource(pdfPath.toUri());
 
             if (resource.exists()) {
@@ -182,36 +188,32 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     public ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId) {
         List<DigitalApprovalDTO> digitalApprovalDTOList = approvalService.getApprovalWaitingList(empId);
         return ResponseEntity.ok(digitalApprovalDTOList);
-
     }
 
     @Override
     @PostMapping("/requestpermission")
-    public ResponseEntity<String> approvalRequestPermission(Map<String, String> request) throws IOException, DocumentException {
-            Integer empId = Integer.parseInt(request.get("empId"));
-            System.out.println("===========" + empId + "=========");
+    public ResponseEntity<String> approvalRequestPermission(Map<String, String> request)
+            throws IOException, DocumentException {
+        Integer empId = Integer.parseInt(request.get("empId"));
+        System.out.println("===========" + empId + "=========");
 
-            EmpDTO empDTO = empService.getEmpById(empId);
+        EmpDTO empDTO = empService.getEmpById(empId);
 
-            DigitalApprovalDTO approvalDTO = new DigitalApprovalDTO();
-            Integer draftId = approvalDTO.getDrafterId();
-            System.out.println("===========" + draftId + "=========");
-            String imagePath = empDTO.getEmpSign();
+        DigitalApprovalDTO approvalDTO = new DigitalApprovalDTO();
+        Integer draftId = approvalDTO.getDrafterId();
+        System.out.println("===========" + draftId + "=========");
+        String imagePath = empDTO.getEmpSign();
 
-            LocalDateTime digitalApprovalAt = LocalDateTime.now();
+        LocalDateTime digitalApprovalAt = LocalDateTime.now();
 
-            String pdfFilePath = "src/main/resources/approvalWaiting/signed_" + empId + ".pdf";
+        String pdfFilePath = "src/main/resources/approvalWaiting/signed_" + empId + ".pdf";
 
-            String outputPdfPath = "src/main/resources/approvalWaiting/permissionsigned_"+ empId + ".pdf";
-            // PDF 파일 Sign 저장
-            // addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
+        String outputPdfPath = "src/main/resources/approvalWaiting/permissionsigned_" + empId + ".pdf";
+        // PDF 파일 Sign 저장
+        // addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
 
-
-            return ResponseEntity.ok("requestpermission : HTML content received and processed successfully");
-
+        return ResponseEntity.ok("requestpermission : HTML content received and processed successfully");
 
     }
-
-
 
 }

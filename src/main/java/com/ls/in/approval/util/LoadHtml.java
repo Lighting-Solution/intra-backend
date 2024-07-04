@@ -59,13 +59,13 @@ public class LoadHtml {
         return htmlContent;
     }
 
-    public Map<String, String> save(Map<String, String> request, String filePath, FormDTO formDTO, ManagerDTO managerDTO, CeoDTO ceoDTO) {
+    public Map<String, String> save(Map<String, String> request, String filePath, FormDTO formDTO,
+            ManagerDTO managerDTO, CeoDTO ceoDTO) {
 
         String encodedHtmlContent = request.get("html");
 
         String htmlContent;
         String title = "";
-
 
         // 기안자 결재 정보
         String drafterName = formDTO.getName();
@@ -84,7 +84,6 @@ public class LoadHtml {
         String ceoName = ceoDTO.getName();
         String ceoPosition = ceoDTO.getPosition();
 
-
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());
 
@@ -95,9 +94,7 @@ public class LoadHtml {
             Element inputElement = document.getElementById("title");
             if (inputElement != null) {
                 String inputValue = inputElement.attr("value");
-
                 title = inputValue;
-
             } else {
                 System.err.println("Input element with id 'title' not found.");
             }
@@ -128,6 +125,12 @@ public class LoadHtml {
 
             // ID가 approvalName3 인 요소 찾기
             this.changeValue(document, "approvalName3", "span", ceoName);
+
+            document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+            document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
+
+            // System.out.println(htmlContent);
+            htmlContent = document.html();
 
             document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
             document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
@@ -169,6 +172,7 @@ public class LoadHtml {
 
     public void htmlToPdf(String filePath, String fontPath, Map<String, String> request)
             throws IOException, DocumentException {
+
         // html -> pdf 변경하기 (결재진행중 저장)
 
         // Ensure HTML content is read as UTF-8
@@ -198,7 +202,7 @@ public class LoadHtml {
         matcher.appendTail(sb);
         htmlContent = sb.toString();
         System.out.println("--------------------------------------------------------");
-        //System.out.println(htmlContent);  html 코드 보여주기
+        // System.out.println(htmlContent); html 코드 보여주기
 
         // Convert HTML to PDF using ITextRenderer
         ITextRenderer renderer = new ITextRenderer();
@@ -278,5 +282,4 @@ public class LoadHtml {
             }
         }
     }
-
 }
