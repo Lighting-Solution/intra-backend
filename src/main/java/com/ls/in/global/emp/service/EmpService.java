@@ -7,6 +7,11 @@ import com.ls.in.global.emp.exception.EmpNotFoundException;
 import java.util.List;
 
 public interface EmpService {
+    /**
+     * @apiNote 모든 사원 정보
+     * @return List<EmpDTO>
+     * @throws EmpNotFoundException
+     */
     List<EmpDTO> getAllEmp() throws EmpNotFoundException;
 
     /**
