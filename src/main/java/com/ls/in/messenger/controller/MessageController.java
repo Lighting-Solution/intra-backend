@@ -29,7 +29,6 @@ public class MessageController {
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@RequestMapping("/api/messages")
 public class MessageController {
 
     private final MessageService messageService;
