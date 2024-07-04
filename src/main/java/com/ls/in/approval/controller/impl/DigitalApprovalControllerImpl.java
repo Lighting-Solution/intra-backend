@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.ls.in.approval.util.LoadHtml.addSignToPDF;
+
 @RestController
 @RequestMapping("/api/v1/lighting_solutions/digital/approval")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -95,7 +97,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         String pdfFilePath = "src/main/resources/approvalWaiting/saved_approval.pdf";
         String imagePath = empDTO.getEmpSign();
 
-        String outputPdfPath = "src/main/resources/approvalWaiting/signed"+ empId.toString() +"pdf";
+        //String outputPdfPath = "src/main/resources/approvalWaiting/signed"+ empId.toString() +"pdf";
 
         //String outputPdfPath = "src/main/resources/approvalWaiting/signed" +this.documentCount.toString()+".pdf";
         System.out.println("------------------------");
@@ -149,7 +151,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         String outputPdfPath = "src/main/resources/approvalWaiting/signed" +digitalApprovalDTO.getDigitalApprovalId()+".pdf";
 
         // PDF 파일 Sign 저장
-        LoadHtml.addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
+        addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
 
         return ResponseEntity.ok("HTML content received and processed successfully");
     }
@@ -187,5 +189,28 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         return ResponseEntity.ok(digitalApprovalDTOList);
     }
 
+    @Override
+    @PostMapping("/requestpermission")
+    public ResponseEntity<String> approvalRequestPermission(Map<String, String> request) throws IOException, DocumentException {
 
+        Integer empId = Integer.parseInt(request.get("empId"));
+        System.out.println("===========" + empId + "=========");
+
+        EmpDTO empDTO = empService.getEmpById(empId);
+
+        DigitalApprovalDTO digitalApprovalDTO = new DigitalApprovalDTO();
+        Integer drafterId = digitalApprovalDTO.getDrafterId();
+
+        System.out.println("===========" + drafterId + "=========");
+        String imagePath = empDTO.getEmpSign();
+
+        String outputPdfPath = "src/main/resources/approvalWaiting/signed" +digitalApprovalDTO.getDigitalApprovalId()+".pdf";
+        // PDF 파일 Sign 저장
+        //addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
+
+
+        return ResponseEntity.ok("requestpermission : HTML content received and processed successfully");
+
+
+    }
 }

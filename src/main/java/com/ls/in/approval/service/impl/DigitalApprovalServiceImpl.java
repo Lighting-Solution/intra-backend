@@ -64,12 +64,6 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
                 .map(DigitalApprovalMapper::toDto) // 엔티티를 DTO로 변환
                 .collect(Collectors.toList());
     }
-    @Override
-    public List<DigitalApprovalDTO> getApprovalWaitingList(Integer empId) {
-        List<DigitalApproval> digitalApprovalList = approvalDao.findByEmpEmpId(empId);
-        return digitalApprovalList.stream()
-                .map(DigitalApprovalMapper::toDto) // 엔티티를 DTO로 변환
-                .collect(Collectors.toList());
-    }
+
 
 }

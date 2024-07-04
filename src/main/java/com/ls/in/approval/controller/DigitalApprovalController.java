@@ -46,11 +46,11 @@ public interface DigitalApprovalController {
      */
     ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId);
 
-
     /**
-     * @apiNote empId를 조회해서 결재 대기 문서 조회
-     * @param empId
+     * @apiNote empId를 조회해서 sign PDF에 서명 및 날짜 추가
+     * @param request
      * @return
      */
-    ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId);
+    ResponseEntity<String> approvalRequestPermission(@RequestBody Map<String, String> request) throws IOException, DocumentException;
+
 }
