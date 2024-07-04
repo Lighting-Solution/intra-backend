@@ -2,6 +2,7 @@ package com.ls.in.approval.controller.impl;
 
 import com.lowagie.text.DocumentException;
 import com.ls.in.approval.controller.DigitalApprovalController;
+import com.ls.in.approval.domain.model.DigitalApproval;
 import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.approval.dto.FormDTO;
 import com.ls.in.approval.service.DigitalApprovalService;
@@ -23,7 +24,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -37,6 +40,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
     private EmpService empService;
 
+    private Integer documentCount = 1;
     @Autowired
 
     public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService) {
@@ -73,6 +77,12 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     @Override
     @PostMapping("/request")
     public ResponseEntity<String> approvalRequest(Map<String, String> request) throws IOException, DocumentException {
+
+        Integer empId = Integer.parseInt(request.get("empId")); // 로그인한 사원 ID
+
+        // 사원 정보 가져오기 (직급, 부서)
+        EmpDTO empDTO = empService.getEmpById(empId);
+
         // 양식 상태
         String status = request.get("status");
 
@@ -81,16 +91,19 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
         // 사용자 결재 서명 추가하기
         String pdfFilePath = "src/main/resources/approvalWaiting/saved_approval.pdf";
-        String imagePath = "src/main/resources/signs/sign3.png";
-        String outputPdfPath = "src/main/resources/approvalWaiting/signed_approval.pdf";
+        String imagePath = empDTO.getEmpSign();
+
+        //String outputPdfPath = "src/main/resources/approvalWaiting/signed" +this.documentCount.toString()+".pdf";
+        System.out.println("------------------------");
+
+        System.out.println("------------------------");
+        this.documentCount += 1;
+        System.out.println(this.documentCount);
+
 
         // html 문서로 부터 데이터 받아오기
         Map<String, String> successResult = new HashMap<>();
 
-        Integer empId = Integer.parseInt(request.get("empId")); // 로그인한 사원 ID
-
-        // 사원 정보 가져오기 (직급, 부서)
-        EmpDTO empDTO = empService.getEmpById(empId);
 
         // HTML 들어갈 정보 (FormDTO)
         FormDTO formDTO = new FormDTO();
@@ -129,6 +142,12 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         // html 파일 PDF 저장
         loadHtml.htmlToPdf(filePath, fontPath, request);
 
+
+        //String outputPdfPath = "src/main/resources/approvalWaiting/"++".pdf";
+
+
+        String outputPdfPath = "src/main/resources/approvalWaiting/signed" +digitalApprovalDTO.getDigitalApprovalId()+".pdf";
+
         // PDF 파일 Sign 저장
         LoadHtml.addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
 
@@ -136,11 +155,12 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     }
 
     @Override
-    @GetMapping("/pdf/{projectName}")
-    public ResponseEntity<Resource> getPdf(String projectName) {
+    @GetMapping("/pdf/{digitalApprovalId}/{projectName}")
+    public ResponseEntity<Resource> getPdf(@PathVariable String projectName, @PathVariable Integer digitalApprovalId) {
+        System.out.println("digitalApprovalId" + digitalApprovalId);
         try {
             // 프로젝트 이름을 기반으로 PDF 파일 경로 설정 (이 예시에서는 고정된 경로 사용)
-            Path pdfPath = Paths.get("src/main/resources/approvalWaiting/signed_approval.pdf");
+            Path pdfPath = Paths.get("src/main/resources/approvalWaiting/signed"+ digitalApprovalId.toString()+".pdf");
             Resource resource = new UrlResource(pdfPath.toUri());
 
             if (resource.exists()) {
@@ -155,5 +175,14 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving PDF", e);
         }
     }
+
+    @Override
+    @GetMapping("/waiting")
+    public ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId) {
+        List<DigitalApprovalDTO> digitalApprovalDTOList = approvalService.getApprovalWaitingList(empId);
+        return ResponseEntity.ok(digitalApprovalDTOList);
+
+    }
+
 
 }

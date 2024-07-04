@@ -177,7 +177,7 @@ public class LoadHtml {
         matcher.appendTail(sb);
         htmlContent = sb.toString();
         System.out.println("--------------------------------------------------------");
-        System.out.println(htmlContent);
+        //System.out.println(htmlContent);  html 코드 보여주기
 
         // Convert HTML to PDF using ITextRenderer
         ITextRenderer renderer = new ITextRenderer();
