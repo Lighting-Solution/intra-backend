@@ -43,7 +43,11 @@ public class RoomMember {
     public void updatePresentStatusFalse(){
         this.presentStatus = false;
     }
+
     public void updateNotificationStatusTrue() {
         this.notificationStatus = true;
+    }
+    public void updateNotificationStatusFalse() {
+        this.notificationStatus = false;
     }
 }

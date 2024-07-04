@@ -58,11 +58,7 @@ public class RoomController {
 		return roomService.getRooms(1);
 	}
 
-	@GetMapping(value = "/api/rooms/{roomId}/messages")
-	public List<ChatMessageDTO> getMessagesByRoomId(@PathVariable Integer roomId) {
-		log.info("# 채팅방 메시지 가져오기, roomId: " + roomId);
-		return messageService.getMessagesByRoomId(roomId);
-	}
+
 
 	/**
 	 * description : 채팅방 생성하는 로직
@@ -83,6 +79,7 @@ public class RoomController {
 	 */
 	@PostMapping("/api/delRoom")
 	public ResponseEntity<String> deleteChatRoom(@RequestBody ChatRoomDTO currentChat) {
+		log.info("# 채팅방 삭제하기");
 		roomService.deleteChatRoom(currentChat);
 		return ResponseEntity.ok("상대방이 채팅방을 나갔습니다.");
 	}

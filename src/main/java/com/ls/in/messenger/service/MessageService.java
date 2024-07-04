@@ -31,7 +31,10 @@ public class MessageService {
 	}
 
 	@Transactional
-	public List<ChatMessageDTO> getMessagesByRoomId(Integer roomId) {
+	public List<ChatMessageDTO> getMessagesByRoomId(Integer roomId, Integer empId) {
+		// notification -> false
+		roomMemberRepository.findRoomMemberByRoomIdAndEmpId(roomId, empId).updateNotificationStatusFalse();
+
 		// roomID를 통해 RoomMember 엔티티 리스트를 모두 가져옴
 		List<RoomMember> roomMembers = roomMemberRepository.findByRoomRoomId(roomId);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
