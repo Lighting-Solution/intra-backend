@@ -3,6 +3,7 @@ package com.ls.in.approval.controller.impl;
 import com.lowagie.text.DocumentException;
 import com.ls.in.approval.controller.DigitalApprovalController;
 import com.ls.in.approval.dto.DigitalApprovalDTO;
+import com.ls.in.approval.dto.FormDTO;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
@@ -21,7 +22,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -71,6 +75,10 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     @Override
     @PostMapping("/request")
     public ResponseEntity<String> approvalRequest(Map<String, String> request) throws IOException, DocumentException {
+        Integer empId = Integer.parseInt(request.get("empId")); // 로그인한 사원 ID
+
+        // 사원 정보 가져오기 (직급, 부서)
+        EmpDTO empDTO = empService.getEmpById(empId);
         // 양식 상태
         String status = request.get("status");
 
@@ -79,41 +87,34 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
         // 사용자 결재 서명 추가하기
         String pdfFilePath = "src/main/resources/approvalWaiting/saved_approval.pdf";
-        String imagePath = "src/main/resources/signs/sign3.png";
-        String outputPdfPath = "src/main/resources/approvalWaiting/signed_approval.pdf";
+        String imagePath = empDTO.getEmpSign();
+        String outputPdfPath = "src/main/resources/approvalWaiting/signed"+ empId.toString() +"pdf";
 
         // html 문서로 부터 데이터 받아오기
         Map<String, String> successResult = new HashMap<>();
 
-
-        Integer empId = Integer.parseInt(request.get("empId")); // 로그인한 사원 ID
-
-        // 사원 정보 가져오기 (직급, 부서)
-        EmpDTO empDTO = empService.getEmpById(empId);
-
+        // HTML 들어갈 정보 (FormDTO)
+        FormDTO formDTO = new FormDTO();
+        formDTO.setDepartment(empDTO.getDepartment().getDepartmentName());
+        formDTO.setName(empDTO.getEmpName());
+        formDTO.setDigitalApprovalCreatedAt(LocalDateTime.now());
 
         // 서버에 작성한 전자결재 저장하기
         switch (status) {
             case "0":
                 // 기안문
                 filePath = "src/main/resources/writeForms/draftForm.html";
-
-                successResult = loadHtml.save(request, filePath);
-
+                successResult = loadHtml.save(request, filePath, formDTO);
                 break;
             case "1":
                 // 회의록
                 filePath = "src/main/resources/writeForms/meetingForm.html";
-
-                successResult = loadHtml.save(request, filePath);
-
+                successResult = loadHtml.save(request, filePath, formDTO);
                 break;
             case "2":
                 // 협조문
                 filePath = "src/main/resources/writeForms/cooperationForm.html";
-
-                successResult = loadHtml.save(request, filePath);
-
+                successResult = loadHtml.save(request, filePath, formDTO);
                 break;
         }
 
@@ -133,9 +134,13 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         return ResponseEntity.ok("HTML content received and processed successfully");
     }
 
+
+
+
     @Override
     @GetMapping("/pdf/{projectName}")
-    public ResponseEntity<Resource> getPdf(String projectName) {
+    public ResponseEntity<Resource> getPdf(@PathVariable String projectName) {
+
         try {
             // 프로젝트 이름을 기반으로 PDF 파일 경로 설정 (이 예시에서는 고정된 경로 사용)
             Path pdfPath = Paths.get("src/main/resources/approvalWaiting/signed_approval.pdf");
@@ -153,5 +158,13 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving PDF", e);
         }
     }
+
+    @Override
+    @GetMapping("/waiting")
+    public ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId) {
+        List<DigitalApprovalDTO> digitalApprovalDTOList = approvalService.getApprovalWaitingList(empId);
+        return ResponseEntity.ok(digitalApprovalDTOList);
+    }
+
 
 }

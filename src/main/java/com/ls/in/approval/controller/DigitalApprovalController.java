@@ -1,6 +1,7 @@
 package com.ls.in.approval.controller;
 
 import com.lowagie.text.DocumentException;
+import com.ls.in.approval.dto.DigitalApprovalDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public interface DigitalApprovalController {
@@ -33,4 +35,10 @@ public interface DigitalApprovalController {
      */
     ResponseEntity<Resource> getPdf(@PathVariable String projectName);
 
+    /**
+     * @apiNote empId를 조회해서 결재 대기 문서 조회
+     * @param empId
+     * @return
+     */
+    ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId);
 }

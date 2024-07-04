@@ -3,6 +3,7 @@ package com.ls.in.approval.util;
 import com.itextpdf.text.pdf.BaseFont;
 import com.lowagie.text.DocumentException;
 import com.ls.in.approval.dto.DigitalApprovalDTO;
+import com.ls.in.approval.dto.FormDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import lombok.NoArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -13,6 +14,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Entities;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -25,6 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -53,12 +57,22 @@ public class LoadHtml {
         return htmlContent;
     }
 
-    public Map<String, String> save(Map<String, String> request, String filePath){
+    public Map<String, String> save(Map<String, String> request, String filePath, FormDTO formDTO){
 
         String encodedHtmlContent = request.get("html");
 
         String htmlContent;
         String title = "";
+
+        String name = formDTO.getName();
+        String department = formDTO.getDepartment();
+        LocalDateTime digitalApprovalCreatedAt = formDTO.getDigitalApprovalCreatedAt();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = digitalApprovalCreatedAt.format(formatter);
+
+        System.out.println("name :"+ name);
+        System.out.println("department :"+ department);
+
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());
 
@@ -68,19 +82,37 @@ public class LoadHtml {
             // ID가 "title"인 input 요소 찾기
             Element inputElement = document.getElementById("title");
             if (inputElement != null) {
-                // digitalApprovalDTO.getDigitalApprovalName() 값을 설정
                 String inputValue = inputElement.attr("value");
-
                 title = inputValue;
-
-                //String approvalName = digitalApprovalDTO.getDigitalApprovalName(); // 이 부분을 실제 값으로 변경
-                //inputElement.attr("value", approvalName);
             } else {
                 System.err.println("Input element with id 'title' not found.");
             }
 
-            //System.out.println(htmlContent);
+            // ID가 "digitalApprovalEmpName"인 요소 찾기
+            this.changeValue(document, "digitalApprovalEmpName","div",name);
 
+            // ID가 "digitalApprovalDepartment"인 요소 찾기
+            this.changeValue(document, "digitalApprovalDepartment","div",department);
+
+            // ID가 "digitalApprovalCreatedAt" 인 요소 찾기
+            this.changeValue(document, "digitalApprovalCreatedAt", "div", formattedDate);
+
+            // ID가 approvalDepartment1 인 요소 찾기
+            this.changeValue(document, "approvalDepartment1" , "span", "솔루션 개발부");
+
+            // ID가 approvalName1 인 요소 찾기
+            this.changeValue(document, "approvalName1" , "span", name);
+
+            // ID가 approvalDate1 인 요소 찾기
+            this.changeValue(document, "approvalDate1", "span", formattedDate);
+
+
+
+            document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+            document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
+
+            //System.out.println(htmlContent);
+            htmlContent = document.html();
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -99,6 +131,18 @@ public class LoadHtml {
             return Map.of("status", "error", "message", "Failed to save HTML.");
         }
 
+    }
+
+    private Document changeValue(Document document, String elementId, String type, String value){
+        Element inputElement = document.getElementById(elementId);
+        if (inputElement != null) {
+            if(type.equals("div") || type.equals("span")){
+                inputElement.text(value);
+            }
+        } else {
+            System.err.println(elementId + "not found.");
+        }
+        return document;
     }
 
     public void htmlToPdf(String filePath, String fontPath, Map<String, String> request) throws IOException, DocumentException {
@@ -196,7 +240,7 @@ public class LoadHtml {
             PDImageXObject pdImage = PDImageXObject.createFromFile(imagePath, document);
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true)) {
                 // 1번째 사인 위치
-                contentStream.drawImage(pdImage, 470, 800, 40, 35);
+                contentStream.drawImage(pdImage, 470, 795, 40, 35);
 
                 // 2번째 사인 위치
                 //contentStream.drawImage(pdImage, 550, 800, 40, 35);
@@ -211,9 +255,4 @@ public class LoadHtml {
             }
         }
     }
-
-
-
-
-
 }
