@@ -28,10 +28,17 @@ public class RoomMember {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    private Boolean presentStatus;
+
     public static RoomMember createRoomMember(Emp emp, Room room) {
         return RoomMember.builder()
                 .emp(emp)
                 .room(room)
+                .presentStatus(true)
                 .build();
+    }
+
+    public void updatePresentStatusFalse(){
+        this.presentStatus = false;
     }
 }
