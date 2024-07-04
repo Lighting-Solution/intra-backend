@@ -1,5 +1,6 @@
 package com.ls.in.global.emp.domain.dao.impl;
 
+import com.ls.in.contact.dto.ContactFilterPageDTO;
 import com.ls.in.global.emp.domain.dao.ContactEmpDAO;
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.repository.EmpRepository;
@@ -25,7 +26,8 @@ public class ContactEmpDAOImpl implements ContactEmpDAO {
     }
 
     @Override
-    public Page<Emp> findByDepartmentId(Pageable pageable, Integer id) throws DataAccessException {
-        return empRepository.findAllByDepartment(pageable, id);
+    public Page<Emp> findAllByDepartment(ContactFilterPageDTO data) throws DataAccessException {
+        return empRepository.search(data);
     }
+
 }

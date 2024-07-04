@@ -1,14 +1,11 @@
 package com.ls.in.contact.util.mapper;
 
 import com.ls.in.contact.domain.model.PersonalContact;
-import com.ls.in.contact.dto.CompanyDTO;
 import com.ls.in.contact.dto.PersonalContactDTO;
 import com.ls.in.global.emp.domain.model.Emp;
-import com.ls.in.global.emp.util.EmpMapper;
-import com.ls.in.global.util.Formats;
 
 public class PersonalContactMapper {
-    public static PersonalContactDTO toDTO(PersonalContact personalContact) {
+    public static PersonalContactDTO toDto(PersonalContact personalContact) {
         if(personalContact == null) return null;
         PersonalContactDTO personalContactDTO = new PersonalContactDTO();
 
@@ -23,17 +20,15 @@ public class PersonalContactMapper {
         personalContactDTO.setPersonalContactBirthday(personalContact.getPersonalContactBirthday());
         personalContactDTO.setEmpId(personalContact.getEmp().getEmpId());
         if(personalContact.getCompany() != null)
-            personalContactDTO.setCompany(CompanyMapper.toDTO(personalContact.getCompany()));
+            personalContactDTO.setCompany(CompanyMapper.toDto(personalContact.getCompany()));
 
         return personalContactDTO;
     }
 
     public static PersonalContact toEntity(PersonalContactDTO personalContactDTO) {
         if(personalContactDTO == null) return null;
-        Integer id = Formats.toInteger(personalContactDTO.getPersonalContactId());
-        Integer empId = Formats.toInteger(personalContactDTO.getEmpId());
         return PersonalContact.builder()
-                .personalContactId(id)
+                .personalContactId(personalContactDTO.getPersonalContactId())
                 .positionName(personalContactDTO.getPositionName())
                 .departmentName(personalContactDTO.getDepartmentName())
                 .personalContactName(personalContactDTO.getPersonalContactName())
@@ -43,7 +38,7 @@ public class PersonalContactMapper {
                 .personalContactMemo(personalContactDTO.getPersonalContactMemo())
                 .personalContactBirthday(personalContactDTO.getPersonalContactBirthday())
                 .company(CompanyMapper.toEntity(personalContactDTO.getCompany()))
-                .emp(Emp.builder().empId(empId).build())
+                .emp(Emp.builder().empId(personalContactDTO.getEmpId()).build())
                 .build();
     }
 }

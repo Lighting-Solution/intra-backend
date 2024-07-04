@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository("personalGroupDAO")
 public class PersonalGroupDAOImpl implements PersonalGroupDAO {
 
@@ -30,5 +32,10 @@ public class PersonalGroupDAOImpl implements PersonalGroupDAO {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public List<PersonalGroup> findAllByEmp(Integer empId) throws DataAccessException {
+        return personalGroupRepository.findAllByEmp(empId);
     }
 }

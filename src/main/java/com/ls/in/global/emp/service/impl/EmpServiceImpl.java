@@ -6,7 +6,6 @@ import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.exception.EmpNotFoundException;
 import com.ls.in.global.emp.service.EmpService;
 import com.ls.in.global.emp.util.EmpMapper;
-import com.ls.in.global.util.Formats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,16 +36,13 @@ public class EmpServiceImpl implements EmpService {
 
     @Override
     public EmpDTO getEmpById(int empId) throws EmpNotFoundException {
-        Integer id = Formats.toInteger(empId);
-        Emp resultEmp = empDAO.findById(id);
+        Emp resultEmp = empDAO.findById(empId);
         return EmpMapper.toDto(resultEmp);
     }
 
     @Override
     public EmpDTO getEmpByIdAndDepartmentAndPosition(int empId, int positionId) throws EmpNotFoundException {
-        Integer empPk = Formats.toInteger(empId);
-        Integer positionPk = Formats.toInteger(positionId);
-        Emp result = empDAO.findByIdAndDepartmentAndPosition(empPk, positionPk);
+        Emp result = empDAO.findByIdAndDepartmentAndPosition(empId, positionId);
         return EmpMapper.toDto(result);
     }
 
@@ -54,6 +50,12 @@ public class EmpServiceImpl implements EmpService {
     public EmpDTO getEmpByPosition(Integer id) throws EmpNotFoundException {
         Emp result = empDAO.findByPosition(id);
         return EmpMapper.toDto(result);
+    }
+
+    @Override
+    public boolean createEmp(EmpDTO empDTO) throws EmpNotFoundException {
+        Emp emp = EmpMapper.toEntity(empDTO);
+        return empDAO.save(emp);
     }
 
 

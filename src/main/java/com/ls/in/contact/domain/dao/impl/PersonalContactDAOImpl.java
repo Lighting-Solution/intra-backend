@@ -30,6 +30,7 @@ public class PersonalContactDAOImpl implements PersonalContactDAO {
         return personalContactRepository.findAllByEmp(pageable, id);
     }
 
+
     @Override
     public boolean deleteById(Integer contactId) throws DataAccessException {
         try{

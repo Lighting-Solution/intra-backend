@@ -1,6 +1,5 @@
-package com.ls.in.contact.dto;
+package com.ls.in.global.emp.domain.dto;
 
-import com.ls.in.global.emp.domain.dto.EmpDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContactResponseDTO {
-    private List<EmpDTO> empList;
-    private List<PersonalContactDTO> personalContactList;
+public class EmpAndroidDTO {
+    private List<EmpDTO> empDTOList;
+    private List<PositionDTO> positionDTOList;
+    private List<DepartmentDTO> departmentDTOList;
 }

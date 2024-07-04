@@ -42,4 +42,14 @@ public class EmpDAOImpl implements EmpDAO {
     public Emp findByPosition(Integer positionId) throws DataAccessException {
         return empRepository.findByPosition(positionId);
     }
+
+    @Override
+    public boolean save(Emp emp) throws DataAccessException {
+        try{
+            empRepository.save(emp);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

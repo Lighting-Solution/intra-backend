@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EmpRepository extends JpaRepository<Emp, Integer> {
+public interface EmpRepository extends JpaRepository<Emp, Integer>, EmpCustomRepository {
 
     @Query("SELECT e FROM Emp e WHERE e.department.departmentId = :departmentId")
     Page<Emp> findAllByDepartment( Pageable pageable, @Param("departmentId") Integer departmentId);

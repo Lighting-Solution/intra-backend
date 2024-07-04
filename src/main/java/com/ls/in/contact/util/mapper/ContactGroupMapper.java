@@ -1,22 +1,21 @@
 package com.ls.in.contact.util.mapper;
 
 import com.ls.in.contact.domain.model.ContactGroup;
+import com.ls.in.contact.domain.model.PersonalContact;
+import com.ls.in.contact.domain.model.PersonalGroup;
 import com.ls.in.contact.dto.ContactGroupDTO;
-import com.ls.in.contact.dto.PersonalContactDTO;
-import com.ls.in.contact.dto.PersonalGroupDTO;
-import com.ls.in.global.util.Formats;
 
 public class ContactGroupMapper {
-    public static ContactGroupDTO toDTO(ContactGroup contactGroup) {
+    public static ContactGroupDTO toDto(ContactGroup contactGroup) {
         if(contactGroup == null) return null;
 
         ContactGroupDTO contactGroupDTO = new ContactGroupDTO();
 
         if(contactGroup.getPersonalContact() != null)
-            contactGroupDTO.setPersonalContact(PersonalContactMapper.toDTO(contactGroup.getPersonalContact()));
+            contactGroupDTO.setPersonalContactId(contactGroup.getPersonalContact().getPersonalContactId());
 
         if(contactGroup.getPersonalGroup() != null)
-            contactGroupDTO.setPersonalGroup(PersonalGroupMapper.toDTO(contactGroup.getPersonalGroup()));
+            contactGroupDTO.setPersonalGroupId(contactGroup.getPersonalGroup().getPersonalGroupId());
 
         contactGroupDTO.setContactGroupId(contactGroup.getContactGroupId());
         return contactGroupDTO;
@@ -24,11 +23,10 @@ public class ContactGroupMapper {
 
     public static ContactGroup toEntity(ContactGroupDTO contactGroupDTO) {
         if(contactGroupDTO == null) return null;
-        Integer id = Formats.toInteger(contactGroupDTO.getContactGroupId());
         return ContactGroup.builder()
-                .contactGroupId(id)
-                .personalContact(PersonalContactMapper.toEntity(contactGroupDTO.getPersonalContact()))
-                .personalGroup(PersonalGroupMapper.toEntity(contactGroupDTO.getPersonalGroup()))
+                .contactGroupId(contactGroupDTO.getContactGroupId())
+                .personalContact(PersonalContact.builder().personalContactId(contactGroupDTO.getPersonalContactId()).build())
+                .personalGroup(PersonalGroup.builder().personalGroupId(contactGroupDTO.getPersonalGroupId()).build())
                 .build();
     }
 

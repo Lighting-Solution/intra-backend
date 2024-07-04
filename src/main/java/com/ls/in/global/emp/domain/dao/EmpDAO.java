@@ -6,8 +6,9 @@ import org.springframework.dao.DataAccessException;
 import java.util.List;
 
 public interface EmpDAO {
-    public List<Emp> findAll() throws DataAccessException;
-    public Emp findById(Integer id) throws DataAccessException;
-    public Emp findByIdAndDepartmentAndPosition(Integer empId, Integer positionId) throws DataAccessException;
-    public Emp findByPosition(Integer positionId) throws DataAccessException;
+    List<Emp> findAll() throws DataAccessException;
+    Emp findById(Integer id) throws DataAccessException;
+    Emp findByIdAndDepartmentAndPosition(Integer empId, Integer positionId) throws DataAccessException;
+    Emp findByPosition(Integer positionId) throws DataAccessException;
+    boolean save(Emp emp) throws DataAccessException;
 }
