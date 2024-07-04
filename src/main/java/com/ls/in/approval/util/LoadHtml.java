@@ -59,6 +59,7 @@ public class LoadHtml {
 
     public Map<String, String> save(Map<String, String> request, String filePath, FormDTO formDTO) {
 
+
         String encodedHtmlContent = request.get("html");
 
         String htmlContent;
@@ -69,9 +70,10 @@ public class LoadHtml {
         LocalDateTime digitalApprovalCreatedAt = formDTO.getDigitalApprovalCreatedAt();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = digitalApprovalCreatedAt.format(formatter);
-
+      
         System.out.println("name :" + name);
         System.out.println("department :" + department);
+
 
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());
@@ -83,14 +85,13 @@ public class LoadHtml {
             Element inputElement = document.getElementById("title");
             if (inputElement != null) {
                 String inputValue = inputElement.attr("value");
-
                 title = inputValue;
-
             } else {
                 System.err.println("Input element with id 'title' not found.");
             }
 
             // ID가 "digitalApprovalEmpName"인 요소 찾기
+
             this.changeValue(document, "digitalApprovalEmpName", "div", name);
 
             // ID가 "digitalApprovalDepartment"인 요소 찾기
@@ -105,13 +106,22 @@ public class LoadHtml {
             // ID가 approvalName1 인 요소 찾기
             this.changeValue(document, "approvalName1", "span", name);
 
+
             // ID가 approvalDate1 인 요소 찾기
             this.changeValue(document, "approvalDate1", "span", formattedDate);
+
 
             document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
             document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
 
+
             // System.out.println(htmlContent);
+            htmlContent = document.html();
+
+            document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+            document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
+
+            //System.out.println(htmlContent);
             htmlContent = document.html();
 
         } catch (UnsupportedEncodingException e) {
@@ -134,6 +144,7 @@ public class LoadHtml {
 
     }
 
+
     private Document changeValue(Document document, String elementId, String type, String value) {
         Element inputElement = document.getElementById(elementId);
         if (inputElement != null) {
@@ -148,6 +159,7 @@ public class LoadHtml {
 
     public void htmlToPdf(String filePath, String fontPath, Map<String, String> request)
             throws IOException, DocumentException {
+
         // html -> pdf 변경하기 (결재진행중 저장)
 
         // Ensure HTML content is read as UTF-8
@@ -257,5 +269,4 @@ public class LoadHtml {
             }
         }
     }
-
 }

@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +95,8 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         String pdfFilePath = "src/main/resources/approvalWaiting/saved_approval.pdf";
         String imagePath = empDTO.getEmpSign();
 
+        String outputPdfPath = "src/main/resources/approvalWaiting/signed"+ empId.toString() +"pdf";
+
         //String outputPdfPath = "src/main/resources/approvalWaiting/signed" +this.documentCount.toString()+".pdf";
         System.out.println("------------------------");
 
@@ -103,7 +107,6 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
         // html 문서로 부터 데이터 받아오기
         Map<String, String> successResult = new HashMap<>();
-
 
         // HTML 들어갈 정보 (FormDTO)
         FormDTO formDTO = new FormDTO();
@@ -117,19 +120,16 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
                 // 기안문
                 filePath = "src/main/resources/writeForms/draftForm.html";
                 successResult = loadHtml.save(request, filePath, formDTO);
-
                 break;
             case "1":
                 // 회의록
                 filePath = "src/main/resources/writeForms/meetingForm.html";
                 successResult = loadHtml.save(request, filePath, formDTO);
-
                 break;
             case "2":
                 // 협조문
                 filePath = "src/main/resources/writeForms/cooperationForm.html";
                 successResult = loadHtml.save(request, filePath, formDTO);
-
                 break;
         }
 
@@ -154,10 +154,14 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         return ResponseEntity.ok("HTML content received and processed successfully");
     }
 
+
+
+
     @Override
     @GetMapping("/pdf/{digitalApprovalId}/{projectName}")
     public ResponseEntity<Resource> getPdf(@PathVariable String projectName, @PathVariable Integer digitalApprovalId) {
         System.out.println("digitalApprovalId" + digitalApprovalId);
+
         try {
             // 프로젝트 이름을 기반으로 PDF 파일 경로 설정 (이 예시에서는 고정된 경로 사용)
             Path pdfPath = Paths.get("src/main/resources/approvalWaiting/signed"+ digitalApprovalId.toString()+".pdf");
@@ -181,7 +185,6 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     public ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId) {
         List<DigitalApprovalDTO> digitalApprovalDTOList = approvalService.getApprovalWaitingList(empId);
         return ResponseEntity.ok(digitalApprovalDTOList);
-
     }
 
 

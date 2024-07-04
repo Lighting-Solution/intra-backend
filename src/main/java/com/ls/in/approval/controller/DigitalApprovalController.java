@@ -1,7 +1,9 @@
 package com.ls.in.approval.controller;
 
 import com.lowagie.text.DocumentException;
+
 import com.ls.in.approval.domain.model.DigitalApproval;
+
 import com.ls.in.approval.dto.DigitalApprovalDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -45,4 +47,10 @@ public interface DigitalApprovalController {
     ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId);
 
 
+    /**
+     * @apiNote empId를 조회해서 결재 대기 문서 조회
+     * @param empId
+     * @return
+     */
+    ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId);
 }
