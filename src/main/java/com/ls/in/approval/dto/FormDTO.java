@@ -1,10 +1,13 @@
 package com.ls.in.approval.dto;
 
-import com.ls.in.global.emp.domain.dto.DepartmentDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+
+import java.time.LocalDate;
 
 import java.time.LocalDateTime;
 
@@ -13,9 +16,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FormDTO {
-    //사원의 이름, 부서
-
+    // 사원 이름
     private String name;
+
+    // 사원 부서
     private String department;
+
+    // 기안 날짜
     private LocalDateTime digitalApprovalCreatedAt;
 }

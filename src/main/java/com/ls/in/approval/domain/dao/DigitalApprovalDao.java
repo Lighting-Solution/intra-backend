@@ -7,6 +7,7 @@ import com.ls.in.global.emp.domain.model.Emp;
 import java.util.List;
 
 public interface DigitalApprovalDao {
+
     DigitalApproval save(DigitalApproval digitalApproval);
 
     List<DigitalApproval> findByEmpEmpId(Integer empId);
