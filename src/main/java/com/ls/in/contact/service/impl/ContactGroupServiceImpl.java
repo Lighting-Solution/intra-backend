@@ -31,9 +31,18 @@ public class ContactGroupServiceImpl implements ContactGroupService {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean createContactGroup(Map<String, Object> requestData) throws Exception {
-        List<Integer> contactList = (List<Integer>) requestData.get("contact");
-        List<Integer> groupList = (List<Integer>) requestData.get("group");
+        List<Integer> groupList = null;
+        List<Integer> contactList = null;
+        if(requestData.get("contact") instanceof List) {
+            contactList = (List<Integer>) requestData.get("contact");
+        } else return false;
+
+        if(requestData.get("group") instanceof List) {
+            groupList = (List<Integer>) requestData.get("group");
+        } else return false;
+
         Set<String> existingCombinations = contactGroupDAO.findExistingContactGroupCombinations(contactList, groupList);
         List<ContactGroup> contactGroups = new ArrayList<>();
         for (int contactId : contactList) {

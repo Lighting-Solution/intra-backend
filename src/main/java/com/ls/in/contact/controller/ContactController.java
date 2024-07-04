@@ -17,7 +17,7 @@ public interface ContactController {
      * @apiNote 최조 접속
      * 필요 데이터 :
      * 1. 개인이 만든 모든 주소록 그룹 목록
-     * 2. 공용 주소록의 그룹 목록
+     * 2. 사내 주소록의 그룹 목록
      * 3. 회사 사원 전체의 연락처
      * @return ContactResponseDTO
      */
@@ -60,7 +60,7 @@ public interface ContactController {
     ResponseEntity<ContactAndroidDTO> getPersonalAllByAndroid(@PathVariable("id") String empId);
 
     /**
-     * @apiNote 공용 주소록-전체 주소록
+     * @apiNote 사내 주소록-전체 주소록
      * @return List<EmpDTO>
      */
     @GetMapping("/list/all-emp")
@@ -76,7 +76,7 @@ public interface ContactController {
             @PathVariable("id") String empId);
 
     /**
-     * @apiNote 공용 주소록-부서 별
+     * @apiNote 사내 주소록-부서 별
      * @param department
      * @return List<EmpDTO>
      */
