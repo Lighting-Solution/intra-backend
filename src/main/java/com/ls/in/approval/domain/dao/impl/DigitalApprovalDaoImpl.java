@@ -10,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Component
@@ -29,7 +30,17 @@ public class DigitalApprovalDaoImpl implements DigitalApprovalDao {
     }
 
     @Override
-    public List<DigitalApproval> findByEmpEmpId(Integer empId) {
-        return digitalApprovalRepository.findByEmpEmpId(empId);
+    public List<DigitalApproval> findByDigitalApprovalId() {
+        return digitalApprovalRepository.findAll();
+    }
+
+    @Override
+    public Optional<DigitalApproval> findById(Integer digitalApprovalId) {
+        return digitalApprovalRepository.findById(digitalApprovalId);
+    }
+
+    @Override
+    public void savePathUpdate(DigitalApproval digitalApproval) {
+        digitalApprovalRepository.save(digitalApproval);
     }
 }
