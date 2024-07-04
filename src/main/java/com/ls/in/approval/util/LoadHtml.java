@@ -2,8 +2,10 @@ package com.ls.in.approval.util;
 
 import com.itextpdf.text.pdf.BaseFont;
 import com.lowagie.text.DocumentException;
+import com.ls.in.approval.dto.CeoDTO;
 import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.approval.dto.FormDTO;
+import com.ls.in.approval.dto.ManagerDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import lombok.NoArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -57,23 +59,30 @@ public class LoadHtml {
         return htmlContent;
     }
 
-    public Map<String, String> save(Map<String, String> request, String filePath, FormDTO formDTO) {
-
+    public Map<String, String> save(Map<String, String> request, String filePath, FormDTO formDTO,
+            ManagerDTO managerDTO, CeoDTO ceoDTO) {
 
         String encodedHtmlContent = request.get("html");
 
         String htmlContent;
         String title = "";
 
-        String name = formDTO.getName();
-        String department = formDTO.getDepartment();
+        // 기안자 결재 정보
+        String drafterName = formDTO.getName();
+        String drafterDepartment = formDTO.getDepartment();
+        String drafterPosition = formDTO.getPosition();
+
         LocalDateTime digitalApprovalCreatedAt = formDTO.getDigitalApprovalCreatedAt();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = digitalApprovalCreatedAt.format(formatter);
-      
-        System.out.println("name :" + name);
-        System.out.println("department :" + department);
 
+        // 부장 결재 정보
+        String managerName = managerDTO.getName();
+        String managerPosition = managerDTO.getPosition();
+
+        // ceo 결재 정보
+        String ceoName = ceoDTO.getName();
+        String ceoPosition = ceoDTO.getPosition();
 
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());
@@ -91,29 +100,34 @@ public class LoadHtml {
             }
 
             // ID가 "digitalApprovalEmpName"인 요소 찾기
-
-            this.changeValue(document, "digitalApprovalEmpName", "div", name);
+            this.changeValue(document, "digitalApprovalEmpName", "div", drafterName);
 
             // ID가 "digitalApprovalDepartment"인 요소 찾기
-            this.changeValue(document, "digitalApprovalDepartment", "div", department);
+            this.changeValue(document, "digitalApprovalDepartment", "div", drafterDepartment);
 
             // ID가 "digitalApprovalCreatedAt" 인 요소 찾기
             this.changeValue(document, "digitalApprovalCreatedAt", "div", formattedDate);
 
-            // ID가 approvalDepartment1 인 요소 찾기
-            this.changeValue(document, "approvalDepartment1", "span", "솔루션 개발부");
+            // ID가 approvalPosition1 인 요소 찾기
+            this.changeValue(document, "approvalPosition1", "span", drafterPosition);
 
             // ID가 approvalName1 인 요소 찾기
-            this.changeValue(document, "approvalName1", "span", name);
+            this.changeValue(document, "approvalName1", "span", drafterName);
 
+            // ID가 approvalPosition2 인 요소 찾기
+            this.changeValue(document, "approvalPosition2", "span", managerPosition);
 
-            // ID가 approvalDate1 인 요소 찾기
-            this.changeValue(document, "approvalDate1", "span", formattedDate);
+            // ID가 approvalName2 인 요소 찾기
+            this.changeValue(document, "approvalName2", "span", managerName);
 
+            // ID가 approvalPosition3 인 요소 찾기
+            this.changeValue(document, "approvalPosition3", "span", ceoPosition);
+
+            // ID가 approvalName3 인 요소 찾기
+            this.changeValue(document, "approvalName3", "span", ceoName);
 
             document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
             document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
-
 
             // System.out.println(htmlContent);
             htmlContent = document.html();
@@ -121,7 +135,7 @@ public class LoadHtml {
             document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
             document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
 
-            //System.out.println(htmlContent);
+            // System.out.println(htmlContent);
             htmlContent = document.html();
 
         } catch (UnsupportedEncodingException e) {
@@ -143,7 +157,6 @@ public class LoadHtml {
         }
 
     }
-
 
     private Document changeValue(Document document, String elementId, String type, String value) {
         Element inputElement = document.getElementById(elementId);
@@ -189,7 +202,7 @@ public class LoadHtml {
         matcher.appendTail(sb);
         htmlContent = sb.toString();
         System.out.println("--------------------------------------------------------");
-        //System.out.println(htmlContent);  html 코드 보여주기
+        // System.out.println(htmlContent); html 코드 보여주기
 
         // Convert HTML to PDF using ITextRenderer
         ITextRenderer renderer = new ITextRenderer();

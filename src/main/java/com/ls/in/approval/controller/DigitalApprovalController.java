@@ -29,7 +29,8 @@ public interface DigitalApprovalController {
      * @param request
      * @return
      */
-    ResponseEntity<String> approvalRequest(@RequestBody Map<String, String> request) throws IOException, DocumentException;
+    ResponseEntity<String> approvalRequest(@RequestBody Map<String, String> request)
+            throws IOException, DocumentException;
 
     /**
      * @apiNote PDF Viewer Api 를 활용해서 PDF 화면 띄우기
@@ -37,7 +38,6 @@ public interface DigitalApprovalController {
      * @return
      */
     ResponseEntity<Resource> getPdf(@PathVariable String projectName, @PathVariable Integer digitalApprovalId);
-
 
     /**
      * @apiNote empId를 조회해서 결재 대기 문서 조회
@@ -54,3 +54,10 @@ public interface DigitalApprovalController {
     ResponseEntity<String> approvalRequestPermission(@RequestBody Map<String, String> request) throws IOException, DocumentException;
 
 }
+
+    
+    
+    
+    
+
+     
