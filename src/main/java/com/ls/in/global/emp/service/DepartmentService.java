@@ -6,6 +6,6 @@ import com.ls.in.global.emp.exception.DepartmentNotFoundException;
 import java.util.List;
 
 public interface DepartmentService {
-    public List<DepartmentDTO> getAllDepartment() throws DepartmentNotFoundException;
-    public DepartmentDTO getDepartmentById(int departmentId) throws DepartmentNotFoundException;
+    List<DepartmentDTO> getAllDepartment() throws DepartmentNotFoundException;
+    DepartmentDTO getDepartmentById(int departmentId) throws DepartmentNotFoundException;
 }

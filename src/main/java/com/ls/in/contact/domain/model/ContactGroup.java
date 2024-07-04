@@ -9,7 +9,7 @@ import lombok.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "contactGroup")
+@Table(name = "contactGroup", uniqueConstraints = {@UniqueConstraint(columnNames = {"personalContact_id", "personalGroup_id"})})
 public class ContactGroup {
 
     @Id

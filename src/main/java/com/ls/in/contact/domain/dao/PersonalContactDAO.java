@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PersonalContactDAO {
-    public PersonalContact save(PersonalContact personalContact) throws DataAccessException;
-    public Page<PersonalContact> findAllByEmpId(Pageable pageable, Integer id) throws DataAccessException;
-    public boolean deleteById(Integer contactId) throws DataAccessException;
+    PersonalContact save(PersonalContact personalContact) throws DataAccessException;
+    Page<PersonalContact> findAllByEmpId(Pageable pageable, Integer id) throws DataAccessException;
+    boolean deleteById(Integer contactId) throws DataAccessException;
 }

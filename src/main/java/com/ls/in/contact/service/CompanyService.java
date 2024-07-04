@@ -4,5 +4,5 @@ import com.ls.in.contact.dto.CompanyDTO;
 import com.ls.in.contact.exception.CompanyNotFoundException;
 
 public interface CompanyService {
-    public CompanyDTO createCompany(CompanyDTO companyDTO) throws CompanyNotFoundException;
+    CompanyDTO createCompany(CompanyDTO companyDTO) throws CompanyNotFoundException;
 }

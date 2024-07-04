@@ -6,6 +6,6 @@ import com.ls.in.global.emp.exception.PositionNotFoundException;
 import java.util.List;
 
 public interface PositionService {
-    public List<PositionDTO> getAllPosition() throws PositionNotFoundException;
-    public PositionDTO getPositionById(int positionId) throws PositionNotFoundException;
+    List<PositionDTO> getAllPosition() throws PositionNotFoundException;
+    PositionDTO getPositionById(int positionId) throws PositionNotFoundException;
 }
