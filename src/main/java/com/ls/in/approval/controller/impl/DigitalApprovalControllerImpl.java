@@ -157,7 +157,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         LoadHtml.addSignToPDF(pdfFilePath, imagePath, outputPdfPath, "drafter");
 
         // 전자 결재 테이블 data update (pdf 저장 경로)
-        approvalService.pathUpdate(digitalApprovalDTO, outputPdfPath);
+        approvalService.updatePath(digitalApprovalId, outputPdfPath);
 
         return ResponseEntity.ok("HTML content received and processed successfully");
     }
@@ -228,7 +228,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
                 LoadHtml.addSignToPDF(pdfFilePath,imagePath,outputPdfPath, "manager");
 
                 // DB manager_status update
-                
+                approvalService.updateStatus(digitalApprovalId, "manager");
 
 
             } else { // 부장 status true : ceo 사인 넣어주기
@@ -239,6 +239,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
                 // 내문서함으로 전송 (기안자 id, 문서경로)
 
                 // DB ceo_status update
+                approvalService.updateStatus(digitalApprovalId, "ceo");
             }
 
         } else { // 기안자와 사용자가 같을 경우

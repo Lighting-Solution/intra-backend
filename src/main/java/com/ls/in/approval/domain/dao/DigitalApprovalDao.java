@@ -15,5 +15,7 @@ public interface DigitalApprovalDao {
 
     Optional<DigitalApproval> findById(Integer digitalApprovalId);
 
-    void savePathUpdate(DigitalApproval digitalApproval);
+    void updatePath(Integer digitalApprovalId, String outputPdfPath);
+
+    void updateStatus(Integer digitalApprovalId, String type);
 }

@@ -68,21 +68,12 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
     }
 
     @Override
-    public void pathUpdate(DigitalApprovalDTO digitalApprovalDTO,String outputPdfPath) {
-        Emp emp = EmpMapper.toEntity(digitalApprovalDTO.getEmpDTO());
-        DigitalApproval digitalApproval = DigitalApproval.builder()
-                .digitalApprovalId(digitalApprovalDTO.getDigitalApprovalId())
-                .drafterId(digitalApprovalDTO.getDrafterId())
-                .digitalApprovalName(digitalApprovalDTO.getDigitalApprovalName())
-                .digitalApprovalPath(outputPdfPath)
-                .digitalApprovalType(false)
-                .drafterStatus(true)
-                .managerStatus(false)
-                .ceoStatus(false)
-                .digitalApprovalCreateAt(LocalDateTime.now())
-                .digitalApprovalAt(null)
-                .emp(emp)
-                .build();
-        approvalDao.savePathUpdate(digitalApproval);
+    public void updatePath(Integer digitalApprovalId,String outputPdfPath) {
+        approvalDao.updatePath(digitalApprovalId, outputPdfPath);
+    }
+
+    @Override
+    public void updateStatus(Integer digitalApprovalId, String type) {
+        approvalDao.updateStatus(digitalApprovalId, type);
     }
 }

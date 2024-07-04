@@ -14,5 +14,7 @@ public interface DigitalApprovalService {
 
     DigitalApprovalDTO getDrafterId(Integer digitalApprovalId);
 
-    void pathUpdate(DigitalApprovalDTO digitalApprovalDTO, String outputPdfPath);
+    void updatePath(Integer digitalApprovalId, String outputPdfPath);
+
+    void updateStatus(Integer digitalApprovalId, String type);
 }

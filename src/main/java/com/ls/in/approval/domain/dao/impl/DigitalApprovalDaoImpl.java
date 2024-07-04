@@ -40,7 +40,23 @@ public class DigitalApprovalDaoImpl implements DigitalApprovalDao {
     }
 
     @Override
-    public void savePathUpdate(DigitalApproval digitalApproval) {
-        digitalApprovalRepository.save(digitalApproval);
+    public void updatePath(Integer digitalApprovalId, String outputPdfPath) {
+        DigitalApproval existingApproval  = digitalApprovalRepository.findById(digitalApprovalId).orElseThrow();
+        existingApproval.setDigitalApprovalPath(outputPdfPath);
+        DigitalApproval updatedDigitalApproval = digitalApprovalRepository.save(existingApproval);
+    }
+
+    @Override
+    public void updateStatus(Integer digitalApprovalId, String type) {
+        DigitalApproval existingApproval  = digitalApprovalRepository.findById(digitalApprovalId).orElseThrow();
+        // 매니저 상태 변경
+        if(type.equals("manager")){
+            existingApproval.setManagerStatus(true);
+        } else if(type.equals("ceo")){
+            existingApproval.setCeoStatus(true);
+        } else {
+            System.out.println("등록된 type 이아닙니다.");
+        }
+        DigitalApproval updatedDigitalApproval = digitalApprovalRepository.save(existingApproval);
     }
 }
