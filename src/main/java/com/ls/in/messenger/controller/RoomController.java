@@ -8,6 +8,7 @@ import com.ls.in.messenger.service.RoomService;
 //import com.ls.in.messenger.util.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class RoomController {
 	@GetMapping(value = "/api/rooms")
 	public List<ChatRoomDTO> rooms(){
 		log.info("# 채팅방 목록 가져오기");
-		return roomService.getRooms(2);
+		return roomService.getRooms(1);
 	}
 
 	@GetMapping(value = "/api/rooms/{roomId}/messages")
@@ -73,5 +74,16 @@ public class RoomController {
 		log.info("Employee IDs: {}", group.getEmpIds());
 		roomService.createChattingRoom(group);
 		return "Chat room created successfully!";
+	}
+
+	/**
+	 * description : 사용자의 채팅방을 삭제하는 로직.
+	 * @param currentChat
+	 * @return
+	 */
+	@PostMapping("/api/delRoom")
+	public ResponseEntity<String> deleteChatRoom(@RequestBody ChatRoomDTO currentChat) {
+		roomService.deleteChatRoom(currentChat);
+		return ResponseEntity.ok("상대방이 채팅방을 나갔습니다.");
 	}
 }
