@@ -53,6 +53,13 @@ public interface DigitalApprovalController {
      */
     ResponseEntity<String> approvalRequestPermission(@RequestBody Map<String, String> request) throws IOException, DocumentException;
 
+    /**
+     * @apiNote empId를 조회해서 반려 버튼 눌렀을 때 결재 반려 문서함으로 이동
+     * @param request
+     * @return
+     */
+    ResponseEntity<String> approvalRequestReject(@RequestBody Map<String, String> request) throws IOException, DocumentException;
+
 }
 
 

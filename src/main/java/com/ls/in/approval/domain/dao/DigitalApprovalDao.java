@@ -18,4 +18,6 @@ public interface DigitalApprovalDao {
     void updatePath(Integer digitalApprovalId, String outputPdfPath);
 
     void updateStatus(Integer digitalApprovalId, String type);
+
+    void updateRejectionStatus(Integer digitalApprovalId);
 }

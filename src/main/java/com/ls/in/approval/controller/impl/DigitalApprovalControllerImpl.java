@@ -11,6 +11,7 @@ import com.ls.in.approval.util.LoadHtml;
 
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import com.ls.in.global.emp.service.EmpService;
+import org.apache.xpath.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -216,7 +218,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
         // 문서 번호의 기안자와 사용자가 다를 경우 (사원이 아닐 경우 -> 부장 , ceo)
         // 현재 empId : 2 , drafterId : 1
-        if(!empId.equals(digitalApprovalId)){
+        if(!empId.equals(drafterId)){
 
             //부장 status false : 부장 문서 결재 대기함에 보이게 함
             if(!managerStatus){
@@ -268,5 +270,41 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
          */
         return ResponseEntity.ok("requestpermission : HTML content received and processed successfully");
     }
+
+    @Override
+    @PostMapping("/requestreject")
+    public ResponseEntity<String> approvalRequestReject(@RequestBody Map<String, String> request) throws IOException, DocumentException {
+        Integer empId = Integer.parseInt(request.get("empId"));
+        Integer digitalApprovalId = Integer.parseInt(request.get("digitalApprovalId"));
+
+        DigitalApprovalDTO digitalApprovalDTO = approvalService.getDrafterId(digitalApprovalId);
+
+        boolean managerStatus = digitalApprovalDTO.isManagerStatus();
+        boolean ceoStatus = digitalApprovalDTO.isCeoStatus();
+
+        // 문서가 이미 승인된 상태인지 확인
+        if (!managerStatus && !ceoStatus) {
+            // 반려 상태로 업데이트
+            approvalService.updateRejectionStatus(digitalApprovalId);
+
+            // 결재 대기 문서함 경로
+            String savedPdfPath = "src/main/resources/approvalWaiting/signed" + digitalApprovalDTO.getDigitalApprovalId() + ".pdf";
+            // 결재 반려 문서함 경로
+            String outputPdfPath = "src/main/resources/approvalReject/signed" + digitalApprovalDTO.getDigitalApprovalId() + ".pdf";
+
+            Path savedPath = Paths.get(savedPdfPath);
+            Path outputPath = Paths.get(outputPdfPath);
+
+            Files.move(savedPath, outputPath);
+
+            // 전자 결재 테이블 data update (pdf 저장 경로)
+            approvalService.updatePath(digitalApprovalId, outputPdfPath);
+
+            return ResponseEntity.ok("문서가 반려 대기함으로 이동되었습니다.");
+        } else {
+            return ResponseEntity.badRequest().body("이미 승인된 문서는 반려할 수 없습니다.");
+        }
+    }
+
 
 }

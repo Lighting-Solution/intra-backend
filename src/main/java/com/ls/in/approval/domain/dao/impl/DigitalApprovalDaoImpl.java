@@ -4,6 +4,7 @@ import com.ls.in.approval.domain.dao.DigitalApprovalDao;
 import com.ls.in.approval.domain.model.DigitalApproval;
 import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.approval.repository.DigitalApprovalRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -58,5 +59,14 @@ public class DigitalApprovalDaoImpl implements DigitalApprovalDao {
             System.out.println("등록된 type 이아닙니다.");
         }
         DigitalApproval updatedDigitalApproval = digitalApprovalRepository.save(existingApproval);
+    }
+
+    @Override
+    public void updateRejectionStatus(Integer digitalApprovalId) {
+        DigitalApproval existingApproval = digitalApprovalRepository.findById(digitalApprovalId)
+                .orElseThrow(() -> new EntityNotFoundException("DigitalApproval not found"));
+        // 반려 상태로 설정
+        existingApproval.setDigitalApprovalType(true);
+        DigitalApproval updatedRejectionDigitalApproval = digitalApprovalRepository.save(existingApproval);
     }
 }
