@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -167,10 +168,21 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     public ResponseEntity<Resource> getPdf(@PathVariable String projectName, @PathVariable Integer digitalApprovalId) {
         System.out.println("digitalApprovalId" + digitalApprovalId);
 
+        DigitalApprovalDTO digitalApprovalDTO = approvalService.getDrafterId(digitalApprovalId);
+        boolean digitalApprovalType = digitalApprovalDTO.isDigitalApprovalType();
+
         try {
             // 프로젝트 이름을 기반으로 PDF 파일 경로 설정 (이 예시에서는 고정된 경로 사용)
-            Path pdfPath = Paths
-                    .get("src/main/resources/approvalWaiting/signed" + digitalApprovalId.toString() + ".pdf");
+            Path pdfPath;
+            // 반려함
+            if(digitalApprovalType){
+                pdfPath = Paths
+                        .get("src/main/resources/approvalReject/signed" + digitalApprovalId.toString() + ".pdf");
+            } else {
+                pdfPath = Paths
+                        .get("src/main/resources/approvalWaiting/signed" + digitalApprovalId.toString() + ".pdf");
+            }
+
             Resource resource = new UrlResource(pdfPath.toUri());
 
             if (resource.exists()) {
@@ -213,6 +225,9 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
             digitalApprovalDTOList = approvalService.getApprovalWaitingList();
         } else if(position.equals(2)){ // 부장
             digitalApprovalDTOList = approvalService.getApprovalWaitingListByManager(department);
+            System.out.println("=============================================================");
+            System.out.println(digitalApprovalDTOList);
+            System.out.println("=============================================================");
         } else { // 부장 밑 사원
             digitalApprovalDTOList = approvalService.getApprovalWaitingListByEmployee(empId);
             System.out.println(digitalApprovalDTOList);
@@ -275,6 +290,46 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         }
 
         return ResponseEntity.ok("requestpermission : HTML content received and processed successfully");
+    }
+
+
+    @Override
+    @PostMapping("/requestreject")
+    public ResponseEntity<String> approvalRequestReject(@RequestBody Map<String, String> request) throws IOException, DocumentException {
+        Integer empId = Integer.parseInt(request.get("empId"));
+        Integer digitalApprovalId = Integer.parseInt(request.get("digitalApprovalId"));
+
+        DigitalApprovalDTO digitalApprovalDTO = approvalService.getDrafterId(digitalApprovalId);
+
+        boolean managerStatus = digitalApprovalDTO.isManagerStatus();
+        boolean ceoStatus = digitalApprovalDTO.isCeoStatus();
+
+        // 문서가 이미 승인된 상태인지 확인
+        if (!managerStatus || !ceoStatus) {
+            // 반려 상태로 업데이트
+            approvalService.updateRejectionStatus(digitalApprovalId);
+
+            // 결재 대기 문서함 경로
+            String savedPdfPath = "src/main/resources/approvalWaiting/signed" + digitalApprovalDTO.getDigitalApprovalId() + ".pdf";
+            // 결재 반려 문서함 경로
+            String outputPdfPath = "src/main/resources/approvalReject/signed" + digitalApprovalDTO.getDigitalApprovalId() + ".pdf";
+
+            Path savedPath = Paths.get(savedPdfPath);
+            Path outputPath = Paths.get(outputPdfPath);
+
+            // 문서 이동
+            Files.move(savedPath, outputPath);
+
+            // 문서 지우기
+            Files.delete(savedPath);
+
+            // 전자 결재 테이블 data update (pdf 저장 경로)
+            approvalService.updatePath(digitalApprovalId, outputPdfPath);
+
+            return ResponseEntity.ok("문서가 반려 대기함으로 이동되었습니다.");
+        } else {
+            return ResponseEntity.badRequest().body("이미 승인된 문서는 반려할 수 없습니다.");
+        }
     }
 
 }

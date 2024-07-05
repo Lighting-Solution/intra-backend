@@ -116,5 +116,9 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
         approvalDao.updateStatus(digitalApprovalId, type);
     }
 
+    @Override
+    public void updateRejectionStatus(Integer digitalApprovalId) {
+        approvalDao.updateRejectionStatus(digitalApprovalId);
+    }
 
 }
