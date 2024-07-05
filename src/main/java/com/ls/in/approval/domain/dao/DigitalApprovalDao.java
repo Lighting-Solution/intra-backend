@@ -11,11 +11,12 @@ public interface DigitalApprovalDao {
 
     DigitalApproval save(DigitalApproval digitalApproval);
 
-    List<DigitalApproval> findByDigitalApprovalId();
+    List<DigitalApproval> findAll();
 
     Optional<DigitalApproval> findById(Integer digitalApprovalId);
 
     void updatePath(Integer digitalApprovalId, String outputPdfPath);
 
     void updateStatus(Integer digitalApprovalId, String type);
+
 }

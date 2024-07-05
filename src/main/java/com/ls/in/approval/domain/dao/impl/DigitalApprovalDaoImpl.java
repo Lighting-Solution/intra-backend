@@ -30,7 +30,7 @@ public class DigitalApprovalDaoImpl implements DigitalApprovalDao {
     }
 
     @Override
-    public List<DigitalApproval> findByDigitalApprovalId() {
+    public List<DigitalApproval> findAll() {
         return digitalApprovalRepository.findAll();
     }
 
@@ -59,4 +59,6 @@ public class DigitalApprovalDaoImpl implements DigitalApprovalDao {
         }
         DigitalApproval updatedDigitalApproval = digitalApprovalRepository.save(existingApproval);
     }
+
+
 }

@@ -17,4 +17,8 @@ public interface DigitalApprovalService {
     void updatePath(Integer digitalApprovalId, String outputPdfPath);
 
     void updateStatus(Integer digitalApprovalId, String type);
+
+    List<DigitalApprovalDTO> getApprovalWaitingListByManager(Integer department);
+
+    List<DigitalApprovalDTO> getApprovalWaitingListByEmployee(Integer empId);
 }

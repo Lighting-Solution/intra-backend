@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,6 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
     private EmpService empService;
 
-    private Integer documentCount = 1;
 
     @Autowired
 
@@ -188,8 +188,37 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
     @Override
     @GetMapping("/waiting")
-    public ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList() {
-        List<DigitalApprovalDTO> digitalApprovalDTOList = approvalService.getApprovalWaitingList();
+    public ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Map<String, String> request) {
+        System.out.println("==========test start==========");
+        Integer empId = Integer.parseInt(request.get("empId"));
+        System.out.println("empId : " + empId);
+
+
+        // empId : 3 position : 1 drafterId : 1
+        //empId를 통해 drafterID 와 해당 직급 가져오기
+        EmpDTO empDTO = empService.getEmpById(empId);
+        Integer position = empDTO.getPosition().getPositionId();
+        Integer department = 0;
+
+        if(!empId.equals(3)){
+            department = empDTO.getDepartment().getDepartmentId();
+        }
+
+        System.out.println("position : " + position);
+
+        List<DigitalApprovalDTO> digitalApprovalDTOList = new ArrayList<>();
+
+        // 대표 이사
+        if(position.equals(1)){
+            digitalApprovalDTOList = approvalService.getApprovalWaitingList();
+        } else if(position.equals(2)){ // 부장
+            digitalApprovalDTOList = approvalService.getApprovalWaitingListByManager(department);
+        } else { // 부장 밑 사원
+            digitalApprovalDTOList = approvalService.getApprovalWaitingListByEmployee(empId);
+            System.out.println(digitalApprovalDTOList);
+        }
+
+        System.out.println("==========test end==========");
         return ResponseEntity.ok(digitalApprovalDTOList);
     }
 
@@ -201,25 +230,22 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         EmpDTO empDTO = empService.getEmpById(empId);
 
         Integer digitalApprovalId = Integer.parseInt(request.get("digitalApprovalId"));
-        System.out.println("==========test start==========");
-
+        System.out.println("empId : " + empId + "digitalApprovalId : " + digitalApprovalId);
         // 문서 id를 통해서 객체 반환 받고 기안자 id, status 가져오기
         // 문서 id를 통해서 객체 반환 받고 status 값 가져오기
         DigitalApprovalDTO digitalApprovalDTO = approvalService.getDrafterId(digitalApprovalId);
-        System.out.println("drafterId : " + digitalApprovalDTO.getDrafterId());
-        System.out.println("isManagerStatus : " + digitalApprovalDTO.isManagerStatus());
-        System.out.println("isCeoStatus : " + digitalApprovalDTO.isCeoStatus());
+        System.out.println("digitalApprovalDTO : " + digitalApprovalDTO);
 
         Integer drafterId = digitalApprovalDTO.getDrafterId();
         boolean managerStatus = digitalApprovalDTO.isManagerStatus();
-        boolean ceoStatus = digitalApprovalDTO.isCeoStatus();
+        //boolean ceoStatus = digitalApprovalDTO.isCeoStatus();
 
         // 문서 번호의 기안자와 사용자가 다를 경우 (사원이 아닐 경우 -> 부장 , ceo)
         // 현재 empId : 2 , drafterId : 1
-        if(!empId.equals(digitalApprovalId)){
-
+        if(!empId.equals(drafterId)){
             //부장 status false : 부장 문서 결재 대기함에 보이게 함
             if(!managerStatus){
+
                 // 부장 사인 넣어주고 pdf로 저장
                 // pdfFilePath : 사인되어있는 pdf 파일, imagePath : 본인 sign , outputPdfPath : 사인저장할 pdf
                 String pdfFilePath = "src/main/resources/approvalWaiting/signed"+ digitalApprovalId+".pdf";
@@ -230,42 +256,24 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
                 // DB manager_status update
                 approvalService.updateStatus(digitalApprovalId, "manager");
 
-
             } else { // 부장 status true : ceo 사인 넣어주기
+
                 String pdfFilePath = "src/main/resources/approvalWaiting/signed"+ digitalApprovalId+".pdf";
                 String imagePath = empDTO.getEmpSign();
                 String outputPdfPath = "src/main/resources/approvalWaiting/signed" + digitalApprovalId + ".pdf";
                 LoadHtml.addSignToPDF(pdfFilePath,imagePath,outputPdfPath, "ceo");
+
                 // 내문서함으로 전송 (기안자 id, 문서경로)
 
                 // DB ceo_status update
                 approvalService.updateStatus(digitalApprovalId, "ceo");
+
             }
 
         } else { // 기안자와 사용자가 같을 경우
             // logic 처리할 필요가 없음
         }
 
-        System.out.println("==========test end==========");
-
-        /*
-        EmpDTO empDTO = empService.getEmpById(empId);
-
-        DigitalApprovalDTO approvalDTO = new DigitalApprovalDTO();
-        Integer draftId = approvalDTO.getDrafterId();
-
-
-        System.out.println("===========" + draftId + "=========");
-        String imagePath = empDTO.getEmpSign();
-
-        LocalDateTime digitalApprovalAt = LocalDateTime.now();
-
-        String pdfFilePath = "src/main/resources/approvalWaiting/signed_" + empId + ".pdf";
-
-        String outputPdfPath = "src/main/resources/approvalWaiting/permissionsigned_" + empId + ".pdf";
-        // PDF 파일 Sign 저장
-        // addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
-         */
         return ResponseEntity.ok("requestpermission : HTML content received and processed successfully");
     }
 

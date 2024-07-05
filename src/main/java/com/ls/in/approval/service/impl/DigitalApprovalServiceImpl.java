@@ -54,11 +54,50 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
 
     @Override
     public List<DigitalApprovalDTO> getApprovalWaitingList() {
-        List<DigitalApproval> digitalApprovalList = approvalDao.findByDigitalApprovalId();
+        List<DigitalApproval> digitalApprovalList = approvalDao.findAll();
         return digitalApprovalList.stream()
                 .map(DigitalApprovalMapper::toDto) // 엔티티를 DTO로 변환
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<DigitalApprovalDTO> getApprovalWaitingListByManager(Integer department) {
+        List<DigitalApproval> digitalApprovalList = approvalDao.findAll();
+
+        List<DigitalApprovalDTO> digitalApprovalDTOList = new ArrayList<>();
+        for(DigitalApproval item : digitalApprovalList ){
+            DigitalApprovalDTO digitalApprovalDTO = DigitalApprovalMapper.toDto(item);
+
+            // 기안자의 id의 부서와 position 의 부서가 같을 경우 list 추가
+           Integer drafterPosition = digitalApprovalDTO.getEmpDTO().getDepartment().getDepartmentId();
+           if(drafterPosition.equals(department)){
+               digitalApprovalDTOList.add(digitalApprovalDTO);
+           }
+
+        }
+
+        return digitalApprovalDTOList;
+    }
+
+    @Override
+    public List<DigitalApprovalDTO> getApprovalWaitingListByEmployee(Integer empId) {
+        List<DigitalApproval> digitalApprovalList = approvalDao.findAll();
+
+        List<DigitalApprovalDTO> digitalApprovalDTOList = new ArrayList<>();
+        for(DigitalApproval item : digitalApprovalList ){
+            DigitalApprovalDTO digitalApprovalDTO = DigitalApprovalMapper.toDto(item);
+
+            // 기안자의 id와 emp id가 같을 경우 추가
+            Integer drafterId = digitalApprovalDTO.getDrafterId();
+            if(drafterId.equals(empId)){
+                digitalApprovalDTOList.add(digitalApprovalDTO);
+                System.out.println(digitalApprovalDTO);
+            }
+
+        }
+        return digitalApprovalDTOList;
+    }
+
 
     @Override
     public DigitalApprovalDTO getDrafterId(Integer digitalApprovalId) {
@@ -76,4 +115,6 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
     public void updateStatus(Integer digitalApprovalId, String type) {
         approvalDao.updateStatus(digitalApprovalId, type);
     }
+
+
 }

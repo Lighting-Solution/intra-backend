@@ -262,7 +262,9 @@ public class LoadHtml {
     public static void addSignToPDF(String pdfFilePath, String imagePath, String outputPdfPath, String signType) throws IOException {
         try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
             PDPage page = document.getPage(0); // Add signature to the first page
-
+            System.out.println("pdfFilePath :" + pdfFilePath);
+            System.out.println("imagePath :" + imagePath);
+            System.out.println("outputPdfPath :" + outputPdfPath);
             PDImageXObject pdImage = PDImageXObject.createFromFile(imagePath, document);
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page,
                     PDPageContentStream.AppendMode.APPEND, true, true)) {
