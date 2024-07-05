@@ -18,6 +18,6 @@ public class ChatMessageDTO {
 	private Integer empId;
 	private String writer;
 	private String message;
-	private LocalDateTime sendTime;
 	private String fileUrl;
+	private String sendTime;
 }

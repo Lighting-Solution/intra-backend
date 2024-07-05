@@ -30,6 +30,4 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 				.setAllowedOrigins("http://localhost:3000") // React 개발 서버의 주소
 				.withSockJS();
 	}
-
-
 }

@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public interface RoomMemberRepository extends JpaRepository<RoomMember, Integer> {
 
-	@Query("select rm.room.roomId from RoomMember rm where rm.emp.empId = :id")
-	List<Integer> findRoomIdsByEmpId(@Param("id") Integer id);
+	@Query("select rm from RoomMember rm where rm.emp.empId = :id and rm.presentStatus = true")
+	List<RoomMember> findRoomIdsByEmpIdPresentStatusTrue(@Param("id") Integer id);
 
 	@Query("select rm.emp from RoomMember rm where rm.room.roomId = :id")
 	List<Emp> findEmpByRoomId(@Param("id") Integer id);
@@ -23,8 +23,11 @@ public interface RoomMemberRepository extends JpaRepository<RoomMember, Integer>
 	List<Emp> findEmpByRoomIdExceptionMe(@Param("roomId") Integer roomId, @Param("empId") Integer empId);
 
 	@Query("select rm from RoomMember rm where rm.room.roomId = :roomId and rm.emp.empId =:empId")
-	RoomMember findByRoomIdAndEmpId(@Param("roomId") Integer roomId, @Param("empId") Integer empId);
+	RoomMember findRoomMemberByRoomIdAndEmpId(@Param("roomId") Integer roomId, @Param("empId") Integer empId);
 
 	// Room ID로 RoomMember 엔티티 리스트 가져오기
 	List<RoomMember> findByRoomRoomId(Integer roomId);
+
+	@Query("select rm from RoomMember rm where rm.room.roomId = :roomId and rm.emp.empId <> :empId")
+	List<RoomMember> findRoomMembersByRoomIdExceptionMe(@Param("roomId") Integer roomId, @Param("empId") Integer empId);
 }
