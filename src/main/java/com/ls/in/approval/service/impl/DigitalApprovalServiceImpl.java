@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,35 +36,44 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
     @Override
     public DigitalApprovalDTO approvalRequest(Integer empId, String digitalApprovalName, EmpDTO empDTO) {
         Emp emp = EmpMapper.toEntity(empDTO);
-            DigitalApproval digitalApproval = DigitalApproval.builder()
-                    .drafterId(empDTO.getEmpId())
-                    .digitalApprovalName(digitalApprovalName)
-                    .digitalApprovalPath(empDTO.getEmpSign())
-                    .digitalApprovalType(false)
-                    .drafterStatus(true)
-                    .managerStatus(false)
-                    .ceoStatus(false)
-                    .digitalApprovalCreateAt(LocalDateTime.now())
+        DigitalApproval digitalApproval = DigitalApproval.builder()
+                .drafterId(empDTO.getEmpId())
+                .digitalApprovalName(digitalApprovalName)
+                .digitalApprovalType(false)
+                .drafterStatus(true)
+                .managerStatus(false)
+                .ceoStatus(false)
+                .digitalApprovalCreateAt(LocalDateTime.now())
+                .digitalApprovalAt(null)
+                .emp(emp)
+                .build();
+        DigitalApproval digitalApproval2 = approvalDao.save(digitalApproval);
 
-                    .digitalApprovalAt(null)
-
-
-                    .emp(emp)
-                    .build();
-            DigitalApproval digitalApproval2 = approvalDao.save(digitalApproval);
-
-            //---------------------------------------------------------
-            return DigitalApprovalMapper.toDto(digitalApproval2);
-
+        return DigitalApprovalMapper.toDto(digitalApproval2);
     }
 
     @Override
-    public List<DigitalApprovalDTO> getApprovalWaitingList(Integer empId) {
-        List<DigitalApproval> digitalApprovalList = approvalDao.findByEmpEmpId(empId);
+    public List<DigitalApprovalDTO> getApprovalWaitingList() {
+        List<DigitalApproval> digitalApprovalList = approvalDao.findByDigitalApprovalId();
         return digitalApprovalList.stream()
                 .map(DigitalApprovalMapper::toDto) // 엔티티를 DTO로 변환
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public DigitalApprovalDTO getDrafterId(Integer digitalApprovalId) {
+        Optional<DigitalApproval> optionalDigitalApproval = approvalDao.findById(digitalApprovalId);
+        DigitalApproval digitalApproval = optionalDigitalApproval.get();
+        return DigitalApprovalMapper.toDto(digitalApproval);
+    }
 
+    @Override
+    public void updatePath(Integer digitalApprovalId,String outputPdfPath) {
+        approvalDao.updatePath(digitalApprovalId, outputPdfPath);
+    }
+
+    @Override
+    public void updateStatus(Integer digitalApprovalId, String type) {
+        approvalDao.updateStatus(digitalApprovalId, type);
+    }
 }
