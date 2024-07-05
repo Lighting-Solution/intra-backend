@@ -9,7 +9,7 @@ import java.util.List;
 public interface DigitalApprovalService {
 
     DigitalApprovalDTO approvalRequest(Integer empId, String digitalApprovalName, EmpDTO empDTO);
-
+    
     List<DigitalApprovalDTO> getApprovalWaitingList();
 
     DigitalApprovalDTO getDrafterId(Integer digitalApprovalId);

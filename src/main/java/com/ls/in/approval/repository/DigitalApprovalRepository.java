@@ -10,5 +10,4 @@ import java.util.List;
 public interface DigitalApprovalRepository extends JpaRepository<DigitalApproval, Integer> {
     // 결재 대기 문서 목록 조회
     List<DigitalApproval> findByEmpEmpId(Integer empId);
-
 }

@@ -47,6 +47,7 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
                 .digitalApprovalAt(null)
                 .emp(emp)
                 .build();
+
         DigitalApproval digitalApproval2 = approvalDao.save(digitalApproval);
 
         return DigitalApprovalMapper.toDto(digitalApproval2);
