@@ -10,5 +10,11 @@ public interface DigitalApprovalService {
 
     DigitalApprovalDTO approvalRequest(Integer empId, String digitalApprovalName, EmpDTO empDTO);
   
-    List<DigitalApprovalDTO> getApprovalWaitingList(Integer empId);
+    List<DigitalApprovalDTO> getApprovalWaitingList();
+
+    DigitalApprovalDTO getDrafterId(Integer digitalApprovalId);
+
+    void updatePath(Integer digitalApprovalId, String outputPdfPath);
+
+    void updateStatus(Integer digitalApprovalId, String type);
 }

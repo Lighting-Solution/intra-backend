@@ -259,21 +259,28 @@ public class LoadHtml {
     }
 
     // 전자 결재 서명
-    public static void addSignToPDF(String pdfFilePath, String imagePath, String outputPdfPath) throws IOException {
+    public static void addSignToPDF(String pdfFilePath, String imagePath, String outputPdfPath, String signType) throws IOException {
         try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
             PDPage page = document.getPage(0); // Add signature to the first page
 
             PDImageXObject pdImage = PDImageXObject.createFromFile(imagePath, document);
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page,
                     PDPageContentStream.AppendMode.APPEND, true, true)) {
-                // 1번째 사인 위치
-                contentStream.drawImage(pdImage, 470, 795, 40, 35);
 
-                // 2번째 사인 위치
-                // contentStream.drawImage(pdImage, 550, 795, 40, 35);
-
-                // 3번째 사인 위치
-                // contentStream.drawImage(pdImage, 630, 795, 40, 35);
+                switch (signType){
+                    case "drafter" :
+                        // 1번째 사인 위치
+                        contentStream.drawImage(pdImage, 470, 795, 40, 35);
+                        break;
+                    case "manager":
+                        // 2번째 사인 위치
+                        contentStream.drawImage(pdImage, 550, 795, 40, 35);
+                        break;
+                    case "ceo":
+                        // 3번째 사인 위치
+                        contentStream.drawImage(pdImage, 630, 795, 40, 35);
+                        break;
+                }
             }
 
             // Save the signed PDF to the output path

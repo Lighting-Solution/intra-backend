@@ -40,11 +40,11 @@ public interface DigitalApprovalController {
     ResponseEntity<Resource> getPdf(@PathVariable String projectName, @PathVariable Integer digitalApprovalId);
 
     /**
-     * @apiNote empId를 조회해서 결재 대기 문서 조회
+     * @apiNote digitalApprovalId 를 조회해서 결재 대기 문서 조회
      * @param empId
      * @return
      */
-    ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Integer empId);
+    ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList();
 
     /**
      * @apiNote empId를 조회해서 sign PDF에 서명 및 날짜 추가
