@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface PersonalGroupRepository extends JpaRepository<PersonalGroup, Integer> {
     @Query("SELECT pg FROM PersonalGroup pg WHERE pg.emp.empId = :empId")
-    public List<PersonalGroup> findAllByEmp(@Param("empId") Integer empId);
+    List<PersonalGroup> findAllByEmp(@Param("empId") Integer empId);
 }

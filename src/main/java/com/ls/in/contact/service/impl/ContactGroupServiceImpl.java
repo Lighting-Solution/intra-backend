@@ -4,15 +4,13 @@ import com.ls.in.contact.domain.dao.ContactGroupDAO;
 import com.ls.in.contact.domain.model.ContactGroup;
 import com.ls.in.contact.domain.model.PersonalContact;
 import com.ls.in.contact.domain.model.PersonalGroup;
-import com.ls.in.contact.dto.ContactFilterPageDTO;
+import com.ls.in.contact.dto.ContactFilterDTO;
 import com.ls.in.contact.dto.ContactGroupDTO;
 import com.ls.in.contact.dto.PersonalContactDTO;
-import com.ls.in.contact.exception.ContactGroupNotFoundException;
 import com.ls.in.contact.service.ContactGroupService;
 import com.ls.in.contact.util.mapper.ContactGroupMapper;
 import com.ls.in.contact.util.mapper.PersonalContactMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -79,8 +77,8 @@ public class ContactGroupServiceImpl implements ContactGroupService {
     }
 
     @Override
-    public List<PersonalContactDTO> getAllByGroupBySearch(ContactFilterPageDTO requestDTO) {
-        Page<PersonalContact> result = contactGroupDAO.findAllByGroup(requestDTO);
+    public List<PersonalContactDTO> getAllByGroupBySearch(ContactFilterDTO requestDTO) {
+        List<PersonalContact> result = contactGroupDAO.findAllByGroup(requestDTO);
         List<PersonalContactDTO> responseList = new ArrayList<>();
         for(PersonalContact personalContact : result) {
             PersonalContactDTO tempDTO = PersonalContactMapper.toDto(personalContact);

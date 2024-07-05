@@ -28,8 +28,6 @@ public interface ContactController {
      * @apiNote 그룹, 검색 필터, 정렬, 페이지에 대한 조회
      * @param groupId
      * @param departmentId
-     * @param pageOffset
-     * @param pageSize
      * @param filterType
      * @param filterContent
      * @param sortType
@@ -38,8 +36,6 @@ public interface ContactController {
     @GetMapping("/list/search")
     ResponseEntity<ContactResponseDTO> getAllBySearch(@RequestParam(name = "groupId", required = false) String groupId,
                                                       @RequestParam(name = "departmentId", required = false) String departmentId,
-                                                      @RequestParam(name = "pageOffset", required = false) String pageOffset,
-                                                      @RequestParam(name = "pageSize", required = false) String pageSize,
                                                       @RequestParam(name = "filterType", required = false) String filterType,
                                                       @RequestParam(name = "filterContent", required = false) String filterContent,
                                                       @RequestParam(name = "sortType", required = false) String sortType);
@@ -97,7 +93,7 @@ public interface ContactController {
      * @param requestDTO
      * @return "success" 또는 "fail"
      */
-    @PostMapping("/contact")
+    @PostMapping("/personal-contact")
     ResponseEntity<String> createPersonalContact(@RequestBody PersonalContactDTO requestDTO);
 
     /**
@@ -105,7 +101,7 @@ public interface ContactController {
      * @param requestDTO
      * @return PersonalContactDTO
      */
-    @PutMapping("/contact")
+    @PutMapping("/personal-contact")
     ResponseEntity<PersonalContactDTO> updatePersonalContact(@RequestBody PersonalContactDTO requestDTO);
 
     /**
@@ -113,7 +109,7 @@ public interface ContactController {
      * @param contactId
      * @return "success" 또는 "fail"
      */
-    @DeleteMapping("/contact")
+    @DeleteMapping("/personal-contact")
     ResponseEntity<String> deletePersonalContact(@PathVariable("contactId") int contactId);
 
     /**

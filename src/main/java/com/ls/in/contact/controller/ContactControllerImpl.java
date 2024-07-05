@@ -51,23 +51,19 @@ public class ContactControllerImpl implements ContactController {
     @Override
     public ResponseEntity<ContactResponseDTO> getAllBySearch(@RequestParam(name = "groupId", required = false) String groupId,
                                                              @RequestParam(name = "departmentId", required = false) String departmentId,
-                                                             @RequestParam(name = "pageOffset", required = false) String pageOffset,
-                                                             @RequestParam(name = "pageSize", required = false) String pageSize,
                                                              @RequestParam(name = "filterType", required = false) String filterType,
                                                              @RequestParam(name = "filterContent", required = false) String filterContent,
                                                              @RequestParam(name = "sortType", required = false) String sortType) {
-        ContactFilterPageDTO contactFilterPageDTO = ContactFilterPageDTO.toDTO(
+        ContactFilterDTO contactFilterDTO = ContactFilterDTO.toDTO(
                 Utils.stringToInteger(groupId),
                 Utils.stringToInteger(departmentId),
-                Utils.stringToInteger(pageOffset),
-                Utils.stringToInteger(pageSize),
                 filterType,
                 filterContent,
                 sortType);
-        if(Utils.checkIntegerNull(contactFilterPageDTO.getGroupId()) && Utils.checkIntegerNull(contactFilterPageDTO.getDepartmentId()))
+        if(Utils.checkIntegerNull(contactFilterDTO.getGroupId()) && Utils.checkIntegerNull(contactFilterDTO.getDepartmentId()))
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "BAD_REQUEST");
 
-        ContactResponseDTO contactResponseDTO = contactService.getAllBySearch(contactFilterPageDTO);
+        ContactResponseDTO contactResponseDTO = contactService.getAllBySearch(contactFilterDTO);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(contactResponseDTO);
     }
@@ -124,9 +120,9 @@ public class ContactControllerImpl implements ContactController {
     @Override
     public ResponseEntity<List<PersonalContactDTO>> getAllPersonalContactByGroup(
             @PathVariable("groupId") String groupId) throws Exception {
-        ContactFilterPageDTO contactFilterPageDTO = new ContactFilterPageDTO();
-        contactFilterPageDTO.setGroupId(Utils.stringToInteger(groupId));
-        List<PersonalContactDTO> resultList = contactGroupService.getAllByGroupBySearch(contactFilterPageDTO);
+        ContactFilterDTO contactFilterDTO = new ContactFilterDTO();
+        contactFilterDTO.setGroupId(Utils.stringToInteger(groupId));
+        List<PersonalContactDTO> resultList = contactGroupService.getAllByGroupBySearch(contactFilterDTO);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(resultList);
     }

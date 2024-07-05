@@ -10,9 +10,7 @@ import com.ls.in.contact.service.CompanyService;
 import com.ls.in.contact.service.PersonalContactService;
 import com.ls.in.contact.util.mapper.CompanyMapper;
 import com.ls.in.contact.util.mapper.PersonalContactMapper;
-import com.ls.in.global.util.PageNation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,7 +41,7 @@ public class PersonalContactServiceImpl implements PersonalContactService {
 
     @Override
     public List<PersonalContactDTO> getAllPersonalContact(int empId) throws PersonalContactNotFoundException {
-        Page<PersonalContact> result = personalContactDAO.findAllByEmpId(PageNation.setPage(0,10), empId);
+        List<PersonalContact> result = personalContactDAO.findAllByEmpId(empId);
         List<PersonalContactDTO> responseList = new ArrayList<>();
         for(PersonalContact personalContact : result) {
             PersonalContactDTO tempDTO = PersonalContactMapper.toDto(personalContact);

@@ -1,6 +1,6 @@
 package com.ls.in.global.emp.repository.impl;
 
-import com.ls.in.contact.dto.ContactFilterPageDTO;
+import com.ls.in.contact.dto.ContactFilterDTO;
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.domain.model.QEmp;
 import com.ls.in.global.emp.repository.EmpCustomRepository;
@@ -9,10 +9,6 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,7 +24,7 @@ public class EmpCustomRepositoryImpl implements EmpCustomRepository {
     }
 
     @Override
-    public Page<Emp> search(ContactFilterPageDTO data) {
+    public List<Emp> search(ContactFilterDTO data) {
         QEmp emp = QEmp.emp;
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -46,13 +42,8 @@ public class EmpCustomRepositoryImpl implements EmpCustomRepository {
             }
         }
 
-        if(Utils.checkIntegerNull(data.getPageOffset())) data.setPageOffset(0);
-        if(Utils.checkIntegerNull(data.getPageSize())) data.setPageSize(10);
-
         JPAQuery<Emp> query = queryFactory.selectFrom(emp)
-                .where(builder)
-                .offset(data.getPageOffset())
-                .limit(data.getPageSize());
+                .where(builder);
 
         if (!Utils.checkStringNull(data.getSortType())) {
             switch (data.getSortType()) {
@@ -71,10 +62,6 @@ public class EmpCustomRepositoryImpl implements EmpCustomRepository {
             }
         }
 
-        List<Emp> results = query.fetch();
-        long total = queryFactory.selectFrom(emp).where(builder).fetch().size();
-        Pageable pageable = PageRequest.of(data.getPageOffset(), data.getPageSize());
-
-        return new PageImpl<>(results, pageable, total);
+        return query.fetch();
     }
 }

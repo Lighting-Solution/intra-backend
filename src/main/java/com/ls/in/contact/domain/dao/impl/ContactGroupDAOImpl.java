@@ -3,12 +3,10 @@ package com.ls.in.contact.domain.dao.impl;
 import com.ls.in.contact.domain.dao.ContactGroupDAO;
 import com.ls.in.contact.domain.model.ContactGroup;
 import com.ls.in.contact.domain.model.PersonalContact;
-import com.ls.in.contact.dto.ContactFilterPageDTO;
+import com.ls.in.contact.dto.ContactFilterDTO;
 import com.ls.in.contact.repository.ContactGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,7 +25,7 @@ public class ContactGroupDAOImpl implements ContactGroupDAO {
     }
 
     @Override
-    public Page<PersonalContact> findAllByGroup(ContactFilterPageDTO data) throws DataAccessException {
+    public List<PersonalContact> findAllByGroup(ContactFilterDTO data) throws DataAccessException {
         return contactGroupRepository.search(data);
     }
 

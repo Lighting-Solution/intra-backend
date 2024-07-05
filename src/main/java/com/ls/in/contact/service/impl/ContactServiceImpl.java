@@ -70,7 +70,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public ContactResponseDTO getAllBySearch(ContactFilterPageDTO requestDTO) {
+    public ContactResponseDTO getAllBySearch(ContactFilterDTO requestDTO) {
         if(Utils.checkIntegerNull(requestDTO.getDepartmentId())) {
             List<PersonalContactDTO> resultList = contactGroupService.getAllByGroupBySearch(requestDTO);
             ContactResponseDTO responseDTO = new ContactResponseDTO();

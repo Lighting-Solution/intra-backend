@@ -1,18 +1,18 @@
 package com.ls.in.global.emp.repository;
 
 import com.ls.in.global.emp.domain.model.Emp;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface EmpRepository extends JpaRepository<Emp, Integer>, EmpCustomRepository {
 
     @Query("SELECT e FROM Emp e WHERE e.department.departmentId = :departmentId")
-    Page<Emp> findAllByDepartment( Pageable pageable, @Param("departmentId") Integer departmentId);
+    List<Emp> findAllByDepartment(@Param("departmentId") Integer departmentId);
 
     @Query("SELECT e FROM Emp e WHERE e.position.positionId = :positionId")
     Emp findByPosition(@Param("positionId") Integer positionId);
