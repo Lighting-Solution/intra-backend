@@ -42,9 +42,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
     private EmpService empService;
 
-
     @Autowired
-
     public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService) {
         this.approvalService = approvalService;
         this.empService = empService;
@@ -80,7 +78,8 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     @PostMapping("/request")
     public ResponseEntity<String> approvalRequest(Map<String, String> request) throws IOException, DocumentException {
 
-        Integer empId = Integer.parseInt(request.get("empId")); // 로그인한 사원 ID
+        // 로그인한 사원 ID
+        Integer empId = Integer.parseInt(request.get("empId"));
 
         // empId와 일치하는 사원 정보 가져오기 (직급, 부서)
         EmpDTO empDTO = empService.getEmpById(empId);
@@ -149,7 +148,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         Integer digitalApprovalId = digitalApprovalDTO.getDigitalApprovalId();
 
         // html 파일 PDF 저장
-        loadHtml.htmlToPdf(filePath, fontPath, request);
+        loadHtml.htmlToPdf(filePath, fontPath, request, digitalApprovalId, formDTO);
 
         // sign PDF 가 저장되는 경로
         String outputPdfPath = "src/main/resources/approvalWaiting/signed" + digitalApprovalDTO.getDigitalApprovalId() + ".pdf";
@@ -205,8 +204,6 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         Integer empId = Integer.parseInt(request.get("empId"));
         System.out.println("empId : " + empId);
 
-
-        // empId : 3 position : 1 drafterId : 1
         //empId를 통해 drafterID 와 해당 직급 가져오기
         EmpDTO empDTO = empService.getEmpById(empId);
         Integer position = empDTO.getPosition().getPositionId();
@@ -225,15 +222,10 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
             digitalApprovalDTOList = approvalService.getApprovalWaitingList();
         } else if(position.equals(2)){ // 부장
             digitalApprovalDTOList = approvalService.getApprovalWaitingListByManager(department);
-            System.out.println("=============================================================");
-            System.out.println(digitalApprovalDTOList);
-            System.out.println("=============================================================");
         } else { // 부장 밑 사원
             digitalApprovalDTOList = approvalService.getApprovalWaitingListByEmployee(empId);
-            System.out.println(digitalApprovalDTOList);
         }
 
-        System.out.println("==========test end==========");
         return ResponseEntity.ok(digitalApprovalDTOList);
     }
 
@@ -245,18 +237,15 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         EmpDTO empDTO = empService.getEmpById(empId);
 
         Integer digitalApprovalId = Integer.parseInt(request.get("digitalApprovalId"));
-        System.out.println("empId : " + empId + "digitalApprovalId : " + digitalApprovalId);
+
         // 문서 id를 통해서 객체 반환 받고 기안자 id, status 가져오기
         // 문서 id를 통해서 객체 반환 받고 status 값 가져오기
         DigitalApprovalDTO digitalApprovalDTO = approvalService.getDrafterId(digitalApprovalId);
-        System.out.println("digitalApprovalDTO : " + digitalApprovalDTO);
 
         Integer drafterId = digitalApprovalDTO.getDrafterId();
         boolean managerStatus = digitalApprovalDTO.isManagerStatus();
-        //boolean ceoStatus = digitalApprovalDTO.isCeoStatus();
 
         // 문서 번호의 기안자와 사용자가 다를 경우 (사원이 아닐 경우 -> 부장 , ceo)
-        // 현재 empId : 2 , drafterId : 1
         if(!empId.equals(drafterId)){
             //부장 status false : 부장 문서 결재 대기함에 보이게 함
             if(!managerStatus){
@@ -279,12 +268,11 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
                 LoadHtml.addSignToPDF(pdfFilePath,imagePath,outputPdfPath, "ceo");
 
                 // 내문서함으로 전송 (기안자 id, 문서경로)
+                /* 꼭 해야함  */
 
                 // DB ceo_status update
                 approvalService.updateStatus(digitalApprovalId, "ceo");
-
             }
-
         } else { // 기안자와 사용자가 같을 경우
             // logic 처리할 필요가 없음
         }
@@ -296,6 +284,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     @Override
     @PostMapping("/requestreject")
     public ResponseEntity<String> approvalRequestReject(@RequestBody Map<String, String> request) throws IOException, DocumentException {
+
         Integer empId = Integer.parseInt(request.get("empId"));
         Integer digitalApprovalId = Integer.parseInt(request.get("digitalApprovalId"));
 

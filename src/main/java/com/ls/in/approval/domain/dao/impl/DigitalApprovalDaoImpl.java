@@ -2,14 +2,12 @@ package com.ls.in.approval.domain.dao.impl;
 
 import com.ls.in.approval.domain.dao.DigitalApprovalDao;
 import com.ls.in.approval.domain.model.DigitalApproval;
-import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.approval.repository.DigitalApprovalRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +53,7 @@ public class DigitalApprovalDaoImpl implements DigitalApprovalDao {
             existingApproval.setManagerStatus(true);
         } else if(type.equals("ceo")){
             existingApproval.setCeoStatus(true);
+            existingApproval.setDigitalApprovalAt(LocalDateTime.now());
         } else {
             System.out.println("등록된 type 이아닙니다.");
         }

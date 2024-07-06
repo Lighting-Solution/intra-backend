@@ -2,8 +2,6 @@ package com.ls.in.approval.controller;
 
 import com.lowagie.text.DocumentException;
 
-import com.ls.in.approval.domain.model.DigitalApproval;
-
 import com.ls.in.approval.dto.DigitalApprovalDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;

@@ -3,10 +3,8 @@ package com.ls.in.approval.util;
 import com.itextpdf.text.pdf.BaseFont;
 import com.lowagie.text.DocumentException;
 import com.ls.in.approval.dto.CeoDTO;
-import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.approval.dto.FormDTO;
 import com.ls.in.approval.dto.ManagerDTO;
-import com.ls.in.global.emp.domain.dto.EmpDTO;
 import lombok.NoArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -129,13 +127,11 @@ public class LoadHtml {
             document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
             document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
 
-            // System.out.println(htmlContent);
             htmlContent = document.html();
 
             document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
             document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
 
-            // System.out.println(htmlContent);
             htmlContent = document.html();
 
         } catch (UnsupportedEncodingException e) {
@@ -170,8 +166,19 @@ public class LoadHtml {
         return document;
     }
 
-    public void htmlToPdf(String filePath, String fontPath, Map<String, String> request)
+    public void htmlToPdf(String filePath, String fontPath, Map<String, String> request, Integer digitalApprovalId, FormDTO formDTO)
             throws IOException, DocumentException {
+        // 문서번호 가져오기
+        String approvalId = String.valueOf(digitalApprovalId);
+
+        // 부서명, 기안일 가져오기
+        String departmentName = formDTO.getDepartment();
+        LocalDateTime digitalApprovalCreatedAt = formDTO.getDigitalApprovalCreatedAt();
+        String formatterPattern = "yyyyMMdd";  // formatter 객체 대신 문자열로 변경
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatterPattern);
+
+        // 날짜를 원하는 형식으로 포맷팅하는 예시
+        String formattedDate = digitalApprovalCreatedAt.format(formatter);
 
         // html -> pdf 변경하기 (결재진행중 저장)
 
@@ -179,17 +186,18 @@ public class LoadHtml {
         byte[] htmlContentBytes = Files.readAllBytes(Paths.get(filePath));
         String htmlContent = new String(htmlContentBytes, StandardCharsets.UTF_8);
 
-        // Inject request map values into HTML content
+
         for (Map.Entry<String, String> entry : request.entrySet()) {
             String placeholder = String.format("{{%s}}", entry.getKey());
             htmlContent = htmlContent.replace(placeholder, entry.getValue());
         }
 
-        // Convert input fields and text areas with values
+        // html 안에 요소 변경하기
         htmlContent = htmlContent.replaceAll("<input type=\"text\" placeholder=\"[^\"]*\" value=\"([^\"]*)\" />", "$1");
         htmlContent = htmlContent.replaceAll("<input[^>]*id=\"([^\"]*)\"[^>]*value=\"([^\"]*)\"[^>]*>", "$2");
+        htmlContent = htmlContent.replaceAll("<div id=\"digitalApprovalId\"></div>", "<div id=\"digitalApprovalId\">" +departmentName+"-"+formattedDate+"-"+approvalId + "</div>");
 
-        // Handle <textarea> elements specifically
+
         Pattern pattern = Pattern.compile("(?s)<textarea[^>]*>(.*?)</textarea>");
         Matcher matcher = pattern.matcher(htmlContent);
         StringBuffer sb = new StringBuffer();
@@ -201,10 +209,8 @@ public class LoadHtml {
         }
         matcher.appendTail(sb);
         htmlContent = sb.toString();
-        System.out.println("--------------------------------------------------------");
-        // System.out.println(htmlContent); html 코드 보여주기
 
-        // Convert HTML to PDF using ITextRenderer
+        // html 을 pdf 로 쓰기위해 ITextRenderer 사용
         ITextRenderer renderer = new ITextRenderer();
         ITextFontResolver fontResolver = renderer.getFontResolver();
         fontResolver.addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED); // 유니코드 폰트 설정
@@ -212,33 +218,33 @@ public class LoadHtml {
         renderer.setDocumentFromString(htmlContent);
         renderer.layout();
 
-        // Create approvalWaiting directory if it doesn't exist
+        // 결재 대기 문서 폴더가 없으면 생성
         Path approvalWaitingDir = Paths.get("src/main/resources/ApprovalWaiting");
         if (!Files.exists(approvalWaitingDir)) {
             Files.createDirectories(approvalWaitingDir);
         }
 
-        // Save PDF to the approvalWaiting directory
+        // 결재 대기 문서 폴더에 pdf 저장
         Path pdfPath = approvalWaitingDir.resolve("saved_approval.pdf");
         try (OutputStream os = Files.newOutputStream(pdfPath)) {
             renderer.createPDF(os);
         }
 
-        // Load the PDF and convert the first page to an image
+        // PDF 를 가져와서 첫 화면을 이미지로 바꾸는 작업
         BufferedImage image;
         try (PDDocument document = PDDocument.load(pdfPath.toFile())) {
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             image = pdfRenderer.renderImageWithDPI(0, 300); // Render at 300 DPI
 
-            // Clean up
+            // 문서 닫기
             document.close();
         }
 
-        // Save the image to a PNG file in the approvalWaiting directory
+        // 이미지를 png 파일을 결재 대기 문서함에 저장
         Path pngPath = approvalWaitingDir.resolve("saved_approval.png");
         ImageIO.write(image, "png", pngPath.toFile());
 
-        // Create a new PDF document with the image
+        // 사인 이미지를 추가해 새로운 PDF 생성
         try (PDDocument pdfDocument = new PDDocument()) {
             PDPage page = new PDPage();
             pdfDocument.addPage(page);
@@ -247,24 +253,19 @@ public class LoadHtml {
                 contentStream.drawImage(pdImage, 0, 0, page.getMediaBox().getWidth(), page.getMediaBox().getHeight());
             }
 
-            // Save the new PDF to the approvalWaiting directory
             Path finalPdfPath = approvalWaitingDir.resolve("final_saved_approval.pdf");
             try (OutputStream outputStream = Files.newOutputStream(finalPdfPath)) {
                 pdfDocument.save(outputStream);
             }
 
-            // Clean up
             Files.deleteIfExists(pngPath);
         }
     }
 
-    // 전자 결재 서명
     public static void addSignToPDF(String pdfFilePath, String imagePath, String outputPdfPath, String signType) throws IOException {
         try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
-            PDPage page = document.getPage(0); // Add signature to the first page
-            System.out.println("pdfFilePath :" + pdfFilePath);
-            System.out.println("imagePath :" + imagePath);
-            System.out.println("outputPdfPath :" + outputPdfPath);
+            // 첫 화면 지정하기
+            PDPage page = document.getPage(0);
             PDImageXObject pdImage = PDImageXObject.createFromFile(imagePath, document);
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page,
                     PDPageContentStream.AppendMode.APPEND, true, true)) {
@@ -285,7 +286,6 @@ public class LoadHtml {
                 }
             }
 
-            // Save the signed PDF to the output path
             try (OutputStream os = new FileOutputStream(outputPdfPath)) {
                 document.save(os);
             }
