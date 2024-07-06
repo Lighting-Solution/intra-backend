@@ -27,4 +27,11 @@ public class Room {
 
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
+
+    public static Room createRoom(String name) {
+        return Room.builder()
+                .roomName(name)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
 }
