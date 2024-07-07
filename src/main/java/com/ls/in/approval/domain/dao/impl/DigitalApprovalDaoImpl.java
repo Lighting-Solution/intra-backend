@@ -51,9 +51,11 @@ public class DigitalApprovalDaoImpl implements DigitalApprovalDao {
         // 매니저 상태 변경
         if(type.equals("manager")){
             existingApproval.setManagerStatus(true);
+            System.out.println(existingApproval);
         } else if(type.equals("ceo")){
             existingApproval.setCeoStatus(true);
             existingApproval.setDigitalApprovalAt(LocalDateTime.now());
+
         } else {
             System.out.println("등록된 type 이아닙니다.");
         }
@@ -61,11 +63,22 @@ public class DigitalApprovalDaoImpl implements DigitalApprovalDao {
     }
 
     @Override
-    public void updateRejectionStatus(Integer digitalApprovalId) {
+    public void updateRejectionStatus(Integer digitalApprovalId, boolean managerStatus, boolean ceoStatus) {
         DigitalApproval existingApproval = digitalApprovalRepository.findById(digitalApprovalId)
                 .orElseThrow(() -> new EntityNotFoundException("DigitalApproval not found"));
         // 반려 상태로 설정
         existingApproval.setDigitalApprovalType(true);
+
+        // 부장 결재 반려 시간
+        if(!managerStatus){
+            existingApproval.setManagerRejectAt(LocalDateTime.now());
+        } else { // ceo 반려 시간
+            if(!ceoStatus){
+                existingApproval.setCeoRejectAt(LocalDateTime.now());
+            }
+        }
+
+
         DigitalApproval updatedRejectionDigitalApproval = digitalApprovalRepository.save(existingApproval);
     }
 

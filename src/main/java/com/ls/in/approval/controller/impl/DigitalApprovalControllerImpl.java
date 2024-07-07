@@ -211,6 +211,8 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
         if(!empId.equals(3)){
             department = empDTO.getDepartment().getDepartmentId();
+        } else {
+            department = null;
         }
 
         System.out.println("position : " + position);
@@ -225,6 +227,8 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         } else { // 부장 밑 사원
             digitalApprovalDTOList = approvalService.getApprovalWaitingListByEmployee(empId);
         }
+        System.out.println("--------------------");
+        System.out.println(digitalApprovalDTOList);
 
         return ResponseEntity.ok(digitalApprovalDTOList);
     }
@@ -296,7 +300,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         // 문서가 이미 승인된 상태인지 확인
         if (!managerStatus || !ceoStatus) {
             // 반려 상태로 업데이트
-            approvalService.updateRejectionStatus(digitalApprovalId);
+            approvalService.updateRejectionStatus(digitalApprovalId, managerStatus, ceoStatus);
 
             // 결재 대기 문서함 경로
             String savedPdfPath = "src/main/resources/approvalWaiting/signed" + digitalApprovalDTO.getDigitalApprovalId() + ".pdf";

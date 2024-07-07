@@ -45,6 +45,8 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
                     .ceoStatus(false)
                     .digitalApprovalCreateAt(LocalDateTime.now())
                     .digitalApprovalAt(null)
+                    .managerRejectAt(null)
+                    .ceoRejectAt(null)
                     .emp(emp)
                     .build();
         DigitalApproval digitalApproval2 = approvalDao.save(digitalApproval);
@@ -115,8 +117,8 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
     }
 
     @Override
-    public void updateRejectionStatus(Integer digitalApprovalId) {
-        approvalDao.updateRejectionStatus(digitalApprovalId);
+    public void updateRejectionStatus(Integer digitalApprovalId, boolean managerStatus, boolean ceoStatus) {
+        approvalDao.updateRejectionStatus(digitalApprovalId, managerStatus, ceoStatus);
     }
 
 }

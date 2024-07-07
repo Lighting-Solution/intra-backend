@@ -19,5 +19,5 @@ public interface DigitalApprovalDao {
 
     void updateStatus(Integer digitalApprovalId, String type);
 
-    void updateRejectionStatus(Integer digitalApprovalId);
+    void updateRejectionStatus(Integer digitalApprovalId , boolean managerStatus, boolean ceoStatus);
 }

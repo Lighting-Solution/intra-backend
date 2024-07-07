@@ -21,5 +21,5 @@ public interface DigitalApprovalService {
 
     List<DigitalApprovalDTO> getApprovalWaitingListByEmployee(Integer empId);
 
-    void updateRejectionStatus(Integer digitalApprovalId);
+    void updateRejectionStatus(Integer digitalApprovalId, boolean managerStatus, boolean ceoStatus);
 }
