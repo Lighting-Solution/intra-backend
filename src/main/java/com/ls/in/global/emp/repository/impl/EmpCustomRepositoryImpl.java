@@ -28,6 +28,8 @@ public class EmpCustomRepositoryImpl implements EmpCustomRepository {
         QEmp emp = QEmp.emp;
 
         BooleanBuilder builder = new BooleanBuilder();
+        builder.and(emp.department.departmentId.eq(data.getDepartmentId()));
+
         if (!(Utils.checkStringNull(data.getFilterType()) || Utils.checkStringNull(data.getFilterContent()))) {
             switch (data.getFilterType()) {
                 case "name":

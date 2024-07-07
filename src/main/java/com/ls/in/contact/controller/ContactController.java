@@ -2,7 +2,6 @@ package com.ls.in.contact.controller;
 
 import com.ls.in.contact.dto.ContactAndroidDTO;
 import com.ls.in.contact.dto.ContactResponseDTO;
-import com.ls.in.contact.dto.EmpAllResponseDTO;
 import com.ls.in.contact.dto.PersonalContactDTO;
 import com.ls.in.global.emp.domain.dto.EmpAndroidDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
@@ -22,7 +21,7 @@ public interface ContactController {
      * @return ContactResponseDTO
      */
     @GetMapping("/list/all/{id}")
-    ResponseEntity<EmpAllResponseDTO> getAll(@PathVariable("id") String empId);
+    ResponseEntity<ContactResponseDTO> getAll(@PathVariable("id") String empId);
 
     /**
      * @apiNote 그룹, 검색 필터에 대한 조회

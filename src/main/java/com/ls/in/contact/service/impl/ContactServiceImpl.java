@@ -39,13 +39,13 @@ public class ContactServiceImpl implements ContactService {
 
 
     @Override
-    public EmpAllResponseDTO getAll(int empId) {
+    public ContactResponseDTO getAll(int empId) {
         List<EmpDTO> empDTOList = contactEmpService.getAllEmp();
         List<DepartmentDTO> departmentDTOList = departmentService.getAllDepartment();
         List<PersonalGroupDTO> personalGroupDTOList = personalGroupService.getAllByEmp(empId);
 
-        EmpAllResponseDTO responseDTO = new EmpAllResponseDTO();
-        responseDTO.setEmpDTOList(empDTOList);
+        ContactResponseDTO responseDTO = new ContactResponseDTO();
+        responseDTO.setEmpList(empDTOList);
         responseDTO.setDepartmentDTOList(departmentDTOList);
         responseDTO.setGroupDTOList(personalGroupDTOList);
         return responseDTO;

@@ -11,10 +11,11 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+@Repository
 public class ContactGroupCustomRepositoryImpl implements ContactGroupCustomRepository {
     private final JPAQueryFactory queryFactory;
 

@@ -41,8 +41,8 @@ public class ContactControllerImpl implements ContactController {
 
     @GetMapping("/list/all/{id}")
     @Override
-    public ResponseEntity<EmpAllResponseDTO> getAll(@PathVariable("id") String empId) {
-        EmpAllResponseDTO responseDTO = contactService.getAll(Utils.stringToInteger(empId));
+    public ResponseEntity<ContactResponseDTO> getAll(@PathVariable("id") String empId) {
+        ContactResponseDTO responseDTO = contactService.getAll(Utils.stringToInteger(empId));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(responseDTO);
     }
