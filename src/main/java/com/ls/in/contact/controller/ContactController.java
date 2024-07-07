@@ -25,7 +25,7 @@ public interface ContactController {
     ResponseEntity<EmpAllResponseDTO> getAll(@PathVariable("id") String empId);
 
     /**
-     * @apiNote 그룹, 검색 필터, 정렬, 페이지에 대한 조회
+     * @apiNote 그룹, 검색 필터에 대한 조회
      * @param groupId
      * @param departmentId
      * @param filterType
