@@ -3,6 +3,7 @@ package com.ls.in.contact.controller;
 import com.ls.in.contact.dto.ContactAndroidDTO;
 import com.ls.in.contact.dto.ContactResponseDTO;
 import com.ls.in.contact.dto.PersonalContactDTO;
+import com.ls.in.contact.dto.PersonalGroupDTO;
 import com.ls.in.global.emp.domain.dto.EmpAndroidDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import org.springframework.http.ResponseEntity;
@@ -55,14 +56,14 @@ public interface ContactController {
     ResponseEntity<ContactAndroidDTO> getPersonalAllByAndroid(@PathVariable("id") String empId);
 
     /**
-     * @apiNote 사내 주소록-전체 주소록
+     * @apiNote 사내 주소록-전체 주소록 연락처
      * @return List<EmpDTO>
      */
     @GetMapping("/list/all-emp")
     ResponseEntity<List<EmpDTO>> getAllEmp();
 
     /**
-     * @apiNote 개인 주소록-전체 주소록
+     * @apiNote 개인 주소록-전체 주소록 연락처
      * @param empId
      * @return List<PersonalContactDTO>
      */
@@ -109,27 +110,32 @@ public interface ContactController {
      * @return "success" 또는 "fail"
      */
     @DeleteMapping("/personal-contact")
-    ResponseEntity<String> deletePersonalContact(@PathVariable("contactId") int contactId);
+    ResponseEntity<String> deletePersonalContact(@PathVariable("contactId") String contactId);
+
+
+    /**
+     * @apiNote 개인 주소록 목록 조회
+     * @param empId
+     * @return List<PersonalGroupDTO>
+     */
+    @GetMapping("/personal-group/{empId}")
+    ResponseEntity<List<PersonalGroupDTO>> getPersonalGroup(@PathVariable("empId") String empId);
 
     /**
      * @apiNote 개인 그룹 추가
-     * @param empId
-     * @param groupName
+     * @param requestDTO
      * @return "success" 또는 "fail"
      */
-    @PostMapping("/group/{empId}/{groupName}")
-    ResponseEntity<String> createPersonalGroup(@PathVariable("empId") String empId,
-                                               @PathVariable("groupName") String groupName);
+    @PostMapping("/personal-group")
+    ResponseEntity<String> createPersonalGroup(@RequestBody PersonalGroupDTO requestDTO);
 
     /**
      * @apiNote 개인 그룹 수정
-     * @param groupId
-     * @param groupName
+     * @param requestDTO
      * @return "success" 또는 "fail"
      */
-    @PutMapping("/group/{groupId}/{groupName}")
-    ResponseEntity<String> updatePersonalGroup(@PathVariable("groupId") String groupId,
-                                               @PathVariable("groupName") String groupName);
+    @PutMapping("/personal-group")
+    ResponseEntity<String> updatePersonalGroup(@RequestBody PersonalGroupDTO requestDTO);
 
     /**
      * @apiNote 개인 그룹 삭제

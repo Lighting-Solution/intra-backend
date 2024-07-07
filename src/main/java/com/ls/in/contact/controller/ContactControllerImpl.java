@@ -145,31 +145,34 @@ public class ContactControllerImpl implements ContactController {
                 .body(responseDTO);
     }
 
-
     @DeleteMapping("/contact")
     @Override
-    public ResponseEntity<String> deletePersonalContact(@PathVariable("contactId") int contactId) {
-        boolean result = personalContactService.deletePersonalContact(contactId);
+    public ResponseEntity<String> deletePersonalContact(@PathVariable("contactId") String contactId) {
+        boolean result = personalContactService.deletePersonalContact(Utils.stringToInteger(contactId));
+        if(result) return ResponseEntity.ok("success");
+        return ResponseEntity.ok("fail");
+    }
+
+    @GetMapping("/personal-group/{empId}")
+    @Override
+    public ResponseEntity<List<PersonalGroupDTO>> getPersonalGroup(@PathVariable("empId") String empId) {
+        List<PersonalGroupDTO> resultList = personalGroupService.getAllByEmp(Utils.stringToInteger(empId));
+        return null;
+    }
+
+    @PostMapping("/personal-group")
+    @Override
+    public ResponseEntity<String> createPersonalGroup(@RequestBody PersonalGroupDTO requestDTO) {
+        boolean result = personalGroupService.createPersonalGroup(requestDTO.getEmpId(), requestDTO.getPersonalGroupName());
         if(result) return ResponseEntity.ok("success");
         return ResponseEntity.ok("fail");
     }
 
 
-    @PostMapping("/group/{empId}/{groupName}")
+    @PutMapping("/personal-group")
     @Override
-    public ResponseEntity<String> createPersonalGroup(@PathVariable("empId") String empId,
-                                                      @PathVariable("groupName") String groupName) {
-        boolean result = personalGroupService.createPersonalGroup(Utils.stringToInteger(empId), groupName);
-        if(result) return ResponseEntity.ok("success");
-        return ResponseEntity.ok("fail");
-    }
-
-
-    @PutMapping("/group/{groupId}/{groupName}")
-    @Override
-    public ResponseEntity<String> updatePersonalGroup(@PathVariable("groupId") String groupId,
-                                                      @PathVariable("groupName") String groupName) {
-        boolean result = personalGroupService.updatePersonalGroup(Utils.stringToInteger(groupId), groupName);
+    public ResponseEntity<String> updatePersonalGroup(@RequestBody PersonalGroupDTO requestDTO) {
+        boolean result = personalGroupService.updatePersonalGroup(requestDTO.getEmpId(), requestDTO.getPersonalGroupName());
         if(result) return ResponseEntity.ok("success");
         return ResponseEntity.ok("fail");
     }
