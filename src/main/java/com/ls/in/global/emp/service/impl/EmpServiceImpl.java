@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("empService")
-public abstract class EmpServiceImpl implements EmpService {
+public class EmpServiceImpl implements EmpService {
 
     private final EmpDAO empDAO;
 
