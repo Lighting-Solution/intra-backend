@@ -10,7 +10,7 @@ import com.ls.in.messenger.repository.RoomMemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,7 +65,7 @@ public class MessageService {
 						message.getRoomMember().getEmp().getEmpId(),
 						message.getRoomMember().getEmp().getEmpName(),
 						message.getMessageContent(),
-						message.getMessageFile() != null ? message.getMessageFile().getFilePath() : null
+						message.getMessageFile() != null ? message.getMessageFile().getFilePath() : null,
 						message.getMessageSendTime().format(formatter)
 
 				))

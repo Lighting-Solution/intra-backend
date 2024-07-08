@@ -55,7 +55,7 @@ public class RoomController {
 	@GetMapping(value = "/api/rooms")
 	public List<ChatRoomDTO> rooms(){
 		log.info("# 채팅방 목록 가져오기");
-		return roomService.getRooms(1);
+		return roomService.getRooms(2);
 	}
 
 

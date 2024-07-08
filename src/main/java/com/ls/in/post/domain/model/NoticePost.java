@@ -12,29 +12,37 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "noticePost")
+@Table(name = "notice_post")
 public class NoticePost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "nPost_id")
-    private Integer nPost_id;
+    @Column(name = "notice_post_id")
+    private Integer noticePostId;
 
-    @Column(name = "title")
-    private String noticePostTitle;
-
-    @Column(name = "content")
-    private String noticePostContent;
-
-    @Column(name = "importantNotice")
-    private Boolean importantNotice;
-
-    @Column(name = "createdAt")
-    private LocalDateTime noticePostCreatedAt;
-
-    @Column(name = "updatedAt")
-    private LocalDateTime noticePostUpdatedAt;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emp_id")
     private Emp emp;
+
+    @Column(name = "notice_title")
+    private String noticeTitle;
+
+    @Column(name = "notice_content")
+    private String noticeContent;
+
+    @Column(name = "important_notice")
+    private Boolean importantNotice;
+
+    @Column(name = "notice_created_at")
+    private LocalDateTime noticeCreatedAt;
+
+    @Column(name = "notice_updated_at")
+    private LocalDateTime noticeUpdatedAt;
+
+    @Column(name = "notice_hits", nullable = false)
+    private Integer noticeHits = 0; // 기본값 설정
+
+    @Column(name = "notice_good", nullable = false)
+    private Integer noticeGood = 0; // 기본값 설정
+
+
 }
