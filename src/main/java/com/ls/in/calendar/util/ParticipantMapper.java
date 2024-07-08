@@ -9,10 +9,6 @@ public class ParticipantMapper {
 
     public static ParticipantDTO toDto(Participant participant) {
         ParticipantDTO dto = new ParticipantDTO();
-        dto.setParticipantId(participant.getParticipantId());
-        dto.setEmp(EmpMapper.toDto(participant.getEmp()));
-        dto.setCalendarId(participant.getCalendar().getCalendarId());
-
         return dto;
     }
 }

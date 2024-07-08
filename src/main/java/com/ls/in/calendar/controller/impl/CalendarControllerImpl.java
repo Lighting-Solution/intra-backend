@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,18 @@ public class CalendarControllerImpl implements CalendarController {
 
     @PostMapping("/events")
     public CalendarDTO createEvent(@RequestBody CalendarDTO calendarDTO) {
+        // Convert string dates to LocalDateTime
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime startAt = calendarDTO.getCalendarStartAt();
+        LocalDateTime endAt = calendarDTO.getCalendarEndAt();
+
+        // Set the converted LocalDateTime back to the DTO
+        calendarDTO.setCalendarStartAt(startAt);
+        calendarDTO.setCalendarEndAt(endAt);
+
+        System.out.println("======" + calendarDTO + "=======");
         return calendarService.createOrUpdateEvent(calendarDTO);
+
     }
 
     @PutMapping("/events/{id}")

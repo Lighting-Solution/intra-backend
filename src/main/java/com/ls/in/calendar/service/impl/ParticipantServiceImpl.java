@@ -3,59 +3,66 @@ package com.ls.in.calendar.service.impl;
 import com.ls.in.calendar.domain.model.Calendar;
 import com.ls.in.calendar.domain.model.Participant;
 import com.ls.in.calendar.dto.ParticipantDTO;
+import com.ls.in.calendar.repository.CalendarRepository;
 import com.ls.in.calendar.repository.ParticipantRepository;
 import com.ls.in.calendar.service.ParticipantService;
-import com.ls.in.calendar.util.ParticipantMapper;
-import com.ls.in.global.emp.domain.dto.EmpDTO;
+
+import com.ls.in.calendar.util.CalendarMapper;
+import com.ls.in.global.emp.domain.dao.EmpDAO;
 import com.ls.in.global.emp.domain.model.Emp;
-import com.ls.in.global.emp.exception.EmpNotFoundException;
-import com.ls.in.global.emp.service.EmpService;
 import com.ls.in.global.emp.util.EmpMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.ls.in.calendar.util.ParticipantMapper.toDto;
 
 @Service
 public class ParticipantServiceImpl implements ParticipantService {
-
     private final ParticipantRepository participantRepository;
-    private final EmpService empService;
+    private final CalendarRepository calendarRepository;
 
-    public ParticipantServiceImpl(ParticipantRepository participantRepository, EmpService empService) {
+
+    public ParticipantServiceImpl(ParticipantRepository participantRepository, CalendarRepository calendarRepository) {
         this.participantRepository = participantRepository;
-        this.empService = empService;
+        this.calendarRepository = calendarRepository;
     }
 
-    public List<ParticipantDTO> getAllParticipants() {
-        List<Participant> participants = participantRepository.findAll();
-        return participants.stream()
-                .map(ParticipantMapper::toDto)
-                .collect(Collectors.toList());
-    }
 
-    public ParticipantDTO getParticipantById(Integer participantId) {
-        Participant participant = participantRepository.findById(participantId)
-                .orElseThrow(() -> new RuntimeException("Participant not found"));
-        return toDto(participant);
-    }
+    @Override
+    public void addParticipantToCalendar(ParticipantDTO participantDTO) {
+        try {
+            // Map CalendarDTO to Calendar entity
+            Calendar calendar = CalendarMapper.toEntity(participantDTO.getCalendarDTO());
 
-    public ParticipantDTO createParticipant(Integer empId, Integer calendarId) throws EmpNotFoundException {
-        EmpDTO empDTO = empService.getEmpById(empId);
-        Emp emp = EmpMapper.toEntity(empDTO);
+            // Save Calendar entity
+            Calendar calendar1 = calendarRepository.save(calendar);
+            Integer calendarId = calendar1.getCalendarId();
 
-        Calendar calendar = new Calendar();
-        calendar.setCalendarId(calendarId);
+            // List<Integer> empIdList = [1,2,3];
+            /*
+            for(Integer empId : empIdList){
+                Participant participant = new Participant();
+                participant.setCalendar();
+                participant.setEmp();
+            }
+*/
+            // Map ParticipantDTO to Participant entity
+            Participant participant = new Participant();
+            participant.setParticipantId(participantDTO.getParticipantId());
 
-        Participant participant = new Participant();
-        participant.setEmp(emp);
-        participant.setCalendar(calendar);
+            Emp emp = EmpMapper.toEntity(participantDTO.getEmpDTO());
+            participant.setEmp(emp);
 
-        participant = participantRepository.save(participant);
+            // Set the previously saved Calendar entity to Participant
+            participant.setCalendar(calendar);
 
-        return toDto(participant);
+            // Save Participant entity
+            participantRepository.save(participant);
+
+            System.out.println("Participant added successfully: " + participant);
+        } catch (Exception e) {
+            System.err.println("Failed to add participant: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }
