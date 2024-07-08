@@ -2,9 +2,11 @@ package com.ls.in.global.emp.service;
 
 
 import com.ls.in.global.emp.domain.dto.EmpDTO;
+import com.ls.in.global.emp.domain.dto.UserDTO;
 import com.ls.in.global.emp.exception.EmpNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EmpService {
     public List<EmpDTO> getAllEmp() throws EmpNotFoundException;
@@ -34,5 +36,11 @@ public interface EmpService {
      */
     public EmpDTO getEmpByPosition(Integer id) throws EmpNotFoundException;
 
+    /**
+     * @apiNote 존재하는 accountId를 통해 accountId, accountPw를 반환
+     * @param accountId
+     * @return Optional<EmpDTO></EmpDTO>
+     */
+    public UserDTO findByAccountId(String accountId);
 
 }

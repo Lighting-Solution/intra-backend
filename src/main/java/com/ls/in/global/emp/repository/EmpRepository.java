@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface EmpRepository extends JpaRepository<Emp, Integer> {
 
@@ -21,4 +23,6 @@ public interface EmpRepository extends JpaRepository<Emp, Integer> {
             "WHERE e.department.departmentId IN (SELECT e2.department.departmentId FROM Emp e2 WHERE e2.empId = :empId) " +
             "AND e.position.positionId = :positionId")
     Emp findByEmpIdAndDepartmentAndPosition(@Param("empId") Integer empId, @Param("positionId") Integer positionId);
+
+    Optional<Emp> findByAccountId(String accountId);
 }

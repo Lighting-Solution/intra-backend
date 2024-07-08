@@ -2,6 +2,7 @@ package com.ls.in.global.emp.service.impl;
 
 import com.ls.in.global.emp.domain.dao.EmpDAO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
+import com.ls.in.global.emp.domain.dto.UserDTO;
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.exception.EmpNotFoundException;
 import com.ls.in.global.emp.service.EmpService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service("empService")
 public class EmpServiceImpl implements EmpService {
@@ -54,6 +56,16 @@ public class EmpServiceImpl implements EmpService {
     public EmpDTO getEmpByPosition(Integer id) throws EmpNotFoundException {
         Emp result = empDAO.findByPosition(id);
         return EmpMapper.toDto(result);
+    }
+
+    @Override
+    public UserDTO findByAccountId(String accountId) {
+        Optional<Emp> empOptional = empDAO.findByAccountId(accountId);
+        Emp emp = empOptional.get();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(emp.getAccountId());
+        userDTO.setPassword(emp.getAccountPw());
+        return userDTO;
     }
 
 
