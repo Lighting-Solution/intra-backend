@@ -49,19 +49,21 @@ public class ContactControllerImpl implements ContactController {
 
     @GetMapping("/list/search")
     @Override
-    public ResponseEntity<ContactResponseDTO> getAllBySearch(@RequestParam(name = "groupId", required = false) String groupId,
+    public ResponseEntity<ContactResponseDTO> getAllBySearch(@RequestParam(name = "empId", required = false) String empId,
+                                                             @RequestParam(name = "groupId", required = false) String groupId,
                                                              @RequestParam(name = "departmentId", required = false) String departmentId,
                                                              @RequestParam(name = "filterType", required = false) String filterType,
                                                              @RequestParam(name = "filterContent", required = false) String filterContent,
-                                                             @RequestParam(name = "sortType", required = false) String sortType) {
+                                                             @RequestParam(name = "sortType", required = false) String sortType,
+                                                             @RequestParam(name = "groupType", required = false) String groupType) {
         ContactFilterDTO contactFilterDTO = ContactFilterDTO.toDTO(
                 Utils.stringToInteger(groupId),
                 Utils.stringToInteger(departmentId),
                 filterType,
                 filterContent,
-                sortType);
-        if(Utils.checkIntegerNull(contactFilterDTO.getGroupId()) && Utils.checkIntegerNull(contactFilterDTO.getDepartmentId()))
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "BAD_REQUEST");
+                sortType,
+                Utils.stringToInteger(empId),
+                groupType);
 
         ContactResponseDTO contactResponseDTO = contactService.getAllBySearch(contactFilterDTO);
         return ResponseEntity.status(HttpStatus.OK)

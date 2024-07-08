@@ -30,7 +30,9 @@ public class ContactGroupCustomRepositoryImpl implements ContactGroupCustomRepos
         QPersonalContact personalContact = QPersonalContact.personalContact;
 
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(contactGroup.personalGroup.personalGroupId.eq(data.getGroupId()));
+        if(data.getGroupId() != null)
+            builder.and(contactGroup.personalGroup.personalGroupId.eq(data.getGroupId()));
+        else builder.and(contactGroup.personalGroup.emp.empId.eq(data.getEmpId()));
 
         if (!(Utils.checkStringNull(data.getFilterType()) || Utils.checkStringNull(data.getFilterContent()))) {
             switch (data.getFilterType()) {
@@ -42,6 +44,11 @@ public class ContactGroupCustomRepositoryImpl implements ContactGroupCustomRepos
                     break;
                 case "company":
                     builder.and(personalContact.company.companyName.containsIgnoreCase(data.getFilterContent()));
+                    break;
+                case "all":
+                    builder.or(personalContact.company.companyName.containsIgnoreCase(data.getFilterContent()));
+                    builder.or(personalContact.personalContactMP.containsIgnoreCase(data.getFilterContent()));
+                    builder.or(personalContact.personalContactName.containsIgnoreCase(data.getFilterContent()));
                     break;
             }
         }

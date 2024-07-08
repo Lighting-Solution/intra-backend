@@ -34,11 +34,13 @@ public interface ContactController {
      * @return ContactResponseDTO
      */
     @GetMapping("/list/search")
-    ResponseEntity<ContactResponseDTO> getAllBySearch(@RequestParam(name = "groupId", required = false) String groupId,
+    ResponseEntity<ContactResponseDTO> getAllBySearch(@RequestParam(name = "empId", required = false) String empId,
+                                                      @RequestParam(name = "groupId", required = false) String groupId,
                                                       @RequestParam(name = "departmentId", required = false) String departmentId,
                                                       @RequestParam(name = "filterType", required = false) String filterType,
                                                       @RequestParam(name = "filterContent", required = false) String filterContent,
-                                                      @RequestParam(name = "sortType", required = false) String sortType);
+                                                      @RequestParam(name = "sortType", required = false) String sortType,
+                                                      @RequestParam(name = "groupType", required = false) String groupType);
 
     /**
      * @apiNote 안드로이드 EMP API
