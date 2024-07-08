@@ -1,6 +1,8 @@
 package com.ls.in.calendar.controller;
 
 import com.ls.in.calendar.dto.CalendarDTO;
+import com.ls.in.calendar.dto.ParticipantDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -16,5 +18,6 @@ public interface CalendarController {
     CalendarDTO updateEvent(@PathVariable Integer id, @RequestBody CalendarDTO calendarDTO);
 
     void deleteEvent(@PathVariable Integer id);
+
 
 }

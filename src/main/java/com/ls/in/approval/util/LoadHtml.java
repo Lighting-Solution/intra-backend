@@ -218,6 +218,11 @@ public class LoadHtml {
             Files.createDirectories(approvalWaitingDir);
         }
 
+        Path approvalRejectDir = Paths.get("src/main/resources/ApprovalReject");
+        if(!Files.exists(approvalRejectDir)) {
+            Files.createDirectories(approvalRejectDir);
+        }
+
         // Save PDF to the approvalWaiting directory
         Path pdfPath = approvalWaitingDir.resolve("saved_approval.pdf");
         try (OutputStream os = Files.newOutputStream(pdfPath)) {

@@ -3,8 +3,12 @@ package com.ls.in.calendar.controller.impl;
 import com.ls.in.calendar.controller.CalendarController;
 import com.ls.in.calendar.domain.model.Calendar;
 import com.ls.in.calendar.dto.CalendarDTO;
+import com.ls.in.calendar.dto.ParticipantDTO;
 import com.ls.in.calendar.service.CalendarService;
+import com.ls.in.calendar.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -44,4 +48,6 @@ public class CalendarControllerImpl implements CalendarController {
     public void deleteEvent(@PathVariable Integer id) {
         calendarService.deleteEvent(id);
     }
+
+
 }

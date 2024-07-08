@@ -5,6 +5,7 @@ import com.lowagie.text.DocumentException;
 import com.ls.in.approval.domain.model.DigitalApproval;
 
 import com.ls.in.approval.dto.DigitalApprovalDTO;
+import com.ls.in.calendar.dto.ParticipantDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
