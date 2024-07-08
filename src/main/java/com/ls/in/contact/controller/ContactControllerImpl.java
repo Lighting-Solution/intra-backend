@@ -128,7 +128,7 @@ public class ContactControllerImpl implements ContactController {
     }
 
 
-    @PostMapping("/contact")
+    @PostMapping("/personal-contact")
     @Override
     public ResponseEntity<String> createPersonalContact(@RequestBody PersonalContactDTO requestDTO) {
         boolean result = personalContactService.createPersonalContact(requestDTO);
@@ -137,7 +137,7 @@ public class ContactControllerImpl implements ContactController {
     }
 
 
-    @PutMapping("/contact")
+    @PutMapping("/personal-contact")
     @Override
     public ResponseEntity<PersonalContactDTO> updatePersonalContact(@RequestBody PersonalContactDTO requestDTO) {
         PersonalContactDTO responseDTO = personalContactService.updatePersonalContact(requestDTO);
@@ -145,7 +145,7 @@ public class ContactControllerImpl implements ContactController {
                 .body(responseDTO);
     }
 
-    @DeleteMapping("/contact")
+    @DeleteMapping("/personal-contact")
     @Override
     public ResponseEntity<String> deletePersonalContact(@PathVariable("contactId") String contactId) {
         boolean result = personalContactService.deletePersonalContact(Utils.stringToInteger(contactId));
