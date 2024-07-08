@@ -24,6 +24,6 @@ public class CompanyServiceImpl implements CompanyService {
     public CompanyDTO createCompany(CompanyDTO companyDTO) throws CompanyNotFoundException {
         Company company = CompanyMapper.toEntity(companyDTO);
         Company result = companyDAO.save(company);
-        return CompanyMapper.toDTO(result);
+        return CompanyMapper.toDto(result);
     }
 }

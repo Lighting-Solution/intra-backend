@@ -45,7 +45,17 @@ public class EmpDAOImpl implements EmpDAO {
     }
 
     @Override
-    public Optional<Emp> findByAccountId(String accountId) {
-        return empRepository.findByAccountId(accountId);
+    public List<Emp> findAllByDepartment(Integer departmentId) throws DataAccessException {
+        return empRepository.findAllByDepartment(departmentId);
+    }
+
+    @Override
+    public boolean save(Emp emp) throws DataAccessException {
+        try{
+            empRepository.save(emp);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

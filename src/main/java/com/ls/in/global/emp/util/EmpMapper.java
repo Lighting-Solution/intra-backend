@@ -6,9 +6,6 @@ import com.ls.in.global.emp.domain.dto.DepartmentDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import com.ls.in.global.emp.domain.dto.PositionDTO;
 import com.ls.in.global.emp.domain.model.Emp;
-import com.ls.in.global.util.Formats;
-
-import java.text.Format;
 
 public class EmpMapper {
     public static EmpDTO toDto(Emp emp) {
@@ -27,17 +24,17 @@ public class EmpMapper {
         empDTO.setEmpSign(emp.getEmpSign());
 
         if(emp.getCompany() != null) {
-            CompanyDTO companyDTO = CompanyMapper.toDTO(emp.getCompany());
+            CompanyDTO companyDTO = CompanyMapper.toDto(emp.getCompany());
             empDTO.setCompany(companyDTO);
         }
 
         if(emp.getPosition() != null) {
-            PositionDTO positionDTO = PositionMapper.toDTO(emp.getPosition());
+            PositionDTO positionDTO = PositionMapper.toDto(emp.getPosition());
             empDTO.setPosition(positionDTO);
         }
 
         if(emp.getDepartment() != null) {
-            DepartmentDTO departmentDTO = DepartmentMapper.toDTO(emp.getDepartment());
+            DepartmentDTO departmentDTO = DepartmentMapper.toDto(emp.getDepartment());
             empDTO.setDepartment(departmentDTO);
         }
 
@@ -46,9 +43,8 @@ public class EmpMapper {
 
     public static Emp toEntity(EmpDTO empDTO) {
         if(empDTO == null) return null;
-        Integer id = Formats.toInteger(empDTO.getEmpId());
         return Emp.builder()
-                .empId(id)
+                .empId(empDTO.getEmpId())
                 .empName(empDTO.getEmpName())
                 .empEmail(empDTO.getEmpEmail())
                 .empMP(empDTO.getEmpMP())

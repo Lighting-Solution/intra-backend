@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContactGroupDTO {
-    private int contactGroupId;
-    private int personalContactId;
-    private int personalGroupId;
+public class ContactAndroidDTO {
+    List<PersonalContactDTO> personalContactDTOList;
+    List<PersonalGroupDTO> personalGroupDTOList;
+    List<ContactGroupDTO> contactGroupDTOList;
 }
