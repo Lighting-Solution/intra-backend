@@ -32,13 +32,15 @@ public class DocumentController {
 	private final DocumentService documentService;
 	private final FileStorageService fileStorageService;
 	@PostMapping("/api/docsList")
-	public List<DocumentList> getPublicDocs(@RequestBody DocumentDTO documentDTO) {
+	public Page<DocumentList> getPublicDocs(@RequestBody DocumentDTO documentDTO) {
 //		List<DocumentBox> docs = documentService.getDocs(documentDTO);
 
 		Pageable pageable = PageRequest.of(documentDTO.getPage(), documentDTO.getSize());
-		List<DocumentBox> docs = documentService.getDocs(documentDTO, pageable);
+		Page<DocumentBox> docs = documentService.getDocs(documentDTO, pageable);
 		log.info("documentDTO={}", documentDTO);
 		log.info("docs:{}", docs.toString());
+		log.info("docs.content:{}", docs.getContent());
+		log.info("docs.page:{}", docs.getTotalPages());
 		return null;
 	}
 
