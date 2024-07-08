@@ -1,6 +1,7 @@
 package com.ls.in.global.emp.service;
 
 
+import com.ls.in.global.emp.domain.dto.EmpByDepartmentDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import com.ls.in.global.emp.exception.EmpNotFoundException;
 
@@ -40,5 +41,7 @@ public interface EmpService {
     EmpDTO getEmpByPosition(Integer id) throws EmpNotFoundException;
 
     boolean createEmp(EmpDTO empDTO) throws EmpNotFoundException;
+
+    EmpByDepartmentDTO getAllByDepartment() throws EmpNotFoundException;
 
 }

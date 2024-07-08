@@ -157,7 +157,9 @@ public class ContactControllerImpl implements ContactController {
     @Override
     public ResponseEntity<List<PersonalGroupDTO>> getPersonalGroup(@PathVariable("empId") String empId) {
         List<PersonalGroupDTO> resultList = personalGroupService.getAllByEmp(Utils.stringToInteger(empId));
-        return null;
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(resultList);
     }
 
     @PostMapping("/personal-group")

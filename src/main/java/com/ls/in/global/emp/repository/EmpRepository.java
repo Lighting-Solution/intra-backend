@@ -21,4 +21,5 @@ public interface EmpRepository extends JpaRepository<Emp, Integer>, EmpCustomRep
             "WHERE e.department.departmentId IN (SELECT e2.department.departmentId FROM Emp e2 WHERE e2.empId = :empId) " +
             "AND e.position.positionId = :positionId")
     Emp findByEmpIdAndDepartmentAndPosition(@Param("empId") Integer empId, @Param("positionId") Integer positionId);
+
 }
