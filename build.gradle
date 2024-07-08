@@ -25,14 +25,19 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    //Messenger 관련 라이브러리
+    implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     // 보안 관련 라이브러리
-//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
-//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
-//    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
-//    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
-//    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+    //implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
+    //implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
+    //implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    //runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    //runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
     //Messenger 관련 라이브러리
     implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
@@ -49,10 +54,28 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
 
+    //queryDSL
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
+    // 테스트 관련 라이브러리
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // AOP 관련 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // 전자결재 pdf
+    implementation 'org.apache.pdfbox:pdfbox:2.0.24'
+    implementation 'net.sourceforge.htmlunit:htmlunit:2.50.0'
+    implementation 'org.xhtmlrenderer:flying-saucer-pdf:9.1.22'
+    implementation 'org.xhtmlrenderer:flying-saucer-core:9.1.22'
+    implementation 'com.itextpdf:itextpdf:5.5.13.2'
+    implementation 'org.jsoup:jsoup:1.14.3'
+
 }
 
 tasks.named('test') {
