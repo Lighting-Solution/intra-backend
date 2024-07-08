@@ -3,10 +3,12 @@ package com.ls.in.document.controller;
 
 import com.ls.in.document.domain.model.DocumentBox;
 import com.ls.in.document.dto.DocumentDTO;
+import com.ls.in.document.dto.DocumentDetailDTO;
 import com.ls.in.document.dto.DocumentInitDTO;
 import com.ls.in.document.dto.DocumentList;
 import com.ls.in.document.service.DocumentService;
 import com.ls.in.document.service.FileStorageService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -37,11 +39,12 @@ public class DocumentController {
 
 		Pageable pageable = PageRequest.of(documentDTO.getPage(), documentDTO.getSize());
 		Page<DocumentBox> docs = documentService.getDocs(documentDTO, pageable);
+
 		log.info("documentDTO={}", documentDTO);
 		log.info("docs:{}", docs.toString());
 		log.info("docs.content:{}", docs.getContent());
 		log.info("docs.page:{}", docs.getTotalPages());
-		return null;
+		return docs.map(documentService::convertToDocumentList);
 	}
 
 	@PostMapping("/api/creation")
@@ -78,5 +81,12 @@ public class DocumentController {
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
 		}
+	}
+
+	@GetMapping("/detail/{id}")
+	public ResponseEntity<DocumentDetailDTO> getDocumentDetail(@PathVariable Integer id) {
+		DocumentBox documentBox = documentService.getDocumentById(id);
+		DocumentDetailDTO documentDetail = documentService.convertToDocumentDetail(documentBox);
+		return ResponseEntity.ok(documentDetail);
 	}
 }

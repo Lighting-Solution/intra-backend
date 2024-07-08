@@ -2,6 +2,7 @@ package com.ls.in.document.service;
 
 import com.ls.in.document.domain.model.DocumentBox;
 import com.ls.in.document.dto.DocumentDTO;
+import com.ls.in.document.dto.DocumentDetailDTO;
 import com.ls.in.document.dto.DocumentInitDTO;
 import com.ls.in.document.dto.DocumentList;
 import com.ls.in.document.repository.DocumentBoxRepository;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,6 +49,7 @@ public class DocumentService {
 	}
 
 
+
 	private Page<DocumentBox> getApprovalDocuments(Emp loginEmp, Page<DocumentBox> docs, Pageable pageable) {
 		String positionName = loginEmp.getPosition().getPositionName();
 		if (positionName.equals("이사")) {
@@ -72,7 +75,32 @@ public class DocumentService {
 		documentBoxRepository.save(doc);
 	}
 
+	@Transactional
 	public DocumentBox getDocumentById(Integer id) {
 		return documentBoxRepository.findById(id).get();
+	}
+
+	public DocumentList convertToDocumentList(DocumentBox documentBox) {
+		DocumentList documentList = new DocumentList();
+		documentList.setId(documentBox.getDocumentId());
+		documentList.setTitle(documentBox.getDocumentTitle());
+		documentList.setCategory(documentBox.getCategory().name());
+		documentList.setEmpName(documentBox.getEmp().getEmpName());
+		return documentList;
+	}
+
+	public DocumentDetailDTO convertToDocumentDetail(DocumentBox documentBox) {
+		DocumentDetailDTO documentDetailDTO = new DocumentDetailDTO();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+		documentDetailDTO.setDocumentId(documentBox.getDocumentId());
+		documentDetailDTO.setTitle(documentBox.getDocumentTitle());
+		documentDetailDTO.setCategory(documentBox.getCategory().name());
+		documentDetailDTO.setWriterName(documentBox.getEmp().getEmpName());
+		documentDetailDTO.setContent(documentBox.getDocumentContent());
+		documentDetailDTO.setFilePath(documentBox.getDocumentPath());
+		documentDetailDTO.setCreatedAt(documentBox.getDocumentCreatedAt().format(formatter));
+		documentDetailDTO.setUpdatedAt(documentBox.getDocumentUpdatedAt().format(formatter));
+		return documentDetailDTO;
 	}
 }
