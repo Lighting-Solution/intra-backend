@@ -5,9 +5,9 @@ import com.ls.in.contact.domain.model.PersonalContact;
 import com.ls.in.contact.repository.PersonalContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository("personalContactDAO")
 public class PersonalContactDAOImpl implements PersonalContactDAO {
@@ -26,9 +26,10 @@ public class PersonalContactDAOImpl implements PersonalContactDAO {
     }
 
     @Override
-    public Page<PersonalContact> findAllByEmpId(Pageable pageable, Integer id) throws DataAccessException {
-        return personalContactRepository.findAllByEmp(pageable, id);
+    public List<PersonalContact> findAllByEmpId(Integer id) throws DataAccessException {
+        return personalContactRepository.findAllByEmp(id);
     }
+
 
     @Override
     public boolean deleteById(Integer contactId) throws DataAccessException {

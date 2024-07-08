@@ -6,6 +6,6 @@ import org.springframework.dao.DataAccessException;
 import java.util.List;
 
 public interface DepartmentDAO {
-    public List<Department> findAll() throws DataAccessException;
-    public Department findById(Integer id) throws DataAccessException;
+    List<Department> findAll() throws DataAccessException;
+    Department findById(Integer id) throws DataAccessException;
 }

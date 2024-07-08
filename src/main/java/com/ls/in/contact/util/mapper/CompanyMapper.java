@@ -2,10 +2,9 @@ package com.ls.in.contact.util.mapper;
 
 import com.ls.in.contact.domain.model.Company;
 import com.ls.in.contact.dto.CompanyDTO;
-import com.ls.in.global.util.Formats;
 
 public class CompanyMapper {
-    public static CompanyDTO toDTO(Company company) {
+    public static CompanyDTO toDto(Company company) {
         if(company == null) return null;
         CompanyDTO companyDTO = new CompanyDTO();
         companyDTO.setCompanyId(company.getCompanyId());
@@ -19,9 +18,8 @@ public class CompanyMapper {
 
     public static Company toEntity(CompanyDTO companyDTO) {
         if(companyDTO == null) return null;
-        Integer id = Formats.toInteger(companyDTO.getCompanyId());
         return Company.builder()
-                .companyId(id)
+                .companyId(companyDTO.getCompanyId())
                 .companyName(companyDTO.getCompanyName())
                 .companyAddress(companyDTO.getCompanyAddress())
                 .companyURL(companyDTO.getCompanyURL())

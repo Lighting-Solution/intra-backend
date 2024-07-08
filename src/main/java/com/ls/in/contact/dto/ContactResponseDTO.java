@@ -14,7 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContactResponseDTO {
-    private List<PersonalGroupDTO> groupDTOList; // 사용자 개인 주소록 그룹
-    private List<EmpDTO> empDTOList; // 모든 사원 연락처 1페이지
-    private List<DepartmentDTO> departmentDTOList; // 공용 주소록 그룹
+    private List<EmpDTO> empList;
+    private List<PersonalContactDTO> personalContactList;
+    private List<DepartmentDTO> departmentDTOList;
+    private List<PersonalGroupDTO> groupDTOList;
 }

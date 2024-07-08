@@ -11,6 +11,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class ContactGroupDTO {
     private int contactGroupId;
-    private PersonalContactDTO personalContact;
-    private PersonalGroupDTO personalGroup;
+    private int personalContactId;
+    private int personalGroupId;
 }

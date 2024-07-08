@@ -1,6 +1,7 @@
 package com.ls.in.global.emp.domain.dao.impl;
 
 import com.ls.in.global.emp.domain.dao.EmpDAO;
+import com.ls.in.global.emp.domain.dto.EmpDTO;
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.repository.EmpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,20 @@ public class EmpDAOImpl implements EmpDAO {
     @Override
     public Emp findByPosition(Integer positionId) throws DataAccessException {
         return empRepository.findByPosition(positionId);
+    }
+
+    @Override
+    public List<Emp> findAllByDepartment(Integer departmentId) throws DataAccessException {
+        return empRepository.findAllByDepartment(departmentId);
+    }
+
+    @Override
+    public boolean save(Emp emp) throws DataAccessException {
+        try{
+            empRepository.save(emp);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

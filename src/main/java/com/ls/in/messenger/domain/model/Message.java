@@ -1,5 +1,6 @@
 package com.ls.in.messenger.domain.model;
 
+import com.ls.in.messenger.dto.ChatMessageDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,4 +31,12 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "roomMember_id", nullable = false)
     private RoomMember roomMember;
+
+    public static Message createMessage(ChatMessageDTO chatDTO, RoomMember roomMember) {
+        return Message.builder()
+                .messageContent(chatDTO.getMessage())
+                .messageSendTime(LocalDateTime.now())
+                .roomMember(roomMember)
+                .build();
+    }
 }

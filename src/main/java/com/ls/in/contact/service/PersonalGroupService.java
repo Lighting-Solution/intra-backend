@@ -1,9 +1,14 @@
 package com.ls.in.contact.service;
 
+import com.ls.in.contact.dto.PersonalGroupDTO;
 import com.ls.in.contact.exception.ContactGroupNotFoundException;
+import com.ls.in.contact.exception.PersonalGroupNotFoundException;
+
+import java.util.List;
 
 public interface PersonalGroupService {
-    public boolean createPersonalGroup(int empId, String groupName) throws ContactGroupNotFoundException;
-    public boolean updatePersonalGroup(int groupId, String groupName) throws ContactGroupNotFoundException;
-    public boolean deletePersonalGroup(int groupId) throws ContactGroupNotFoundException;
+    boolean createPersonalGroup(int empId, String groupName) throws ContactGroupNotFoundException;
+    boolean updatePersonalGroup(int groupId, String groupName) throws ContactGroupNotFoundException;
+    boolean deletePersonalGroup(int groupId) throws ContactGroupNotFoundException;
+    List<PersonalGroupDTO> getAllByEmp(int empId) throws PersonalGroupNotFoundException;
 }

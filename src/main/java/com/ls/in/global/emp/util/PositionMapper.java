@@ -2,10 +2,9 @@ package com.ls.in.global.emp.util;
 
 import com.ls.in.global.emp.domain.dto.PositionDTO;
 import com.ls.in.global.emp.domain.model.Position;
-import com.ls.in.global.util.Formats;
 
 public class PositionMapper {
-    public static PositionDTO toDTO(Position position) {
+    public static PositionDTO toDto(Position position) {
         if(position == null) return null;
         PositionDTO positionDTO = new PositionDTO();
         positionDTO.setPositionId(position.getPositionId());
@@ -15,9 +14,8 @@ public class PositionMapper {
 
     public static Position toEntity(PositionDTO positionDTO) {
         if(positionDTO == null) return null;
-        Integer id = Formats.toInteger(positionDTO.getPositionId());
         return Position.builder()
-                .positionId(id)
+                .positionId(positionDTO.getPositionId())
                 .positionName(positionDTO.getPositionName())
                 .build();
     }

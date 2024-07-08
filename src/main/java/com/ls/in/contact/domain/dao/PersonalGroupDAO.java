@@ -3,7 +3,10 @@ package com.ls.in.contact.domain.dao;
 import com.ls.in.contact.domain.model.PersonalGroup;
 import org.springframework.dao.DataAccessException;
 
+import java.util.List;
+
 public interface PersonalGroupDAO {
-    public PersonalGroup save(PersonalGroup personalGroup) throws DataAccessException;
-    public boolean deleteById(Integer groupId) throws DataAccessException;
+    PersonalGroup save(PersonalGroup personalGroup) throws DataAccessException;
+    boolean deleteById(Integer groupId) throws DataAccessException;
+    List<PersonalGroup> findAllByEmp(Integer empId) throws DataAccessException;
 }
