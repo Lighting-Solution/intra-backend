@@ -25,6 +25,7 @@ public class FileStorageService {
 		}
 	}
 
+
 	public String storeFile(MultipartFile file) {
 		if (file == null)
 			return "";
