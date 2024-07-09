@@ -13,28 +13,28 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class FileStorageService {
 
-	private final Path fileStorageLocation;
-
 	public FileStorageService() {
-		this.fileStorageLocation = Paths.get("src/main/resources/docs").toAbsolutePath().normalize();
 
-		try {
-			Files.createDirectories(this.fileStorageLocation);
-		} catch (Exception ex) {
-			throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
-		}
 	}
 
 
-	public String storeFile(MultipartFile file) {
+	public String storeFile(MultipartFile file, String category) {
 		if (file == null)
 			return "";
+
+		Path fileStorageLocation = Paths.get("src/main/resources/docs/" + category).toAbsolutePath().normalize();
+		try {
+			Files.createDirectories(fileStorageLocation);
+		} catch (Exception ex) {
+			throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
+		}
+
 		String fileName = file.getOriginalFilename();
 
 		try {
 			// 파일명을 보안상의 이유로 깨끗하게 청소
 			fileName = fileName != null ? fileName.replaceAll("[^a-zA-Z0-9\\.\\-]", "_") : "";
-			Path targetLocation = this.fileStorageLocation.resolve(fileName);
+			Path targetLocation = fileStorageLocation.resolve(fileName);
 			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
 			return fileName;

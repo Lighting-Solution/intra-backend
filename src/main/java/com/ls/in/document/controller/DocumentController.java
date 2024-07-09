@@ -67,7 +67,7 @@ public class DocumentController {
 			@RequestParam(value = "file", required = false) MultipartFile file, // 각 유저별로 폴더를 관리해야함
 			@RequestParam("category") String category,
 			@RequestParam("writerEmpId") Integer writerEmpId) {
-		String fileName = fileStorageService.storeFile(file);
+		String fileName = fileStorageService.storeFile(file, category);
 		DocumentInitDTO document = new DocumentInitDTO(title, content, fileName, category, writerEmpId);
 		documentService.saveDocument(document);
 		return new ResponseEntity<>("Document created successfully", HttpStatus.OK);
@@ -75,13 +75,13 @@ public class DocumentController {
 
 	/**
 	 * description 게시글의 파일을 다운로드 하기 위한 엔드포인트
-	 * @param id
+	 * @param id DocumentBox의 ID값
 	 * @return 성공 시 다운로드, 실패 시 에러..
 	 */
 	@GetMapping("/{id}/download")
 	public ResponseEntity<Resource> downloadFile(@PathVariable Integer id) {
-		String storedPath = "src/main/resources/docs";
 		DocumentBox document = documentService.getDocumentById(id);
+		String storedPath = "src/main/resources/docs/" + document.getCategory().name().toLowerCase();
 		String fileName = document.getDocumentPath();
 		if (document.getCategory().name().equalsIgnoreCase("approval"))
 			storedPath = "src/main/resources/approvalComplete";
@@ -114,9 +114,10 @@ public class DocumentController {
 			@RequestParam("documentId") Integer documentId,
 			@RequestParam("title") String title,
 			@RequestParam("content") String content,
-			@RequestParam(value = "file", required = false) MultipartFile file) {
+			@RequestParam(value = "file", required = false) MultipartFile file,
+			@RequestParam("category") String category) {
 		// File path를 적는 로직을 작성해야함.
-		String fileName = fileStorageService.storeFile(file);
+		String fileName = fileStorageService.storeFile(file, category);
 		return ResponseEntity.ok(documentService.updateDocument(documentId, title, content, fileName));
 	}
 
