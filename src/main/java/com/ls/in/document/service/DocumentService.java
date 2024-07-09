@@ -115,12 +115,15 @@ public class DocumentService {
 	}
 
 	@Transactional
-	public DocumentDetailDTO updateDocument(Integer documentId, String title, String content, String fileName) {
-		DocumentBox documentBox = this.getDocumentById(documentId);
+	public DocumentDetailDTO updateDocument(DocumentBox documentBox, String title, String content, String fileName) {
 		documentBox.setDocumentTitle(title);
 		documentBox.setDocumentContent(content);
 		if (fileName != null)
 			documentBox.setDocumentPath(fileName);
 		return convertToDocumentDetail(documentBox);
+	}
+
+	public void deleteDocument(DocumentBox documentBox) {
+		documentBoxRepository.delete(documentBox);
 	}
 }

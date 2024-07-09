@@ -1,5 +1,6 @@
 package com.ls.in.document.service;
 
+import com.ls.in.document.domain.model.DocumentBox;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -18,15 +19,19 @@ import java.nio.file.StandardCopyOption;
 public class FileStorageService {
 
 	public FileStorageService() {
-
 	}
 
-
-	public String storeFile(MultipartFile file, String category) {
+	/**
+	 * 파일을 Stream 으로 저장하는 메서드
+	 * @param file
+	 * @param writerEmpId
+	 * @return
+	 */
+	public String storeFile(MultipartFile file, Integer writerEmpId, String category) {
 		if (file == null)
 			return "";
 
-		Path fileStorageLocation = Paths.get("src/main/resources/docs/" + category).toAbsolutePath().normalize();
+		Path fileStorageLocation = Paths.get("src/main/resources/docs/" + category.toLowerCase() + "/" + writerEmpId).toAbsolutePath().normalize();
 		try {
 			Files.createDirectories(fileStorageLocation);
 		} catch (Exception ex) {
@@ -37,7 +42,7 @@ public class FileStorageService {
 
 		try {
 			// 파일명을 보안상의 이유로 깨끗하게 청소
-			fileName = fileName != null ? fileName.replaceAll("[^a-zA-Z0-9\\.\\-]", "_") : "";
+//			fileName = fileName != null ? fileName.replaceAll("[^a-zA-Z0-9\\.\\-]", "_") : "";
 			Path targetLocation = fileStorageLocation.resolve(fileName);
 			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
@@ -46,6 +51,13 @@ public class FileStorageService {
 			throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
 		}
 	}
+
+	/**
+	 * 파일을 다운로드 할 수 있게 하는 메서드
+	 * @param storedPath
+	 * @param fileName
+	 * @return
+	 */
 	public ResponseEntity<Resource> getResourceResponse(String storedPath, String fileName) {
 		try {
 			Path filePath = Paths.get(storedPath).resolve(fileName).normalize();
@@ -61,6 +73,24 @@ public class FileStorageService {
 			}
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
+		}
+	}
+
+	public void deleteFile(DocumentBox documentBox) {
+		String fileName = documentBox.getDocumentPath();
+		String category = documentBox.getCategory().name();
+
+		// 파일 경로를 생성합니다.
+		Path fileStorageLocation = Paths.get("src/main/resources/docs/" + documentBox.getCategory().name().toLowerCase() + "/" + documentBox.getEmp().getEmpId()).toAbsolutePath().normalize();
+		Path filePath = fileStorageLocation.resolve(fileName).normalize();
+
+		try {
+			// 파일이 존재하는지 확인하고 삭제합니다.
+			if (Files.exists(filePath)) {
+				Files.delete(filePath);
+			}
+		} catch (IOException ex) {
+			throw new RuntimeException("Could not delete file " + fileName + ". Please try again!", ex);
 		}
 	}
 }
