@@ -26,12 +26,13 @@ public class FileStorageService {
 	}
 
 	public String storeFile(MultipartFile file) {
+		if (file == null)
+			return "";
 		String fileName = file.getOriginalFilename();
 
 		try {
 			// 파일명을 보안상의 이유로 깨끗하게 청소
 			fileName = fileName != null ? fileName.replaceAll("[^a-zA-Z0-9\\.\\-]", "_") : "";
-
 			Path targetLocation = this.fileStorageLocation.resolve(fileName);
 			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 

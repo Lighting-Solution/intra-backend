@@ -64,7 +64,7 @@ public class DocumentController {
 	public ResponseEntity<String> createDocument(
 			@RequestParam("title") String title,
 			@RequestParam("content") String content,
-			@RequestParam(value = "file", required = false) MultipartFile file,
+			@RequestParam(value = "file", required = false) MultipartFile file, // 각 유저별로 폴더를 관리해야함
 			@RequestParam("category") String category,
 			@RequestParam("writerEmpId") Integer writerEmpId) {
 		String fileName = fileStorageService.storeFile(file);
@@ -116,11 +116,8 @@ public class DocumentController {
 			@RequestParam("content") String content,
 			@RequestParam(value = "file", required = false) MultipartFile file) {
 		// File path를 적는 로직을 작성해야함.
-		documentService.updateDocument(documentId, title, content);
-		if (file != null) {
-			System.out.println("File: " + file.getOriginalFilename());
-		}
-		return ResponseEntity.ok(null);
+		String fileName = fileStorageService.storeFile(file);
+		return ResponseEntity.ok(documentService.updateDocument(documentId, title, content, fileName));
 	}
 
 }
