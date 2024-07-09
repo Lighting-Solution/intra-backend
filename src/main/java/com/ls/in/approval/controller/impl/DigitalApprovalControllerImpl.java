@@ -9,6 +9,8 @@ import com.ls.in.approval.dto.ManagerDTO;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
+import com.ls.in.document.dto.DocumentInitDTO;
+import com.ls.in.document.service.DocumentService;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import com.ls.in.global.emp.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +39,17 @@ import java.util.Map;
 public class DigitalApprovalControllerImpl implements DigitalApprovalController {
 
     private final DigitalApprovalService approvalService;
+    private final DocumentService documentService;
 
     private final LoadHtml loadHtml = new LoadHtml();
 
     private EmpService empService;
 
     @Autowired
-    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService) {
+    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService, DocumentService documentService) {
         this.approvalService = approvalService;
         this.empService = empService;
+        this.documentService = documentService;
     }
 
     @Override
@@ -272,8 +276,14 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
                 LoadHtml.addSignToPDF(pdfFilePath,imagePath,outputPdfPath, "ceo");
 
                 // 내문서함으로 전송 (기안자 id, 문서경로)
-                /* 꼭 해야함  */
-
+                /* 꼭 해야함 -> 꼭 했음돵 ㅎㅎ */
+                String fileName = "signed" + digitalApprovalId + ".pdf";
+                DocumentInitDTO documentInitDTO = new DocumentInitDTO("전자결재문서" + digitalApprovalId,
+                        "전자결재내용" + digitalApprovalId,
+                        fileName,
+                        "approval",
+                        drafterId);
+                documentService.saveDocument(documentInitDTO);
                 // DB ceo_status update
                 approvalService.updateStatus(digitalApprovalId, "ceo");
             }
