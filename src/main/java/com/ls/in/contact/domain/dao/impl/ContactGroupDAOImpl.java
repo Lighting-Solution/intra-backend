@@ -5,6 +5,7 @@ import com.ls.in.contact.domain.model.ContactGroup;
 import com.ls.in.contact.domain.model.PersonalContact;
 import com.ls.in.contact.dto.ContactFilterDTO;
 import com.ls.in.contact.repository.ContactGroupRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,7 @@ public class ContactGroupDAOImpl implements ContactGroupDAO {
     }
 
     @Override
+    @Transactional
     public boolean deleteByFKs(List<Integer> contactIds, List<Integer> groupIds) throws DataAccessException {
         try{
             contactGroupRepository.deleteByFKs(contactIds, groupIds);
