@@ -123,7 +123,4 @@ public class DocumentController {
 		return ResponseEntity.ok(null);
 	}
 
-	/**
-	 * 다른 곳의 요청을 받아들이기 위한 요청
-	 */
 }
