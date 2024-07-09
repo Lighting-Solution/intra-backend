@@ -8,7 +8,7 @@ import lombok.Data;
 public class DocumentInitDTO {
 	private String title;
 	private String content;
-	private String filePath;
+	private String fileName;
 	private String category;
 	private Integer writerEmpId;
 }

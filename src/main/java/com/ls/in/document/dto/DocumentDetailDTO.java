@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class DocumentDetailDTO {
 	private Integer documentId; // DocumentBoxId
+	private Integer writerEmpId;
 	private String title;
 	private String category;
 	private String writerName;

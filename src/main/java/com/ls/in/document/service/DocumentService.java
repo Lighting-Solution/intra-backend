@@ -94,13 +94,21 @@ public class DocumentService {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 		documentDetailDTO.setDocumentId(documentBox.getDocumentId());
+		documentDetailDTO.setWriterEmpId(documentBox.getEmp().getEmpId());
 		documentDetailDTO.setTitle(documentBox.getDocumentTitle());
 		documentDetailDTO.setCategory(documentBox.getCategory().name());
 		documentDetailDTO.setWriterName(documentBox.getEmp().getEmpName());
 		documentDetailDTO.setContent(documentBox.getDocumentContent());
-		documentDetailDTO.setFilePath(documentBox.getDocumentPath());
+		documentDetailDTO.setFilePath(documentBox.getDocumentPath()); // FILE
 		documentDetailDTO.setCreatedAt(documentBox.getDocumentCreatedAt().format(formatter));
 		documentDetailDTO.setUpdatedAt(documentBox.getDocumentUpdatedAt().format(formatter));
 		return documentDetailDTO;
+	}
+
+	@Transactional
+	public void updateDocument(Integer documentId, String title, String content) {
+		DocumentBox documentBox = this.getDocumentById(documentId);
+		documentBox.setDocumentTitle(title);
+		documentBox.setDocumentContent(content);
 	}
 }
