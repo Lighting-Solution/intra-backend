@@ -36,6 +36,7 @@ public class DocumentController {
 
 	/**
 	 * description : 문서 목록을 가져오는 엔드포인트
+	 *
 	 * @param documentDTO
 	 * @return
 	 */
@@ -53,6 +54,7 @@ public class DocumentController {
 
 	/**
 	 * description 게시글을 생성하기 위한 EndPoint
+	 *
 	 * @param title
 	 * @param content
 	 * @param file
@@ -75,6 +77,7 @@ public class DocumentController {
 
 	/**
 	 * description 게시글의 파일을 다운로드 하기 위한 엔드포인트
+	 *
 	 * @param id DocumentBox의 ID값
 	 * @return 성공 시 다운로드, 실패 시 에러..
 	 */
@@ -85,22 +88,10 @@ public class DocumentController {
 		String fileName = document.getDocumentPath();
 		if (document.getCategory().name().equalsIgnoreCase("approval"))
 			storedPath = "src/main/resources/approvalComplete";
-		try {
-			Path filePath = Paths.get(storedPath).resolve(fileName).normalize();
-			Resource resource = new UrlResource(filePath.toUri());
-
-			if (resource.exists()) {
-				return ResponseEntity.ok()
-						.contentType(org.springframework.http.MediaType.APPLICATION_OCTET_STREAM)
-						.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-						.body(resource);
-			} else {
-				return ResponseEntity.notFound().build();
-			}
-		} catch (Exception e) {
-			return ResponseEntity.internalServerError().build();
-		}
+		return fileStorageService.getResourceResponse(storedPath, fileName);
 	}
+
+
 
 	@GetMapping("/detail/{id}")
 	public ResponseEntity<DocumentDetailDTO> getDocumentDetail(@PathVariable Integer id) {
@@ -121,4 +112,10 @@ public class DocumentController {
 		return ResponseEntity.ok(documentService.updateDocument(documentId, title, content, fileName));
 	}
 
+	@DeleteMapping("/delete")
+	public String deleteDocument(@PathVariable Integer documentId) {
+		DocumentBox documentBox = documentService.getDocumentById(documentId);
+
+		return "delete is OK!";
+	}
 }

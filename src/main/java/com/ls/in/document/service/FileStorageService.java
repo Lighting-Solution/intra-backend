@@ -1,5 +1,9 @@
 package com.ls.in.document.service;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +44,23 @@ public class FileStorageService {
 			return fileName;
 		} catch (IOException ex) {
 			throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
+		}
+	}
+	public ResponseEntity<Resource> getResourceResponse(String storedPath, String fileName) {
+		try {
+			Path filePath = Paths.get(storedPath).resolve(fileName).normalize();
+			Resource resource = new UrlResource(filePath.toUri());
+
+			if (resource.exists()) {
+				return ResponseEntity.ok()
+						.contentType(org.springframework.http.MediaType.APPLICATION_OCTET_STREAM)
+						.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+						.body(resource);
+			} else {
+				return ResponseEntity.notFound().build();
+			}
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
 		}
 	}
 }
