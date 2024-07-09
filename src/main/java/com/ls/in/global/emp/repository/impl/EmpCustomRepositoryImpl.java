@@ -28,7 +28,7 @@ public class EmpCustomRepositoryImpl implements EmpCustomRepository {
         QEmp emp = QEmp.emp;
 
         BooleanBuilder builder = new BooleanBuilder();
-        if(data.getDepartmentId() != null)
+        if (data.getDepartmentId() != null)
             builder.and(emp.department.departmentId.eq(data.getDepartmentId()));
 
         if (!(Utils.checkStringNull(data.getFilterType()) || Utils.checkStringNull(data.getFilterContent()))) {
@@ -43,9 +43,11 @@ public class EmpCustomRepositoryImpl implements EmpCustomRepository {
                     builder.and(emp.company.companyName.containsIgnoreCase(data.getFilterContent()));
                     break;
                 case "all":
-                    builder.or(emp.empName.containsIgnoreCase(data.getFilterContent()));
-                    builder.or(emp.empMP.containsIgnoreCase(data.getFilterContent()));
-                    builder.or(emp.company.companyName.containsIgnoreCase(data.getFilterContent()));
+                    BooleanBuilder allBuilder = new BooleanBuilder();
+                    allBuilder.or(emp.empName.containsIgnoreCase(data.getFilterContent()));
+                    allBuilder.or(emp.empMP.containsIgnoreCase(data.getFilterContent()));
+                    allBuilder.or(emp.company.companyName.containsIgnoreCase(data.getFilterContent()));
+                    builder.and(allBuilder);
                     break;
             }
         }
@@ -72,4 +74,5 @@ public class EmpCustomRepositoryImpl implements EmpCustomRepository {
 
         return query.fetch();
     }
+
 }

@@ -30,9 +30,10 @@ public class ContactGroupCustomRepositoryImpl implements ContactGroupCustomRepos
         QPersonalContact personalContact = QPersonalContact.personalContact;
 
         BooleanBuilder builder = new BooleanBuilder();
-        if(data.getGroupId() != null)
+        if (data.getGroupId() != null)
             builder.and(contactGroup.personalGroup.personalGroupId.eq(data.getGroupId()));
-        else builder.and(contactGroup.personalGroup.emp.empId.eq(data.getEmpId()));
+        else
+            builder.and(contactGroup.personalGroup.emp.empId.eq(data.getEmpId()));
 
         if (!(Utils.checkStringNull(data.getFilterType()) || Utils.checkStringNull(data.getFilterContent()))) {
             switch (data.getFilterType()) {
@@ -46,9 +47,11 @@ public class ContactGroupCustomRepositoryImpl implements ContactGroupCustomRepos
                     builder.and(personalContact.company.companyName.containsIgnoreCase(data.getFilterContent()));
                     break;
                 case "all":
-                    builder.or(personalContact.company.companyName.containsIgnoreCase(data.getFilterContent()));
-                    builder.or(personalContact.personalContactMP.containsIgnoreCase(data.getFilterContent()));
-                    builder.or(personalContact.personalContactName.containsIgnoreCase(data.getFilterContent()));
+                    BooleanBuilder allBuilder = new BooleanBuilder();
+                    allBuilder.or(personalContact.personalContactName.containsIgnoreCase(data.getFilterContent()));
+                    allBuilder.or(personalContact.personalContactMP.containsIgnoreCase(data.getFilterContent()));
+                    allBuilder.or(personalContact.company.companyName.containsIgnoreCase(data.getFilterContent()));
+                    builder.and(allBuilder);
                     break;
             }
         }
@@ -78,6 +81,7 @@ public class ContactGroupCustomRepositoryImpl implements ContactGroupCustomRepos
         List<PersonalContact> results = query.fetch();
         return results;
     }
+
 
     public List<ContactGroup> findByPersonalContactAndPersonalGroup(List<Integer> contactIds, List<Integer> groupIds) {
         QContactGroup contactGroup = QContactGroup.contactGroup;

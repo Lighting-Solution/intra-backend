@@ -64,8 +64,9 @@ public class ContactControllerImpl implements ContactController {
                 sortType,
                 Utils.stringToInteger(empId),
                 groupType);
-
+        System.out.println(contactFilterDTO.toString());
         ContactResponseDTO contactResponseDTO = contactService.getAllBySearch(contactFilterDTO);
+        if(contactResponseDTO != null) System.out.println(contactResponseDTO.toString());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(contactResponseDTO);
     }
@@ -149,8 +150,8 @@ public class ContactControllerImpl implements ContactController {
 
     @DeleteMapping("/personal-contact")
     @Override
-    public ResponseEntity<String> deletePersonalContact(@PathVariable("contactId") String contactId) {
-        boolean result = personalContactService.deletePersonalContact(Utils.stringToInteger(contactId));
+    public ResponseEntity<String> deletePersonalContact(@RequestBody Map<String, Object> contactIds) {
+        boolean result = personalContactService.deletePersonalContacts(contactIds);
         if(result) return ResponseEntity.ok("success");
         return ResponseEntity.ok("fail");
     }
@@ -208,7 +209,4 @@ public class ContactControllerImpl implements ContactController {
         return ResponseEntity.ok("fail");
     }
 
-
-
-    /* 페이지, 정렬, 필터 별로 조회 만들어야댐 */
 }

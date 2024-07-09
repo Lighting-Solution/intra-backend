@@ -68,6 +68,7 @@ public class ContactGroupServiceImpl implements ContactGroupService {
     @Override
     public List<ContactGroupDTO> getAllByEmpId(Integer empId) {
         List<ContactGroup> result = contactGroupDAO.findAllByEmp(empId);
+        if(result.isEmpty()) return null;
         List<ContactGroupDTO> contactGroupDTOList  = new ArrayList<>();
         for(ContactGroup contactGroup : result) {
             ContactGroupDTO contactGroupDTO = ContactGroupMapper.toDto(contactGroup);
@@ -79,6 +80,7 @@ public class ContactGroupServiceImpl implements ContactGroupService {
     @Override
     public List<PersonalContactDTO> getAllByGroupBySearch(ContactFilterDTO requestDTO) {
         List<PersonalContact> result = contactGroupDAO.findAllByGroup(requestDTO);
+        if(result.isEmpty()) return null;
         List<PersonalContactDTO> responseList = new ArrayList<>();
         for(PersonalContact personalContact : result) {
             PersonalContactDTO tempDTO = PersonalContactMapper.toDto(personalContact);

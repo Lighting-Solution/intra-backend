@@ -108,11 +108,11 @@ public interface ContactController {
 
     /**
      * @apiNote 개인 연락처 삭제
-     * @param contactId
+     * @param contactIds
      * @return "success" 또는 "fail"
      */
-    @DeleteMapping("/personal-contact")
-    ResponseEntity<String> deletePersonalContact(@PathVariable("contactId") String contactId);
+    @DeleteMapping("/personal-contact/")
+    ResponseEntity<String> deletePersonalContact(@RequestBody Map<String, Object> contactIds) throws Exception;
 
 
     /**
@@ -160,6 +160,6 @@ public interface ContactController {
      * @param requestData JSON 형식의 동적 요청 데이터 {"contactId": [1, ...], "groupId": [1, ...]}
      * @return "success" 또는 "fail"
      */
-    @DeleteMapping("/contact-group")
+    @DeleteMapping("/contact-group/")
     ResponseEntity<String> deleteContactGroup(@RequestBody Map<String, Object> requestData) throws Exception;
 }
