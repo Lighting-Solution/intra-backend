@@ -32,8 +32,6 @@ public class ContactGroupCustomRepositoryImpl implements ContactGroupCustomRepos
         BooleanBuilder builder = new BooleanBuilder();
         if (data.getGroupId() != null)
             builder.and(contactGroup.personalGroup.personalGroupId.eq(data.getGroupId()));
-        else
-            builder.and(contactGroup.personalGroup.emp.empId.eq(data.getEmpId()));
 
         if (!(Utils.checkStringNull(data.getFilterType()) || Utils.checkStringNull(data.getFilterContent()))) {
             switch (data.getFilterType()) {
