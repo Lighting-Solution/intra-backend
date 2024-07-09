@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.List;
 
 @Repository
@@ -22,4 +23,5 @@ public interface EmpRepository extends JpaRepository<Emp, Integer>, EmpCustomRep
             "AND e.position.positionId = :positionId")
     Emp findByEmpIdAndDepartmentAndPosition(@Param("empId") Integer empId, @Param("positionId") Integer positionId);
 
+    Optional<Emp> findByAccountId(String accountId);
 }

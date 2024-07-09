@@ -3,6 +3,7 @@ package com.ls.in.global.emp.service.impl;
 import com.ls.in.global.emp.domain.dao.EmpDAO;
 import com.ls.in.global.emp.domain.dto.EmpByDepartmentDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
+import com.ls.in.global.emp.domain.dto.UserDTO;
 import com.ls.in.global.emp.domain.model.DepartmentType;
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.exception.EmpNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service("empService")
 public class EmpServiceImpl implements EmpService {
@@ -55,6 +57,15 @@ public class EmpServiceImpl implements EmpService {
     }
 
     @Override
+    public UserDTO findByAccountId(String accountId) {
+        Optional<Emp> empOptional = empDAO.findByAccountId(accountId);
+        Emp emp = empOptional.get();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(emp.getAccountId());
+        userDTO.setPassword(emp.getAccountPw());
+        return userDTO;
+    }
+
     public boolean createEmp(EmpDTO empDTO) throws EmpNotFoundException {
         Emp emp = EmpMapper.toEntity(empDTO);
         return empDAO.save(emp);

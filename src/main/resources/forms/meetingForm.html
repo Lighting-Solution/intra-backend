@@ -16,23 +16,19 @@
                 <tbody>
                 <tr>
                     <td class="title_cell">문서번호</td>
-                    <td class="content_cell">관리자 데모-2024-00007</td>
+                    <td class="content_cell"><div id="digitalApprovalId"></div></td>
                 </tr>
                 <tr>
                     <td class="title_cell">부서</td>
-                    <td class="content_cell"></td>
+                    <td class="content_cell"><div id="digitalApprovalDepartment"></div></td>
                 </tr>
                 <tr>
                     <td class="title_cell">담당자</td>
-                    <td class="content_cell"></td>
+                    <td class="content_cell"><div id="digitalApprovalEmpName"></div></td>
                 </tr>
                 <tr>
                     <td class="title_cell">작성일자</td>
-                    <td class="content_cell">2024-06-25(Tue)</td>
-                </tr>
-                <tr>
-                    <td class="title_cell">결재일자</td>
-                    <td class="content_cell">2024-06-25(Tue)</td>
+                    <td class="content_cell"><div id="digitalApprovalCreatedAt"></div></td>
                 </tr>
                 </tbody>
             </table>
@@ -47,18 +43,15 @@
                             <table class="sign_member">
                                 <tbody>
                                 <tr>
-                                    <td><span class="sign_rank">Section Manager</span></td>
+                                    <td><span class="sign_rank" style="height: 30px" id="approvalPosition1"></span></td>
                                 </tr>
                                 <tr>
                                     <td class="wrap_name wrap_sign">
-                                                        <span class="sign_stamp stamp_approved">
-                                                            <img src="http://adm.daouoffice.com:80/thumb/user/stamp/6192-1879">
+                                                        <span class="sign_stamp stamp_approved" style="height: 40px">
+                                                            <img src="" id="approvalSign1" />
                                                         </span>
-                                        <span class="sign_name"><strong>김다우</strong></span>
+                                        <span class="sign_name" style="height: 25px" id="approvalName1"></span>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td class="last"><span class="sign_date">2024/06/25</span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -68,18 +61,15 @@
                             <table class="sign_member">
                                 <tbody>
                                 <tr>
-                                    <td><span class="sign_rank" style="height:20px;"></span></td>
+                                    <td><span class="sign_rank" style="height: 30px" id="approvalPosition2"></span></td>
                                 </tr>
                                 <tr>
                                     <td class="wrap_name wrap_sign">
-                                                        <span class="sign_stamp stamp_approved" style="height:40px;">
-                                                            <img src="">
+                                                        <span class="sign_stamp stamp_approved" style="height: 40px">
+                                                            <img src="" id="approvalSign2" />
                                                         </span>
-                                        <span class="sign_name" ><strong>김다우</strong></span>
+                                        <span class="sign_name" style="height: 25px" id="approvalName2"></span>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td class="last"><span class="sign_date" style="height:14px;"></span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -89,18 +79,15 @@
                             <table class="sign_member">
                                 <tbody>
                                 <tr>
-                                    <td><span class="sign_rank" style="height:20px;"></span></td>
+                                    <td><span class="sign_rank" style="height: 30px" id="approvalPosition3"></span></td>
                                 </tr>
                                 <tr>
                                     <td class="wrap_name wrap_sign">
-                                                        <span class="sign_stamp stamp_approved" style="height:40px;">
-                                                            <img src="">
+                                                        <span class="sign_stamp stamp_approved" style="height: 40px">
+                                                            <img src="" id="approvalSign3" />
                                                         </span>
-                                        <span class="sign_name" ><strong>김다우</strong></span>
+                                        <span class="sign_name" style="height: 25px" id="approvalName3"></span>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td class="last"><span class="sign_date" style="height:14px;"></span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -119,19 +106,23 @@
     <tbody>
     <tr>
         <td class="title_cell" colspan="2">제목</td>
-        <td colspan="3" class="reason_cell"><input type="text" id="meeting_title" placeholder="제목을 입력하세요"></td>
+        <td colspan="3" class="reason_cell"><input type="text" id="title" /></td>
     </tr>
     <tr>
         <td class="title_cell" colspan="2">참석자</td>
-        <td colspan="3" class="reason_cell"><input type="text" id="meeting_name" placeholder=""></td>
+        <td colspan="3" class="reason_cell"><input type="text" id="meeting_name" /></td>
     </tr>
     <tr>
         <td class="title_cell" colspan="2">회의 목적</td>
-        <td colspan="3" class="reason_cell"><input type="text" id="meeting_purpose" placeholder=""></td>
+        <td colspan="3" class="reason_cell"><input type="text" id="meeting_purpose" /></td>
     </tr>
     <tr>
-        <td class="title_cell" colspan="2">회의 내용</td>
-        <td colspan="3" class="reason_cell"><input type="text" id="meeting_content" placeholder=""></td>
+        <td class="title_cell" colspan="5">회의 내용</td>
+    </tr>
+    <tr>
+
+        <td colspan="5" class="reason_cell"><textarea id="meeting_content"></textarea>
+        </td>
     </tr>
     </tbody>
 </table>
