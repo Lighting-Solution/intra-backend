@@ -33,7 +33,6 @@ public class ContactGroupServiceImpl implements ContactGroupService {
     public boolean createContactGroup(Map<String, Object> requestData) throws Exception {
         List<Integer> groupList = null;
         List<Integer> contactList = null;
-        System.out.println("전달된 값 : " + requestData);
         if(requestData.get("contactId") instanceof List) {
             contactList = (List<Integer>) requestData.get("contactId");
         } else return false;
@@ -41,8 +40,6 @@ public class ContactGroupServiceImpl implements ContactGroupService {
         if(requestData.get("groupId") instanceof List) {
             groupList = (List<Integer>) requestData.get("groupId");
         } else return false;
-        System.out.println("그룹 : " + groupList);
-        System.out.println("그룹 : " + contactList);
         Set<String> existingCombinations = contactGroupDAO.findExistingContactGroupCombinations(contactList, groupList);
         List<ContactGroup> contactGroups = new ArrayList<>();
         for (int contactId : contactList) {
@@ -62,8 +59,11 @@ public class ContactGroupServiceImpl implements ContactGroupService {
 
     @Override
     public boolean deleteContactGroup(Map<String, Object> requestData) throws Exception {
+        System.out.println("request : " + requestData);
         List<Integer> contactList = (List<Integer>) requestData.get("contactId");
         List<Integer> groupList = (List<Integer>) requestData.get("groupId");
+        System.out.println("contactList : " + contactList);
+        System.out.println("groupList : " + groupList);
         return contactGroupDAO.deleteByFKs(contactList, groupList);
     }
 
