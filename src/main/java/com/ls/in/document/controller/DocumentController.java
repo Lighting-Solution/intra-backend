@@ -33,10 +33,14 @@ import java.util.List;
 public class DocumentController {
 	private final DocumentService documentService;
 	private final FileStorageService fileStorageService;
-	@PostMapping("/api/docsList")
-	public Page<DocumentList> getPublicDocs(@RequestBody DocumentDTO documentDTO) {
-//		List<DocumentBox> docs = documentService.getDocs(documentDTO);
 
+	/**
+	 * description : 문서 목록을 가져오는 엔드포인트
+	 * @param documentDTO
+	 * @return
+	 */
+	@PostMapping("/api/docsList")
+	public Page<DocumentList> getDocs(@RequestBody DocumentDTO documentDTO) {
 		Pageable pageable = PageRequest.of(documentDTO.getPage(), documentDTO.getSize());
 		Page<DocumentBox> docs = documentService.getDocs(documentDTO, pageable);
 
@@ -47,11 +51,20 @@ public class DocumentController {
 		return docs.map(documentService::convertToDocumentList);
 	}
 
+	/**
+	 * description 게시글을 생성하기 위한 EndPoint
+	 * @param title
+	 * @param content
+	 * @param file
+	 * @param category
+	 * @param writerEmpId
+	 * @return
+	 */
 	@PostMapping("/api/creation")
 	public ResponseEntity<String> createDocument(
 			@RequestParam("title") String title,
 			@RequestParam("content") String content,
-			@RequestParam("file") MultipartFile file,
+			@RequestParam(value = "file", required = false) MultipartFile file,
 			@RequestParam("category") String category,
 			@RequestParam("writerEmpId") Integer writerEmpId) {
 		String fileName = fileStorageService.storeFile(file);
@@ -60,14 +73,20 @@ public class DocumentController {
 		return new ResponseEntity<>("Document created successfully", HttpStatus.OK);
 	}
 
+	/**
+	 * description 게시글의 파일을 다운로드 하기 위한 엔드포인트
+	 * @param id
+	 * @return 성공 시 다운로드, 실패 시 에러..
+	 */
 	@GetMapping("/{id}/download")
 	public ResponseEntity<Resource> downloadFile(@PathVariable Integer id) {
-		// Document 엔티티에서 파일 이름을 가져오는 로직을 추가해야 합니다.
+		String storedPath = "src/main/resources/docs";
 		DocumentBox document = documentService.getDocumentById(id);
 		String fileName = document.getDocumentPath();
-
+		if (document.getCategory().name().equalsIgnoreCase("approval"))
+			storedPath = "src/main/resources/approvalComplete";
 		try {
-			Path filePath = Paths.get("src/main/resources/docs").resolve(fileName).normalize();
+			Path filePath = Paths.get(storedPath).resolve(fileName).normalize();
 			Resource resource = new UrlResource(filePath.toUri());
 
 			if (resource.exists()) {
@@ -89,4 +108,22 @@ public class DocumentController {
 		DocumentDetailDTO documentDetail = documentService.convertToDocumentDetail(documentBox);
 		return ResponseEntity.ok(documentDetail);
 	}
+
+	@PutMapping("/update")
+	public ResponseEntity<DocumentDetailDTO> updateDocument(
+			@RequestParam("documentId") Integer documentId,
+			@RequestParam("title") String title,
+			@RequestParam("content") String content,
+			@RequestParam(value = "file", required = false) MultipartFile file) {
+		// File path를 적는 로직을 작성해야함.
+		documentService.updateDocument(documentId, title, content);
+		if (file != null) {
+			System.out.println("File: " + file.getOriginalFilename());
+		}
+		return ResponseEntity.ok(null);
+	}
+
+	/**
+	 * 다른 곳의 요청을 받아들이기 위한 요청
+	 */
 }

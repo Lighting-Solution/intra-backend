@@ -17,43 +17,43 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "documentBox")
 public class DocumentBox {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "document_id")
-    private Integer documentId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "document_id")
+	private Integer documentId;
 
-    @Column(name = "title")
-    private String documentTitle;
+	@Column(name = "title")
+	private String documentTitle;
 
-    @Column(name = "path")
-    private String documentPath;
+	@Column(name = "path")
+	private String documentPath;
 
-    @Column(name = "content")
-    private String documentContent;
+	@Column(name = "content")
+	private String documentContent;
 
-    @Column(name = "createdAt")
-    private LocalDateTime documentCreatedAt;
+	@Column(name = "createdAt")
+	private LocalDateTime documentCreatedAt;
 
-    @Column(name = "updatedAt")
-    private LocalDateTime documentUpdatedAt;
+	@Column(name = "updatedAt")
+	private LocalDateTime documentUpdatedAt;
 
-    @Column(name = "category")
-    @Enumerated(EnumType.STRING)
-    private Category category;
+	@Column(name = "category")
+	@Enumerated(EnumType.STRING)
+	private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "emp_id")
-    private Emp emp;
+	@ManyToOne
+	@JoinColumn(name = "emp_id")
+	private Emp emp;
 
-    public static DocumentBox createDocs(DocumentInitDTO documentInitDTO, Emp emp) {
-        DocumentBox documentBox = new DocumentBox();
-        documentBox.documentTitle = documentInitDTO.getTitle();
-        documentBox.documentContent = documentInitDTO.getContent();
-        documentBox.category = Category.fromCategoryName(documentInitDTO.getCategory());
-        documentBox.emp = emp;
-        documentBox.documentPath = documentInitDTO.getFilePath();
-        documentBox.documentCreatedAt = LocalDateTime.now();
-        documentBox.documentUpdatedAt = LocalDateTime.now();
-        return documentBox;
-    }
+	public static DocumentBox createDocs(DocumentInitDTO documentInitDTO, Emp emp) {
+		DocumentBox documentBox = new DocumentBox();
+		documentBox.documentTitle = documentInitDTO.getTitle();
+		documentBox.documentContent = documentInitDTO.getContent();
+		documentBox.category = Category.fromCategoryName(documentInitDTO.getCategory().trim());
+		documentBox.emp = emp;
+		documentBox.documentPath = documentInitDTO.getFileName();
+		documentBox.documentCreatedAt = LocalDateTime.now();
+		documentBox.documentUpdatedAt = LocalDateTime.now();
+		return documentBox;
+	}
 }
