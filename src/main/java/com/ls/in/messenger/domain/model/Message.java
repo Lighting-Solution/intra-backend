@@ -32,6 +32,9 @@ public class Message {
     @JoinColumn(name = "roomMember_id", nullable = false)
     private RoomMember roomMember;
 
+    @OneToOne
+    @JoinColumn(name = "file_id")
+    private MessageFile messageFile;
     public static Message createMessage(ChatMessageDTO chatDTO, RoomMember roomMember) {
         return Message.builder()
                 .messageContent(chatDTO.getMessage())

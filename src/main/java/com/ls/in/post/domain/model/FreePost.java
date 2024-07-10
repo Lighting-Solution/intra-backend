@@ -12,26 +12,34 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "freePost")
+@Table(name = "free_post")
 public class FreePost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "fPost_id")
-    private Integer fPostId;
+    @Column(name = "free_post_id")
+    private Integer freePostId;
 
-    @Column(name = "title")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emp_id",nullable = false)
+    private Emp emp;
+
+    @Column(name = "free_post_title")
     private String freePostTitle;
 
-    @Column(name = "content")
+    @Column(name = "free_post_content")
     private String freePostContent;
 
-    @Column(name = "createdAt")
-    private LocalDateTime freePostCreatedAt;
+    @Column(name = "free_post_created_at")
+    private LocalDateTime freePostCreateAt;
 
-    @Column(name = "updatedAt")
-    private LocalDateTime freePostUpdatedAt;
+    @Column(name = "free_post_updated_at")
+    private LocalDateTime freePostUpdateAt;
 
-    @ManyToOne
-    @JoinColumn(name = "emp_id")
-    private Emp emp;
+
+    @Column(name = "free_post_good")
+    private Integer freePostGood;
+
+    @Column(name = "free_post_hits")
+    private Integer freePostHits;
+
 }
