@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>협조문</title>
+</head>
+<body>
+<table class="tbl_outer">
+    <tbody>
+    <tr>
+        <td colspan="2" class="header_cell">협조문</td>
+    </tr>
+    <tr>
+        <td>
+            <table class="tbl_inner">
+                <tbody>
+                <tr>
+                    <td class="title_cell">문서번호</td>
+                    <td class="content_cell"><div id="digitalApprovalId"></div></td>
+                </tr>
+                <tr>
+                    <td class="title_cell">부서</td>
+                    <td class="content_cell"><div id="digitalApprovalDepartment"></div></td>
+                </tr>
+                <tr>
+                    <td class="title_cell">담당자</td>
+                    <td class="content_cell"><div id="digitalApprovalEmpName"></div></td>
+                </tr>
+                <tr>
+                    <td class="title_cell">작성일자</td>
+                    <td class="content_cell"><div id="digitalApprovalCreatedAt"></div></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+        <td style="width: 500px; text-align: right; vertical-align: top; padding: 0;">
+            <div class="sign_type1 sign_type_new" data-group-seq="0" data-group-name="신청">
+                <table class="tb_sign_type1">
+                    <tbody>
+                    <tr>
+                        <th>승인</th>
+                        <td>
+                            <table class="sign_member">
+                                <tbody>
+                                <tr>
+                                    <td><span class="sign_rank" style="height: 30px" id="approvalPosition1"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="wrap_name wrap_sign">
+                                                        <span class="sign_stamp stamp_approved" style="height: 40px">
+                                                            <img src="" id="approvalSign1" />
+                                                        </span>
+                                        <span class="sign_name" style="height: 25px" id="approvalName1"></span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <th>결재</th>
+                        <td>
+                            <table class="sign_member">
+                                <tbody>
+                                <tr>
+                                    <td><span class="sign_rank" style="height: 30px" id="approvalPosition2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="wrap_name wrap_sign">
+                                                        <span class="sign_stamp stamp_approved" style="height: 40px">
+                                                            <img src="" id="approvalSign2" />
+                                                        </span>
+                                        <span class="sign_name" style="height: 25px" id="approvalName2"></span>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </td>
+                        <th>결재</th>
+                        <td>
+                            <table class="sign_member">
+                                <tbody>
+                                <tr>
+                                    <td><span class="sign_rank" style="height: 30px" id="approvalPosition3"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="wrap_name wrap_sign">
+                                                        <span class="sign_stamp stamp_approved" style="height: 40px">
+                                                            <img src="" id="approvalSign3" />
+                                                        </span>
+                                        <span class="sign_name" style="height: 25px" id="approvalName3"></span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<table class="tbl_outer">
+    <tbody>
+    <tr>
+        <td class="title_cell" colspan="2">수신 부서</td>
+        <td colspan="3" class="reason_cell"><input type="text" id="department" placeholder=""></td>
+    </tr>
+    <tr>
+        <td class="title_cell" colspan="2">합의</td>
+        <td colspan="3" class="reason_cell"><input type="text" id="agreement" placeholder=""></td>
+    </tr>
+    <tr>
+        <td class="title_cell" colspan="2">제목</td>
+        <td colspan="3" class="reason_cell"><input type="text" id="title" placeholder=""></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="title_cell">상세 내용</td>
+    </tr>
+    <tr>
+        <td colspan="5" class="reason_cell"><textarea placeholder=""></textarea></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
