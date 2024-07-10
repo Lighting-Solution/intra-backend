@@ -10,6 +10,7 @@ import com.ls.in.post.repository.PostFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +38,7 @@ public class NoticeService {
     }
 
     public List<NoticePostDTO> getAllNotices() {
-        return noticePostRepository.findAll().stream()
+        return noticePostRepository.findAll(Sort.by(Sort.Order.desc("importantNotice"), Sort.Order.desc("noticeCreatedAt"))).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -69,26 +70,51 @@ public class NoticeService {
 
     public NoticePost updateNotice(Integer id, NoticePostDTO noticePostDTO, String accountId, String accountPw, MultipartFile file) {
         if (isAdmin(accountId, accountPw)) {
-            NoticePost noticePost = convertToEntity(noticePostDTO);
-            noticePost.setNoticePostId(id);
+            NoticePost noticePost = noticePostRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Notice not found"));
+
+            if (noticePostDTO.getNoticeTitle() != null) {
+                noticePost.setNoticeTitle(noticePostDTO.getNoticeTitle());
+            }
+            if (noticePostDTO.getNoticeContent() != null) {
+                noticePost.setNoticeContent(noticePostDTO.getNoticeContent());
+            }
+            if (noticePostDTO.getImportantNotice() != null) {
+                noticePost.setImportantNotice(noticePostDTO.getImportantNotice());
+            }
             noticePost.setNoticeUpdatedAt(LocalDateTime.now());
-            noticePost.setNoticeGood(noticePost.getNoticeGood());
+
+            // 기존 조회수와 좋아요 수를 그대로 유지
             noticePost.setNoticeHits(noticePost.getNoticeHits());
+            noticePost.setNoticeGood(noticePost.getNoticeGood());
+
             noticePost = noticePostRepository.save(noticePost);
 
-
+            // 파일이 있는 경우 처리
             if (file != null && !file.isEmpty()) {
                 saveFile(file, noticePost);
             }
 
-            return noticePostRepository.save(noticePost);
+            return noticePost;
         } else {
             throw new RuntimeException("Access denied");
         }
     }
 
+
+
     public void deleteNotice(Integer id, String accountId, String accountPw) {
         if (isAdmin(accountId, accountPw)) {
+            // 먼저 관련 파일들을 삭제
+            List<PostFile> files = postFileRepository.findByNoticePost_NoticePostId(id);
+            for (PostFile file : files) {
+                File fileToDelete = new File(uploadDir + File.separator + file.getFilePath());
+                if (fileToDelete.exists()) {
+                    fileToDelete.delete();
+                }
+                postFileRepository.delete(file);
+            }
+            // 그 후 게시글을 삭제
             noticePostRepository.deleteById(id);
         } else {
             throw new RuntimeException("Access denied");
@@ -131,6 +157,7 @@ public class NoticeService {
             throw new RuntimeException("Failed to store file.", e);
         }
     }
+
 
     public Resource loadFile(String filePath) {
         File file = new File(uploadDir + File.separator + filePath);

@@ -20,4 +20,5 @@ public class NoticePostDTO {
     private Integer noticeHits;
     private Integer noticeGood;
 
+
 }

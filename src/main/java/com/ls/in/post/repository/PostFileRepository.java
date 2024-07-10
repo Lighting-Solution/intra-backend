@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface PostFileRepository extends JpaRepository<PostFile, Integer> {
-  
+
+    List<PostFile> findByNoticePost_NoticePostId(Integer noticePostId);
 }
