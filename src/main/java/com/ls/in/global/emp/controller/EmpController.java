@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController("empController")
 @RequestMapping("/api/v1/intranet/emp")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -15,12 +17,6 @@ public class EmpController {
     @Autowired
     private EmpService empService;
 
-    @GetMapping("/test")
-    public void test(@RequestParam("empId") int empId,
-                     @RequestParam("positionId") int positionId) {
-        empService.getEmpByIdAndDepartmentAndPosition(empId, 9);
-        empService.getEmpByPosition(positionId);
-    }
 
     @PostMapping("/toIntra")
     public ResponseEntity<UserDTO> securityToIntra(@RequestBody UserDTO userDTO){
@@ -28,5 +24,11 @@ public class EmpController {
         // userName으로 accountId값이랑 동일한 값 찾아서 accountId와 accountPW 반환
         UserDTO intraUserDTO = empService.findByAccountId(userDTO.getAccountId());
         return ResponseEntity.status(HttpStatus.OK).body(intraUserDTO);
+    }
+
+    @GetMapping("/toMessenger")
+    public ResponseEntity<List<EmpDTO>> empToMessenger() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(empService.getAllEmp());
     }
 }

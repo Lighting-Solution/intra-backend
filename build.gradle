@@ -31,14 +31,6 @@ dependencies {
     implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-    // 보안 관련 라이브러리
-    //implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
-    //implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    //implementation 'org.springframework.boot:spring-boot-starter-security'
-    //implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
-    //runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
-    //runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
-
     //Messenger 관련 라이브러리
     implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
