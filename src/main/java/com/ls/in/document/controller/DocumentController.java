@@ -12,16 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -39,10 +33,10 @@ public class DocumentController {
 	 */
 	@PostMapping("/api/docsList")
 	public Page<DocumentList> getDocs(@RequestBody DocumentDTO documentDTO) {
-		log.info("documentDTO={}", documentDTO);
+		log.info("## documentDTO={}", documentDTO);
 		Page<DocumentBox> docs = null;
 //		if (documentDTO.getSearchTerm() == null)
-		docs = documentService.getDocs(documentDTO);
+		docs = documentService.getDocuments(documentDTO);
 		log.info("docs:{}", docs.toString());
 		log.info("docs.content:{}", docs.getContent());
 		log.info("docs.page:{}", docs.getTotalPages());

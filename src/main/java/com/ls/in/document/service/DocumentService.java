@@ -7,6 +7,7 @@ import com.ls.in.document.dto.DocumentInitDTO;
 import com.ls.in.document.dto.DocumentList;
 import com.ls.in.document.repository.DocumentBoxRepository;
 import com.ls.in.document.util.Category;
+import com.ls.in.document.util.DocumentSpecification;
 import com.ls.in.global.emp.domain.model.DepartmentType;
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.repository.EmpRepository;
@@ -32,13 +33,16 @@ public class DocumentService {
 	private final EmpRepository empRepository;
 
 	@Transactional
-	public Page<DocumentBox> getDocs(DocumentDTO documentDTO) {
+	public Page<DocumentBox> getDocuments(DocumentDTO documentDTO) {
 		Pageable pageable = PageRequest.of(documentDTO.getPage(), documentDTO.getSize());
 		Emp loginEmp = empRepository.findById(documentDTO.getEmpId())
 				.orElseThrow(() -> new RuntimeException("No Emp Id"));
 		String loginEmpDepartment = getEmpDepartment(loginEmp);
 		Category category = Category.fromCategoryName(documentDTO.getCategoryName());
-		Page<DocumentBox> docs = documentBoxRepository.findByCategory(category, pageable);
+
+//		Page<DocumentBox> docs = documentBoxRepository.findByCategory(category, pageable);
+		Page<DocumentBox> docs = documentBoxRepository.findAll(DocumentSpecification.getDocuments(documentDTO), PageRequest.of(documentDTO.getPage(), documentDTO.getSize()));
+
 		// PUBLIC
 		if (category == Category.PUBLIC)
 			return docs;
