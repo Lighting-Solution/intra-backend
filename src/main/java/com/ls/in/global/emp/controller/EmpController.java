@@ -15,12 +15,6 @@ public class EmpController {
     @Autowired
     private EmpService empService;
 
-    @GetMapping("/test")
-    public void test(@RequestParam("empId") int empId,
-                     @RequestParam("positionId") int positionId) {
-        empService.getEmpByIdAndDepartmentAndPosition(empId, 9);
-        empService.getEmpByPosition(positionId);
-    }
 
     @PostMapping("/intra/securityToIntra")
     public ResponseEntity<UserDTO> securityToIntra(@RequestBody UserDTO userDTO){
