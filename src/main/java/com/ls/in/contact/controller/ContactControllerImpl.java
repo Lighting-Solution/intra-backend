@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/intranet/contact")
+@RequestMapping("/api/v1/lighting_solutions/contact")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ContactControllerImpl implements ContactController {
 
