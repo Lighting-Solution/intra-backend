@@ -41,8 +41,8 @@ public class DocumentController {
 	public Page<DocumentList> getDocs(@RequestBody DocumentDTO documentDTO) {
 		log.info("documentDTO={}", documentDTO);
 		Page<DocumentBox> docs = null;
-		if (documentDTO.getSearchTerm() == null)
-			docs = documentService.getDocs(documentDTO);
+//		if (documentDTO.getSearchTerm() == null)
+		docs = documentService.getDocs(documentDTO);
 		log.info("docs:{}", docs.toString());
 		log.info("docs.content:{}", docs.getContent());
 		log.info("docs.page:{}", docs.getTotalPages());
