@@ -8,23 +8,18 @@ import com.ls.in.document.dto.DocumentInitDTO;
 import com.ls.in.document.dto.DocumentList;
 import com.ls.in.document.service.DocumentService;
 import com.ls.in.document.service.FileStorageService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +56,7 @@ public class DocumentController {
 
 	/**
 	 * description 게시글을 생성하기 위한 EndPoint
+	 *
 	 * @param title
 	 * @param content
 	 * @param file
@@ -83,11 +79,13 @@ public class DocumentController {
 
 	/**
 	 * description 게시글의 파일을 다운로드 하기 위한 엔드포인트
-	 * @param id
+	 *
+	 * @param id DocumentBox의 ID값
 	 * @return 성공 시 다운로드, 실패 시 에러..
 	 */
 	@GetMapping("/{id}/download")
 	public ResponseEntity<Resource> downloadFile(@PathVariable Integer id) {
+		log.info("#################### 아오 다운로드 들어와?");
 		DocumentBox document = documentService.getDocumentById(id);
 		String storedPath = "src/main/resources/docs/" + document.getCategory().name().toLowerCase() + "/" + document.getEmp().getEmpId();
 		String fileName = document.getDocumentPath();
