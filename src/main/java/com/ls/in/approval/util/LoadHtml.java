@@ -58,9 +58,10 @@ public class LoadHtml {
     }
 
     public Map<String, String> save(Map<String, String> request, String filePath, FormDTO formDTO,
-            ManagerDTO managerDTO, CeoDTO ceoDTO) {
+                                    ManagerDTO managerDTO, CeoDTO ceoDTO) {
 
         String encodedHtmlContent = request.get("html");
+
 
         String htmlContent;
         String title = "";
@@ -84,6 +85,7 @@ public class LoadHtml {
 
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());
+            System.out.println(htmlContent);
 
             // Jsoup을 사용하여 HTML 파싱
             Document document = Jsoup.parse(htmlContent);

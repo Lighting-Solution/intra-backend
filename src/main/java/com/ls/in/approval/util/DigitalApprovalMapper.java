@@ -25,11 +25,12 @@ public class DigitalApprovalMapper {
                 .build();
 
     }
-
+/*
     public static DigitalApproval toEntity(DigitalApprovalDTO digitalApprovalDTO) {
         if(digitalApprovalDTO == null) return null;
-        Integer digitalApprovalId = (digitalApprovalDTO.getDigitalApprovalId());
-        Integer drafterId = (digitalApprovalDTO.getDrafterId());
+        Integer digitalApprovalId = digitalApprovalDTO.getDigitalApprovalId();
+        Integer drafterId = digitalApprovalDTO.getDrafterId();
+
         return DigitalApproval.builder()
                 .digitalApprovalId(digitalApprovalId)
                 .drafterId(drafterId)
@@ -47,4 +48,6 @@ public class DigitalApprovalMapper {
                 .emp(EmpMapper.toEntity(digitalApprovalDTO.getEmpDTO()))
                 .build();
     }
+
+ */
 }

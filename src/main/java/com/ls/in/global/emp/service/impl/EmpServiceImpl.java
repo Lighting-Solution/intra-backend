@@ -61,8 +61,17 @@ public class EmpServiceImpl implements EmpService {
         Optional<Emp> empOptional = empDAO.findByAccountId(accountId);
         Emp emp = empOptional.get();
         UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(emp.getAccountId());
-        userDTO.setPassword(emp.getAccountPw());
+        userDTO.setAccountId(emp.getAccountId());
+        userDTO.setAccountPw(emp.getAccountPw());
+        userDTO.setEmpId(emp.getEmpId());
+        userDTO.setPositionId(emp.getPosition().getPositionId());
+        userDTO.setEmpName(emp.getEmpName());
+        if(emp.getPosition().getPositionId().equals(1)){
+           userDTO.setDepartmentId(0);
+        } else {
+            userDTO.setDepartmentId(emp.getDepartment().getDepartmentId());
+        }
+
         return userDTO;
     }
 
@@ -116,6 +125,12 @@ public class EmpServiceImpl implements EmpService {
         responseDTO.setSdd_design(tempList);
 
         return responseDTO;
+    }
+
+    @Override
+    public EmpDTO findByPositionIdAndDepartmentId(int i, Integer departmentId) {
+        Emp emp = empDAO.findByPositionIdAndDepartmentId(i, departmentId);
+        return EmpMapper.toDto(emp);
     }
 
     private List<EmpDTO> forList(List<Emp> emps) {

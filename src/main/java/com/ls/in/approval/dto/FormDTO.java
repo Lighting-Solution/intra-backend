@@ -23,4 +23,5 @@ public class FormDTO {
 
     // 기안 날짜
     private LocalDateTime digitalApprovalCreatedAt;
+
 }
