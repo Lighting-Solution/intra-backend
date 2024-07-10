@@ -1,7 +1,7 @@
 package com.ls.in.document.dto;
 
 import lombok.Data;
-import lombok.Getter;
+
 import java.time.LocalDate;
 @Data
 public class DocumentDTO {
