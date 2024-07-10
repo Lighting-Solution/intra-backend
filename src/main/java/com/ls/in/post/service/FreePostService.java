@@ -3,7 +3,6 @@ package com.ls.in.post.service;
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.repository.EmpRepository;
 import com.ls.in.post.domain.model.FreePost;
-import com.ls.in.post.domain.model.NoticePost;
 import com.ls.in.post.dto.FreePostDTO;
 import com.ls.in.post.repository.FreePostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,10 @@ public class FreePostService {
         this.freePostRepository = freePostRepository;
         this.empRepository = empRepository;
     }
+
     public Emp findEmpByAccountIdAndPw(String accountId, String accountPw) {
-        return empRepository.findByAccountIdAndAccountPw(accountId, accountPw);
+        return empRepository.findByAccountIdAndAccountPw(accountId, accountPw)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     public List<FreePostDTO> getAllPosts() {
@@ -40,10 +41,8 @@ public class FreePostService {
     }
 
     public FreePost createPost(FreePostDTO freePostDTO, String accountId, String accountPw) {
-        Emp emp = empRepository.findByAccountId(accountId);
-        if (emp == null) {
-            throw new RuntimeException("User not found");
-        }
+        Emp emp = empRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         FreePost freePost = convertToEntity(freePostDTO);
         freePost.setEmp(emp);
         freePost.setFreePostCreateAt(LocalDateTime.now());
@@ -79,7 +78,6 @@ public class FreePostService {
         freePostRepository.delete(freePost);
     }
 
-
     public void incrementFreePostHits(Integer id) {
         Optional<FreePost> freePostOpt = freePostRepository.findById(id);
         if (freePostOpt.isPresent()) {
@@ -88,6 +86,7 @@ public class FreePostService {
             freePostRepository.save(freePost);
         }
     }
+
     public void incrementPostGood(Integer id) {
         Optional<FreePost> freePostOpt = freePostRepository.findById(id);
         if (freePostOpt.isPresent()) {
@@ -120,9 +119,14 @@ public class FreePostService {
         freePost.setFreePostUpdateAt(freePostDTO.getFreePostUpdateAt());
         freePost.setFreePostGood(freePostDTO.getFreePostGood());
         freePost.setFreePostHits(freePostDTO.getFreePostHits());
-        Emp emp = new Emp();
-        emp.setEmpId(freePostDTO.getEmpId());
+
+
+        Emp emp = Emp.builder()
+                .empId(freePostDTO.getEmpId())
+                .build();
+
         freePost.setEmp(emp);
         return freePost;
     }
+
 }

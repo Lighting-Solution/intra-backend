@@ -39,9 +39,10 @@ public class FreeCommentService {
 
     public FreeCommentDTO addComment(FreeCommentDTO freeCommentDTO, String accountId, String accountPw) {
         Optional<FreePost> freePostOpt = freePostRepository.findById(freeCommentDTO.getFreePostId());
-        Emp emp = empRepository.findByAccountIdAndAccountPw(accountId, accountPw);
+        Optional<Emp> empOpt = empRepository.findByAccountIdAndAccountPw(accountId, accountPw);
 
-        if (freePostOpt.isPresent() && emp != null) {
+        if (freePostOpt.isPresent() && empOpt.isPresent()) {
+            Emp emp = empOpt.get();
             FreeComment freeComment = new FreeComment();
             freeComment.setFreePost(freePostOpt.get());
             freeComment.setEmp(emp);
@@ -59,9 +60,10 @@ public class FreeCommentService {
 
     public FreeCommentDTO updateComment(FreeCommentDTO freeCommentDTO, String accountId, String accountPw) {
         Optional<FreeComment> freeCommentOpt = freeCommentRepository.findById(freeCommentDTO.getFreeCommentId());
-        Emp emp = empRepository.findByAccountIdAndAccountPw(accountId, accountPw);
+        Optional<Emp> empOpt = empRepository.findByAccountIdAndAccountPw(accountId, accountPw);
 
-        if (freeCommentOpt.isPresent() && emp != null) {
+        if (freeCommentOpt.isPresent() && empOpt.isPresent()) {
+            Emp emp = empOpt.get();
             FreeComment freeComment = freeCommentOpt.get();
 
             if (!freeComment.getEmp().getEmpId().equals(emp.getEmpId())) {
@@ -80,9 +82,10 @@ public class FreeCommentService {
 
     public void deleteComment(Integer freePostId, Integer commentId, String accountId, String accountPw) {
         Optional<FreeComment> freeCommentOpt = freeCommentRepository.findById(commentId);
-        Emp emp = empRepository.findByAccountIdAndAccountPw(accountId, accountPw);
+        Optional<Emp> empOpt = empRepository.findByAccountIdAndAccountPw(accountId, accountPw);
 
-        if (freeCommentOpt.isPresent() && emp != null) {
+        if (freeCommentOpt.isPresent() && empOpt.isPresent()) {
+            Emp emp = empOpt.get();
             FreeComment freeComment = freeCommentOpt.get();
 
             if (!freeComment.getEmp().getEmpId().equals(emp.getEmpId())) {

@@ -170,8 +170,13 @@ public class NoticeService {
     }
 
     private boolean isAdmin(String accountId, String accountPw) {
-        Emp emp = empRepository.findByAccountId(accountId);
-        return emp != null && emp.isEmpAdmin() && emp.getAccountPw().equals(accountPw);
+        Optional<Emp> optionalEmp = empRepository.findByAccountId(accountId);
+        if (optionalEmp.isPresent()) {
+            Emp emp = optionalEmp.get();
+            return emp.isEmpAdmin() && emp.getAccountPw().equals(accountPw);
+        } else {
+            return false; // 혹은 적절한 예외를 던질 수 있습니다.
+        }
     }
 
     private NoticePostDTO convertToDTO(NoticePost noticePost) {
