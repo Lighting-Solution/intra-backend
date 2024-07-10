@@ -9,8 +9,12 @@ import com.ls.in.approval.dto.ManagerDTO;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
+import com.ls.in.global.emp.domain.dto.DepartmentDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
+import com.ls.in.global.emp.domain.model.DepartmentType;
+import com.ls.in.global.emp.service.DepartmentService;
 import com.ls.in.global.emp.service.EmpService;
+import com.ls.in.global.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -40,12 +44,14 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
     private final LoadHtml loadHtml = new LoadHtml();
 
-    private EmpService empService;
+    private final EmpService empService;
+    private final DepartmentService departmentService;
 
     @Autowired
-    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService) {
+    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService, DepartmentService departmentService) {
         this.approvalService = approvalService;
         this.empService = empService;
+        this.departmentService = departmentService;
     }
 
     @Override
@@ -77,7 +83,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     @Override
     @PostMapping("/request")
     public ResponseEntity<String> approvalRequest(Map<String, String> request) throws IOException, DocumentException {
-
+        System.out.println("test : " + request);
         // 로그인한 사원 ID
         Integer empId = Integer.parseInt(request.get("empId"));
 
@@ -86,18 +92,21 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
         // HTML 들어갈 정보 (FormDTO)
         FormDTO formDTO = new FormDTO();
-        formDTO.setDepartment(empDTO.getDepartment().getDepartmentName());
-
+        Integer departmentId = Utils.converterDepartment(empDTO.getDepartment().getDepartmentId());
+        DepartmentDTO departmentDTO = departmentService.getDepartmentById(departmentId);
+        formDTO.setDepartment(departmentDTO.getDepartmentName());
         formDTO.setPosition(empDTO.getPosition().getPositionName());
         formDTO.setName(empDTO.getEmpName());
         formDTO.setDigitalApprovalCreatedAt(LocalDateTime.now());
 
         // empId와 일치하는 사원의 부서의 특정 직급과 일치하는 사원 정보 (직급, 이름) - 부장
-        EmpDTO empDTO1 = empService.getEmpByIdAndDepartmentAndPosition(empId, 2);
+        //EmpDTO empDTO1 = empService.getEmpByIdAndDepartmentAndPosition(empId, 2);
+        EmpDTO empDTO1 = empService.findByPositionIdAndDepartmentId(2, departmentId);
+
         ManagerDTO managerDTO = new ManagerDTO();
         managerDTO.setName(empDTO1.getEmpName());
         managerDTO.setPosition(empDTO1.getPosition().getPositionName());
-        managerDTO.setDepartment(empDTO1.getPosition().getPositionName());
+        //managerDTO.setDepartment(empDTO1.getPosition().getPositionName());
 
         // position의 id가 일치하는 사원의 정보 - CEO
         EmpDTO empDTO2 = empService.getEmpByPosition(1);
@@ -200,22 +209,29 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     @Override
     @GetMapping("/waiting")
     public ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Map<String, String> request) {
-        System.out.println("==========test start==========");
+
         Integer empId = Integer.parseInt(request.get("empId"));
-        System.out.println("empId : " + empId);
 
         //empId를 통해 drafterID 와 해당 직급 가져오기
         EmpDTO empDTO = empService.getEmpById(empId);
         Integer position = empDTO.getPosition().getPositionId();
         Integer department = 0;
 
+        /*
         if(!empId.equals(3)){
             department = empDTO.getDepartment().getDepartmentId();
         } else {
             department = null;
         }
+         */
+        if(!position.equals(1)){
+            department = empDTO.getDepartment().getDepartmentId();
+            System.out.println("department" + department);
+        } else {
+            department = null;
+        }
 
-        System.out.println("position : " + position);
+
 
         List<DigitalApprovalDTO> digitalApprovalDTOList = new ArrayList<>();
 
@@ -227,7 +243,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         } else { // 부장 밑 사원
             digitalApprovalDTOList = approvalService.getApprovalWaitingListByEmployee(empId);
         }
-        System.out.println("--------------------");
+
         System.out.println(digitalApprovalDTOList);
 
         return ResponseEntity.ok(digitalApprovalDTOList);
@@ -268,8 +284,12 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
                 String pdfFilePath = "src/main/resources/approvalWaiting/signed"+ digitalApprovalId+".pdf";
                 String imagePath = empDTO.getEmpSign();
-                String outputPdfPath = "src/main/resources/approvalWaiting/signed" + digitalApprovalId + ".pdf";
+                String outputPdfPath = "src/main/resources/approvalComplete/signed" + digitalApprovalId + ".pdf";
                 LoadHtml.addSignToPDF(pdfFilePath,imagePath,outputPdfPath, "ceo");
+
+                Path approvalWaiting = Paths.get(pdfFilePath);
+                Files.delete(approvalWaiting);
+
 
                 // 내문서함으로 전송 (기안자 id, 문서경로)
                 /* 꼭 해야함  */

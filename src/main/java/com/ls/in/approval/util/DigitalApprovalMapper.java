@@ -3,7 +3,7 @@ package com.ls.in.approval.util;
 import com.ls.in.approval.domain.model.DigitalApproval;
 import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.global.emp.util.EmpMapper;
-import com.ls.in.global.util.Formats;
+
 
 public class DigitalApprovalMapper {
     public static DigitalApprovalDTO toDto(DigitalApproval digitalApproval) {
@@ -29,8 +29,8 @@ public class DigitalApprovalMapper {
 
     public static DigitalApproval toEntity(DigitalApprovalDTO digitalApprovalDTO) {
         if(digitalApprovalDTO == null) return null;
-        Integer digitalApprovalId = Formats.toInteger(digitalApprovalDTO.getDigitalApprovalId());
-        Integer drafterId = Formats.toInteger(digitalApprovalDTO.getDrafterId());
+        Integer digitalApprovalId = digitalApprovalDTO.getDigitalApprovalId();
+        Integer drafterId = digitalApprovalDTO.getDrafterId();
         return DigitalApproval.builder()
                 .digitalApprovalId(digitalApprovalId)
                 .drafterId(drafterId)

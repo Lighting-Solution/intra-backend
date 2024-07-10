@@ -53,4 +53,5 @@ public interface EmpService {
 
     EmpByDepartmentDTO getAllByDepartment() throws EmpNotFoundException;
 
+    EmpDTO findByPositionIdAndDepartmentId(int i, Integer departmentId);
 }

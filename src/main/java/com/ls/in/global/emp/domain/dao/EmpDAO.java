@@ -14,4 +14,8 @@ public interface EmpDAO {
     Emp findByPosition(Integer positionId) throws DataAccessException;
     List<Emp> findAllByDepartment(Integer departmentId) throws DataAccessException;
     boolean save(Emp emp) throws DataAccessException;
+
+    Optional<Emp> findByAccountId(String accountId);
+
+    Emp findByPositionIdAndDepartmentId(int i, Integer departmentId);
 }
