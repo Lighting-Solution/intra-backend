@@ -39,17 +39,13 @@ public class DocumentController {
 	 */
 	@PostMapping("/api/docsList")
 	public Page<DocumentList> getDocs(@RequestBody DocumentDTO documentDTO) {
-		Pageable pageable = PageRequest.of(documentDTO.getPage(), documentDTO.getSize());
-		List<DocumentBox> docTest = new ArrayList<>();
-		Page<DocumentBox> docs = new PageImpl<>(docTest, pageable, 0);
 		log.info("documentDTO={}", documentDTO);
-
-		if (documentDTO.getCategoryName() != null)
-			docs = documentService.getDocs(documentDTO, pageable);
+		Page<DocumentBox> docs = null;
+		if (documentDTO.getSearchTerm() == null)
+			docs = documentService.getDocs(documentDTO);
 		log.info("docs:{}", docs.toString());
 		log.info("docs.content:{}", docs.getContent());
 		log.info("docs.page:{}", docs.getTotalPages());
-
 
 		return docs.map(documentService::convertToDocumentList);
 	}

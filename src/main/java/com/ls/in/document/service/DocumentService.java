@@ -13,6 +13,7 @@ import com.ls.in.global.emp.repository.EmpRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,8 @@ public class DocumentService {
 	private final EmpRepository empRepository;
 
 	@Transactional
-	public Page<DocumentBox> getDocs(DocumentDTO documentDTO, Pageable pageable) {
+	public Page<DocumentBox> getDocs(DocumentDTO documentDTO) {
+		Pageable pageable = PageRequest.of(documentDTO.getPage(), documentDTO.getSize());
 		Emp loginEmp = empRepository.findById(documentDTO.getEmpId())
 				.orElseThrow(() -> new RuntimeException("No Emp Id"));
 		String loginEmpDepartment = getEmpDepartment(loginEmp);
