@@ -61,9 +61,12 @@ public class DocumentController {
 			@RequestParam(value = "file", required = false) MultipartFile file, // 각 유저별로 폴더를 관리해야함
 			@RequestParam("category") String category,
 			@RequestParam("writerEmpId") Integer writerEmpId) {
-		String fileName = fileStorageService.storeFile(file, writerEmpId, category);
+		String fileName = null;
+		if (file != null)
+			fileName = file.getOriginalFilename();
 		DocumentInitDTO document = new DocumentInitDTO(title, content, fileName, category, writerEmpId);
-		documentService.saveDocument(document);
+		DocumentBox documentBox = documentService.saveDocument(document);
+		fileStorageService.storeFile(file, documentBox);
 		return new ResponseEntity<>("Document created successfully", HttpStatus.OK);
 	}
 
@@ -75,9 +78,8 @@ public class DocumentController {
 	 */
 	@GetMapping("/{id}/download")
 	public ResponseEntity<Resource> downloadFile(@PathVariable Integer id) {
-		log.info("#################### 아오 다운로드 들어와?");
 		DocumentBox document = documentService.getDocumentById(id);
-		String storedPath = "src/main/resources/docs/" + document.getCategory().name().toLowerCase() + "/" + document.getEmp().getEmpId();
+		String storedPath = "src/main/resources/docs/" + id;
 		String fileName = document.getDocumentPath();
 		if (document.getCategory().name().equalsIgnoreCase("approval"))
 			storedPath = "src/main/resources/approvalComplete";
@@ -101,11 +103,17 @@ public class DocumentController {
 			@RequestParam(value = "file", required = false) MultipartFile file,
 			@RequestParam("writerEmpId") Integer writerEmpId) {
 		// File path를 적는 로직을 작성해야함.
+
 		DocumentBox documentBox = documentService.getDocumentById(documentId);
-		String fileName = fileStorageService.storeFile(file, writerEmpId, documentBox.getCategory().name());
-		fileStorageService.deleteFile(documentBox);
-		log.info("Check Update :{}", fileName);
-		return ResponseEntity.ok(documentService.updateDocument(documentBox, title, content, fileName));
+		String fileName = null;
+		log.info("Check Update :{}", documentBox);
+		if (file != null)
+			fileName = fileStorageService.storeFile(file, documentBox);
+		if (documentBox.getDocumentPath() != null)
+			fileStorageService.deleteFile(documentBox);
+		log.info("Check Update :{}", documentBox);
+		ResponseEntity<DocumentDetailDTO> ok = ResponseEntity.ok(documentService.updateDocument(documentBox, title, content, fileName));
+		return ok;
 	}
 
 	@DeleteMapping("/delete/{id}")

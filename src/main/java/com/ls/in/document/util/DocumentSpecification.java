@@ -36,6 +36,8 @@ public class DocumentSpecification {
 				predicates.add(criteriaBuilder.between(root.get("documentCreatedAt"), startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay()));
 			}
 
+			query.orderBy(criteriaBuilder.desc(root.get("documentCreatedAt")));
+
 			return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 		};
 	}

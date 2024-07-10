@@ -87,10 +87,11 @@ public class DocumentService {
 	}
 
 	@Transactional
-	public void saveDocument(DocumentInitDTO document) {
+	public DocumentBox saveDocument(DocumentInitDTO document) {
 		Optional<Emp> myEmp = empRepository.findById(document.getWriterEmpId());
 		DocumentBox doc = DocumentBox.createDocs(document, myEmp.get());
 		documentBoxRepository.save(doc);
+		return doc;
 	}
 
 	@Transactional
@@ -127,8 +128,7 @@ public class DocumentService {
 	public DocumentDetailDTO updateDocument(DocumentBox documentBox, String title, String content, String fileName) {
 		documentBox.setDocumentTitle(title);
 		documentBox.setDocumentContent(content);
-		if (fileName != null)
-			documentBox.setDocumentPath(fileName);
+		documentBox.setDocumentPath(fileName);
 		return convertToDocumentDetail(documentBox);
 	}
 

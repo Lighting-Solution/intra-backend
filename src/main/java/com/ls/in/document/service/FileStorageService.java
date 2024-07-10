@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 
 @Service
 public class FileStorageService {
@@ -26,11 +23,11 @@ public class FileStorageService {
 	 * @param writerEmpId
 	 * @return
 	 */
-	public String storeFile(MultipartFile file, Integer writerEmpId, String category) {
+	public String storeFile(MultipartFile file, DocumentBox documentBox) {
 		if (file == null)
 			return "";
 
-		Path fileStorageLocation = Paths.get("src/main/resources/docs/" + category.toLowerCase() + "/" + writerEmpId).toAbsolutePath().normalize();
+		Path fileStorageLocation = Paths.get("src/main/resources/docs/" + documentBox.getDocumentId()).toAbsolutePath().normalize();
 		try {
 			Files.createDirectories(fileStorageLocation);
 		} catch (Exception ex) {
@@ -48,6 +45,35 @@ public class FileStorageService {
 			return fileName;
 		} catch (IOException ex) {
 			throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
+		}
+	}
+
+	public void deleteFile(DocumentBox documentBox) {
+		String fileName = documentBox.getDocumentPath();
+		String category = documentBox.getCategory().name();
+
+		// 파일 경로를 생성합니다.
+		Path fileStorageLocation = Paths.get("src/main/resources/docs/" + documentBox.getDocumentId()).toAbsolutePath().normalize();
+		Path filePath = fileStorageLocation.resolve(fileName).normalize();
+
+		try {
+			// 파일이 존재하는지 확인하고 삭제합니다.
+			if (Files.exists(filePath)) {
+				Files.delete(filePath);
+			}
+			Path directoryPath = fileStorageLocation;
+			if (Files.isDirectory(directoryPath) && isDirectoryEmpty(directoryPath)) {
+				Files.delete(directoryPath);  // 비어있는 디렉토리 삭제
+			}
+
+		} catch (IOException ex) {
+			throw new RuntimeException("Could not delete file " + fileName + ". Please try again!", ex);
+		}
+	}
+
+	private boolean isDirectoryEmpty(Path directory) throws IOException {
+		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
+			return !dirStream.iterator().hasNext();
 		}
 	}
 
@@ -72,24 +98,6 @@ public class FileStorageService {
 			}
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
-		}
-	}
-
-	public void deleteFile(DocumentBox documentBox) {
-		String fileName = documentBox.getDocumentPath();
-		String category = documentBox.getCategory().name();
-
-		// 파일 경로를 생성합니다.
-		Path fileStorageLocation = Paths.get("src/main/resources/docs/" + documentBox.getCategory().name().toLowerCase() + "/" + documentBox.getEmp().getEmpId()).toAbsolutePath().normalize();
-		Path filePath = fileStorageLocation.resolve(fileName).normalize();
-
-		try {
-			// 파일이 존재하는지 확인하고 삭제합니다.
-			if (Files.exists(filePath)) {
-				Files.delete(filePath);
-			}
-		} catch (IOException ex) {
-			throw new RuntimeException("Could not delete file " + fileName + ". Please try again!", ex);
 		}
 	}
 }
