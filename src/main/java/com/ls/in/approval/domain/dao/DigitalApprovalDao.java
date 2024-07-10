@@ -11,7 +11,7 @@ public interface DigitalApprovalDao {
 
     DigitalApproval save(DigitalApproval digitalApproval);
 
-    List<DigitalApproval> findByDigitalApprovalId();
+    List<DigitalApproval> findAll();
 
     Optional<DigitalApproval> findById(Integer digitalApprovalId);
 
@@ -19,5 +19,5 @@ public interface DigitalApprovalDao {
 
     void updateStatus(Integer digitalApprovalId, String type);
 
-    void updateRejectionStatus(Integer digitalApprovalId);
+    void updateRejectionStatus(Integer digitalApprovalId , boolean managerStatus, boolean ceoStatus);
 }

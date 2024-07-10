@@ -1,6 +1,5 @@
 package com.ls.in.approval.service;
 
-import com.ls.in.approval.domain.model.DigitalApproval;
 import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 
@@ -18,5 +17,9 @@ public interface DigitalApprovalService {
 
     void updateStatus(Integer digitalApprovalId, String type);
 
-    void updateRejectionStatus(Integer digitalApprovalId);
+    List<DigitalApprovalDTO> getApprovalWaitingListByManager(Integer department);
+
+    List<DigitalApprovalDTO> getApprovalWaitingListByEmployee(Integer empId);
+
+    void updateRejectionStatus(Integer digitalApprovalId, boolean managerStatus, boolean ceoStatus);
 }

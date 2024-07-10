@@ -15,4 +15,8 @@ public class Utils {
         if(str == null || str.isEmpty() || str.equals("")) return true;
         return false;
     }
+
+    public static Integer converterDepartment(Integer departmentId) {
+        return Integer.valueOf((String.valueOf(departmentId).charAt(0) +"00"));
+    }
 }

@@ -9,10 +9,16 @@ import com.ls.in.approval.dto.ManagerDTO;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
+import com.ls.in.document.dto.DocumentInitDTO;
+import com.ls.in.document.service.DocumentService;
+import com.ls.in.global.emp.domain.dto.DepartmentDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.service.EmpService;
 import org.apache.xpath.operations.Bool;
+import com.ls.in.global.emp.domain.model.DepartmentType;
+import com.ls.in.global.emp.service.DepartmentService;
+import com.ls.in.global.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -28,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,18 +45,19 @@ import java.util.Map;
 public class DigitalApprovalControllerImpl implements DigitalApprovalController {
 
     private final DigitalApprovalService approvalService;
+    private final DocumentService documentService;
 
     private final LoadHtml loadHtml = new LoadHtml();
 
-    private EmpService empService;
-
-    private Integer documentCount = 1;
+    private final EmpService empService;
+    private final DepartmentService departmentService;
 
     @Autowired
-
-    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService) {
+    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService, DocumentService documentService, DepartmentService departmentService) {
         this.approvalService = approvalService;
         this.empService = empService;
+        this.documentService = documentService;
+        this.departmentService = departmentService;
     }
 
     @Override
@@ -82,25 +90,29 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     @PostMapping("/request")
     public ResponseEntity<String> approvalRequest(Map<String, String> request) throws IOException, DocumentException {
 
-        Integer empId = Integer.parseInt(request.get("empId")); // 로그인한 사원 ID
+        // 로그인한 사원 ID
+        Integer empId = Integer.parseInt(request.get("empId"));
 
         // empId와 일치하는 사원 정보 가져오기 (직급, 부서)
         EmpDTO empDTO = empService.getEmpById(empId);
 
         // HTML 들어갈 정보 (FormDTO)
         FormDTO formDTO = new FormDTO();
-        formDTO.setDepartment(empDTO.getDepartment().getDepartmentName());
-
+        Integer departmentId = Utils.converterDepartment(empDTO.getDepartment().getDepartmentId());
+        DepartmentDTO departmentDTO = departmentService.getDepartmentById(departmentId);
+        formDTO.setDepartment(departmentDTO.getDepartmentName());
         formDTO.setPosition(empDTO.getPosition().getPositionName());
         formDTO.setName(empDTO.getEmpName());
         formDTO.setDigitalApprovalCreatedAt(LocalDateTime.now());
 
         // empId와 일치하는 사원의 부서의 특정 직급과 일치하는 사원 정보 (직급, 이름) - 부장
-        EmpDTO empDTO1 = empService.getEmpByIdAndDepartmentAndPosition(empId, 2);
+        //EmpDTO empDTO1 = empService.getEmpByIdAndDepartmentAndPosition(empId, 2);
+        EmpDTO empDTO1 = empService.findByPositionIdAndDepartmentId(2, departmentId);
+
         ManagerDTO managerDTO = new ManagerDTO();
         managerDTO.setName(empDTO1.getEmpName());
         managerDTO.setPosition(empDTO1.getPosition().getPositionName());
-        managerDTO.setDepartment(empDTO1.getPosition().getPositionName());
+        //managerDTO.setDepartment(empDTO1.getPosition().getPositionName());
 
         // position의 id가 일치하는 사원의 정보 - CEO
         EmpDTO empDTO2 = empService.getEmpByPosition(1);
@@ -151,7 +163,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         Integer digitalApprovalId = digitalApprovalDTO.getDigitalApprovalId();
 
         // html 파일 PDF 저장
-        loadHtml.htmlToPdf(filePath, fontPath, request);
+        loadHtml.htmlToPdf(filePath, fontPath, request, digitalApprovalId, formDTO);
 
         // sign PDF 가 저장되는 경로
         String outputPdfPath = "src/main/resources/approvalWaiting/signed" + digitalApprovalDTO.getDigitalApprovalId() + ".pdf";
@@ -170,10 +182,21 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     public ResponseEntity<Resource> getPdf(@PathVariable String projectName, @PathVariable Integer digitalApprovalId) {
         System.out.println("digitalApprovalId" + digitalApprovalId);
 
+        DigitalApprovalDTO digitalApprovalDTO = approvalService.getDrafterId(digitalApprovalId);
+        boolean digitalApprovalType = digitalApprovalDTO.isDigitalApprovalType();
+
         try {
             // 프로젝트 이름을 기반으로 PDF 파일 경로 설정 (이 예시에서는 고정된 경로 사용)
-            Path pdfPath = Paths
-                    .get("src/main/resources/approvalWaiting/signed" + digitalApprovalId.toString() + ".pdf");
+            Path pdfPath;
+            // 반려함
+            if(digitalApprovalType){
+                pdfPath = Paths
+                        .get("src/main/resources/approvalReject/signed" + digitalApprovalId.toString() + ".pdf");
+            } else {
+                pdfPath = Paths
+                        .get("src/main/resources/approvalWaiting/signed" + digitalApprovalId.toString() + ".pdf");
+            }
+
             Resource resource = new UrlResource(pdfPath.toUri());
 
             if (resource.exists()) {
@@ -191,8 +214,44 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
     @Override
     @GetMapping("/waiting")
-    public ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList() {
-        List<DigitalApprovalDTO> digitalApprovalDTOList = approvalService.getApprovalWaitingList();
+    public ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Map<String, String> request) {
+
+        Integer empId = Integer.parseInt(request.get("empId"));
+
+        //empId를 통해 drafterID 와 해당 직급 가져오기
+        EmpDTO empDTO = empService.getEmpById(empId);
+        Integer position = empDTO.getPosition().getPositionId();
+        Integer department = 0;
+
+        /*
+        if(!empId.equals(3)){
+            department = empDTO.getDepartment().getDepartmentId();
+        } else {
+            department = null;
+        }
+         */
+        if(!position.equals(1)){
+            department = empDTO.getDepartment().getDepartmentId();
+            System.out.println("department" + department);
+        } else {
+            department = null;
+        }
+
+
+
+        List<DigitalApprovalDTO> digitalApprovalDTOList = new ArrayList<>();
+
+        // 대표 이사
+        if(position.equals(1)){
+            digitalApprovalDTOList = approvalService.getApprovalWaitingList();
+        } else if(position.equals(2)){ // 부장
+            digitalApprovalDTOList = approvalService.getApprovalWaitingListByManager(department);
+        } else { // 부장 밑 사원
+            digitalApprovalDTOList = approvalService.getApprovalWaitingListByEmployee(empId);
+        }
+
+        System.out.println(digitalApprovalDTOList);
+
         return ResponseEntity.ok(digitalApprovalDTOList);
     }
 
@@ -204,26 +263,19 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         //EmpDTO empDTO = empService.getEmpById(empId);
 
         Integer digitalApprovalId = Integer.parseInt(request.get("digitalApprovalId"));
-        System.out.println("==========test start==========");
 
         // 문서 id를 통해서 객체 반환 받고 기안자 id, status 가져오기
         // 문서 id를 통해서 객체 반환 받고 status 값 가져오기
         DigitalApprovalDTO digitalApprovalDTO = approvalService.getDrafterId(digitalApprovalId);
-        System.out.println("drafterId : " + digitalApprovalDTO.getDrafterId());
-        System.out.println("isManagerStatus : " + digitalApprovalDTO.isManagerStatus());
-        System.out.println("isCeoStatus : " + digitalApprovalDTO.isCeoStatus());
 
         Integer drafterId = digitalApprovalDTO.getDrafterId();
         boolean managerStatus = digitalApprovalDTO.isManagerStatus();
-        boolean ceoStatus = digitalApprovalDTO.isCeoStatus();
 
         // 문서 번호의 기안자와 사용자가 다를 경우 (사원이 아닐 경우 -> 부장 , ceo)
-        // 현재 empId : 2 , drafterId : 1
-        /*
         if(!empId.equals(drafterId)){
-
             //부장 status false : 부장 문서 결재 대기함에 보이게 함
             if(!managerStatus){
+
                 // 부장 사인 넣어주고 pdf로 저장
                 // pdfFilePath : 사인되어있는 pdf 파일, imagePath : 본인 sign , outputPdfPath : 사인저장할 pdf
                 String pdfFilePath = "src/main/resources/approvalWaiting/signed"+ digitalApprovalId+".pdf";
@@ -234,42 +286,33 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
                 // DB manager_status update
                 approvalService.updateStatus(digitalApprovalId, "manager");
 
-
             } else { // 부장 status true : ceo 사인 넣어주기
+
                 String pdfFilePath = "src/main/resources/approvalWaiting/signed"+ digitalApprovalId+".pdf";
                 String imagePath = empDTO.getEmpSign();
-                String outputPdfPath = "src/main/resources/approvalWaiting/signed" + digitalApprovalId + ".pdf";
+                String outputPdfPath = "src/main/resources/approvalComplete/signed" + digitalApprovalId + ".pdf";
                 LoadHtml.addSignToPDF(pdfFilePath,imagePath,outputPdfPath, "ceo");
-                // 내문서함으로 전송 (기안자 id, 문서경로)
 
+                Path approvalWaiting = Paths.get(pdfFilePath);
+                Files.delete(approvalWaiting);
+
+
+                // 내문서함으로 전송 (기안자 id, 문서경로)
+                /* 꼭 해야함 -> 꼭 했음돵 ㅎㅎ */
+                String fileName = "signed" + digitalApprovalId + ".pdf";
+                DocumentInitDTO documentInitDTO = new DocumentInitDTO("전자결재문서" + digitalApprovalId,
+                        "전자결재내용" + digitalApprovalId,
+                        fileName,
+                        "approval",
+                        drafterId);
+                documentService.saveDocument(documentInitDTO);
                 // DB ceo_status update
                 approvalService.updateStatus(digitalApprovalId, "ceo");
             }
-
         } else { // 기안자와 사용자가 같을 경우
             // logic 처리할 필요가 없음
         }
 
-        System.out.println("==========test end==========");
-
-        /*
-        EmpDTO empDTO = empService.getEmpById(empId);
-
-        DigitalApprovalDTO approvalDTO = new DigitalApprovalDTO();
-        Integer draftId = approvalDTO.getDrafterId();
-
-
-        System.out.println("===========" + draftId + "=========");
-        String imagePath = empDTO.getEmpSign();
-
-        LocalDateTime digitalApprovalAt = LocalDateTime.now();
-
-        String pdfFilePath = "src/main/resources/approvalWaiting/signed_" + empId + ".pdf";
-
-        String outputPdfPath = "src/main/resources/approvalWaiting/permissionsigned_" + empId + ".pdf";
-        // PDF 파일 Sign 저장
-        // addSignToPDF(pdfFilePath, imagePath, outputPdfPath);
-         */
         return ResponseEntity.ok("requestpermission : HTML content received and processed successfully");
     }
 
@@ -285,9 +328,9 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         boolean ceoStatus = digitalApprovalDTO.isCeoStatus();
 
         // 문서가 이미 승인된 상태인지 확인
-        if (!managerStatus && !ceoStatus) {
+        if (!managerStatus || !ceoStatus) {
             // 반려 상태로 업데이트
-            approvalService.updateRejectionStatus(digitalApprovalId);
+            approvalService.updateRejectionStatus(digitalApprovalId, managerStatus, ceoStatus);
 
             // 결재 대기 문서함 경로
             String savedPdfPath = "src/main/resources/approvalWaiting/signed" + digitalApprovalDTO.getDigitalApprovalId() + ".pdf";
@@ -297,7 +340,11 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
             Path savedPath = Paths.get(savedPdfPath);
             Path outputPath = Paths.get(outputPdfPath);
 
+            // 문서 이동
             Files.move(savedPath, outputPath);
+
+            // 문서 지우기
+            Files.delete(savedPath);
 
             // 전자 결재 테이블 data update (pdf 저장 경로)
             approvalService.updatePath(digitalApprovalId, outputPdfPath);
@@ -307,6 +354,5 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
             return ResponseEntity.badRequest().body("이미 승인된 문서는 반려할 수 없습니다.");
         }
     }
-
 
 }

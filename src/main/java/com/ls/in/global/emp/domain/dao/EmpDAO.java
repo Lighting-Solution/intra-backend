@@ -5,6 +5,7 @@ import com.ls.in.global.emp.domain.model.Emp;
 import org.springframework.dao.DataAccessException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EmpDAO {
     List<Emp> findAll() throws DataAccessException;
@@ -13,4 +14,9 @@ public interface EmpDAO {
     Emp findByPosition(Integer positionId) throws DataAccessException;
     List<Emp> findAllByDepartment(Integer departmentId) throws DataAccessException;
     boolean save(Emp emp) throws DataAccessException;
+
+    Optional<Emp> findByAccountId(String accountId);
+
+    Emp findByPositionIdAndDepartmentId(int i, Integer departmentId);
+
 }

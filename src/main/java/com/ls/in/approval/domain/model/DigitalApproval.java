@@ -49,6 +49,12 @@ public class DigitalApproval {
     @Column(name ="approvalAt")
     private LocalDateTime digitalApprovalAt;
 
+    @Column(name ="managerRejectAt")
+    private LocalDateTime managerRejectAt;
+
+    @Column(name ="ceoRejectAt")
+    private LocalDateTime ceoRejectAt;
+
     @ManyToOne
     @JoinColumn(name = "emp_id")
     private Emp emp;

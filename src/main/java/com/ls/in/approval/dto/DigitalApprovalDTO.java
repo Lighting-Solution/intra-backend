@@ -36,6 +36,10 @@ public class DigitalApprovalDTO {
 
     private LocalDateTime digitalApprovalAt;
 
+    private LocalDateTime managerRejectAt;
+
+    private LocalDateTime ceoRejectAt;
+
     private EmpDTO empDTO;
 
 
