@@ -3,6 +3,7 @@ package com.ls.in.contact.repository;
 import com.ls.in.contact.domain.model.ContactGroup;
 import com.ls.in.contact.domain.model.PersonalContact;
 import com.ls.in.global.emp.domain.model.Emp;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +24,7 @@ public interface ContactGroupRepository extends JpaRepository<ContactGroup, Inte
     List<ContactGroup> findAllByEmpId(@Param("empId") Integer empId);
 
     @Modifying
+    @Transactional
     @Query("DELETE FROM ContactGroup cg " +
             "WHERE cg.personalContact.personalContactId IN :contactIds " +
             "AND cg.personalGroup.personalGroupId IN :groupIds")

@@ -71,16 +71,38 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ContactResponseDTO getAllBySearch(ContactFilterDTO requestDTO) {
-        if(Utils.checkIntegerNull(requestDTO.getDepartmentId())) {
-            List<PersonalContactDTO> resultList = contactGroupService.getAllByGroupBySearch(requestDTO);
-            ContactResponseDTO responseDTO = new ContactResponseDTO();
-            responseDTO.setPersonalContactList(resultList);
-            return responseDTO;
-        } else if(Utils.checkIntegerNull(requestDTO.getGroupId())){
+        if(!(Utils.checkIntegerNull(requestDTO.getDepartmentId()))) {
             List<EmpDTO> resultList = contactEmpService.getAllByDepartmentSearch(requestDTO);
             ContactResponseDTO responseDTO = new ContactResponseDTO();
+            if(resultList == null) return null;
+            System.out.println(resultList.toString());
             responseDTO.setEmpList(resultList);
             return responseDTO;
+        } else if(!(Utils.checkIntegerNull(requestDTO.getGroupId()))) {
+            List<PersonalContactDTO> resultList = contactGroupService.getAllByGroupBySearch(requestDTO);
+            ContactResponseDTO responseDTO = new ContactResponseDTO();
+            if(resultList == null) return null;
+            System.out.println(resultList.toString());
+            responseDTO.setPersonalContactList(resultList);
+            return responseDTO;
+        } else if(!(Utils.checkIntegerNull(requestDTO.getEmpId()))) {
+            System.out.println("사내 전체 주소록 조회");
+            if(requestDTO.getGroupType().equals("company")) {
+                List<EmpDTO> resultList = contactEmpService.getAllByDepartmentSearch(requestDTO);
+                ContactResponseDTO responseDTO = new ContactResponseDTO();
+                if(resultList == null) return null;
+                System.out.println(resultList.toString());
+                responseDTO.setEmpList(resultList);
+                return responseDTO;
+            } else if(requestDTO.getGroupType().equals("personal")) {
+                System.out.println("개인 전체 주소록 조회");
+                List<PersonalContactDTO> resultList = contactGroupService.getAllByGroupBySearch(requestDTO);
+                ContactResponseDTO responseDTO = new ContactResponseDTO();
+                if(resultList == null) return null;
+                System.out.println(resultList.toString());
+                responseDTO.setPersonalContactList(resultList);
+                return responseDTO;
+            } else return null;
         } else return null;
     }
 
