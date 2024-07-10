@@ -1,29 +1,16 @@
 package com.ls.in.document.controller;
 
 
-import com.ls.in.document.domain.model.DocumentBox;
 import com.ls.in.document.dto.DocumentDTO;
-import com.ls.in.document.dto.DocumentDetailDTO;
-import com.ls.in.document.dto.DocumentInitDTO;
 import com.ls.in.document.dto.DocumentList;
 import com.ls.in.document.service.DocumentService;
-import com.ls.in.document.service.FileStorageService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -32,24 +19,11 @@ import java.util.List;
 @RequestMapping("/document")
 public class DocumentController {
 	private final DocumentService documentService;
-	private final FileStorageService fileStorageService;
-
-	/**
-	 * description : 문서 목록을 가져오는 엔드포인트
-	 * @param documentDTO
-	 * @return
-	 */
-	@PostMapping("/api/docsList")
-	public Page<DocumentList> getDocs(@RequestBody DocumentDTO documentDTO) {
-		Pageable pageable = PageRequest.of(documentDTO.getPage(), documentDTO.getSize());
-		Page<DocumentBox> docs = documentService.getDocs(documentDTO, pageable);
-
-		log.info("documentDTO={}", documentDTO);
-		log.info("docs:{}", docs.toString());
-		log.info("docs.content:{}", docs.getContent());
-		log.info("docs.page:{}", docs.getTotalPages());
-		return docs.map(documentService::convertToDocumentList);
+	@PostMapping("/api/publicDocs")
+	public List<DocumentList> getPublicDocs(@RequestBody DocumentDTO documentDTO) {
+		return null;
 	}
+
 
 	/**
 	 * description 게시글을 생성하기 위한 EndPoint
