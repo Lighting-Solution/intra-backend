@@ -30,8 +30,9 @@ public class DocumentService {
 
 	@Transactional
 	public Page<DocumentBox> getDocs(DocumentDTO documentDTO, Pageable pageable) {
-		Emp loginEmp = empRepository.findById(documentDTO.getEmpId()).get();
-		String loginEmpDepartMent = getEmpDepartment(loginEmp);
+		Emp loginEmp = empRepository.findById(documentDTO.getEmpId())
+				.orElseThrow(() -> new RuntimeException("No Emp Id"));
+		String loginEmpDepartment = getEmpDepartment(loginEmp);
 		Category category = Category.fromCategoryName(documentDTO.getCategoryName());
 		Page<DocumentBox> docs = documentBoxRepository.findByCategory(category, pageable);
 		// PUBLIC
@@ -41,7 +42,7 @@ public class DocumentService {
 		if (category == Category.APPROVAL)
 			return getApprovalDocuments(loginEmp, docs, pageable);
 		// myDepartment 문서. 부서별로 열람 가능. 이후 해당 코드로 로직 변경
-		if (documentDTO.getCategoryName().equalsIgnoreCase(loginEmpDepartMent))
+		if (documentDTO.getCategoryName().equalsIgnoreCase(loginEmpDepartment))
 			return docs;
 		// 내가 해당 부서에서 작성한 게시글
 		List<DocumentBox> myDocs = docs.stream().filter(doc -> doc.getEmp().getEmpId().intValue() == loginEmp.getEmpId().intValue()).toList();

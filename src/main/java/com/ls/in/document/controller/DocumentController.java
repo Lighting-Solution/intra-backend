@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -43,12 +45,17 @@ public class DocumentController {
 	@PostMapping("/api/docsList")
 	public Page<DocumentList> getDocs(@RequestBody DocumentDTO documentDTO) {
 		Pageable pageable = PageRequest.of(documentDTO.getPage(), documentDTO.getSize());
-		Page<DocumentBox> docs = documentService.getDocs(documentDTO, pageable);
-
+		List<DocumentBox> docTest = new ArrayList<>();
+		Page<DocumentBox> docs = new PageImpl<>(docTest, pageable, 0);
 		log.info("documentDTO={}", documentDTO);
+
+		if (documentDTO.getCategoryName() != null)
+			docs = documentService.getDocs(documentDTO, pageable);
 		log.info("docs:{}", docs.toString());
 		log.info("docs.content:{}", docs.getContent());
 		log.info("docs.page:{}", docs.getTotalPages());
+
+
 		return docs.map(documentService::convertToDocumentList);
 	}
 
