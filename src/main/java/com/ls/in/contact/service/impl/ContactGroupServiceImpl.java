@@ -33,14 +33,13 @@ public class ContactGroupServiceImpl implements ContactGroupService {
     public boolean createContactGroup(Map<String, Object> requestData) throws Exception {
         List<Integer> groupList = null;
         List<Integer> contactList = null;
-        if(requestData.get("contact") instanceof List) {
-            contactList = (List<Integer>) requestData.get("contact");
+        if(requestData.get("contactId") instanceof List) {
+            contactList = (List<Integer>) requestData.get("contactId");
         } else return false;
 
-        if(requestData.get("group") instanceof List) {
-            groupList = (List<Integer>) requestData.get("group");
+        if(requestData.get("groupId") instanceof List) {
+            groupList = (List<Integer>) requestData.get("groupId");
         } else return false;
-
         Set<String> existingCombinations = contactGroupDAO.findExistingContactGroupCombinations(contactList, groupList);
         List<ContactGroup> contactGroups = new ArrayList<>();
         for (int contactId : contactList) {
@@ -60,14 +59,18 @@ public class ContactGroupServiceImpl implements ContactGroupService {
 
     @Override
     public boolean deleteContactGroup(Map<String, Object> requestData) throws Exception {
-        List<Integer> contactList = (List<Integer>) requestData.get("contact");
-        List<Integer> groupList = (List<Integer>) requestData.get("group");
+        System.out.println("request : " + requestData);
+        List<Integer> contactList = (List<Integer>) requestData.get("contactId");
+        List<Integer> groupList = (List<Integer>) requestData.get("groupId");
+        System.out.println("contactList : " + contactList);
+        System.out.println("groupList : " + groupList);
         return contactGroupDAO.deleteByFKs(contactList, groupList);
     }
 
     @Override
     public List<ContactGroupDTO> getAllByEmpId(Integer empId) {
         List<ContactGroup> result = contactGroupDAO.findAllByEmp(empId);
+        if(result.isEmpty()) return null;
         List<ContactGroupDTO> contactGroupDTOList  = new ArrayList<>();
         for(ContactGroup contactGroup : result) {
             ContactGroupDTO contactGroupDTO = ContactGroupMapper.toDto(contactGroup);
@@ -79,6 +82,7 @@ public class ContactGroupServiceImpl implements ContactGroupService {
     @Override
     public List<PersonalContactDTO> getAllByGroupBySearch(ContactFilterDTO requestDTO) {
         List<PersonalContact> result = contactGroupDAO.findAllByGroup(requestDTO);
+        if(result.isEmpty()) return null;
         List<PersonalContactDTO> responseList = new ArrayList<>();
         for(PersonalContact personalContact : result) {
             PersonalContactDTO tempDTO = PersonalContactMapper.toDto(personalContact);

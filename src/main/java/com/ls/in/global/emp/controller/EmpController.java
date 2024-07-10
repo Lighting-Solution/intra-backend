@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("empController")
-@RequestMapping("/api/v1/intranet/contact")
+@RequestMapping("/api/v1/intranet/emp")
 @CrossOrigin(origins = "http://localhost:3000")
 public class EmpController {
     @Autowired
@@ -22,11 +22,11 @@ public class EmpController {
         empService.getEmpByPosition(positionId);
     }
 
-    @PostMapping("/intra/securityToIntra")
+    @PostMapping("/toIntra")
     public ResponseEntity<UserDTO> securityToIntra(@RequestBody UserDTO userDTO){
-        System.out.println("intra : " + userDTO.getUsername());
+        System.out.println("intra : " + userDTO.getAccountId());
         // userName으로 accountId값이랑 동일한 값 찾아서 accountId와 accountPW 반환
-        UserDTO intraUserDTO = empService.findByAccountId(userDTO.getUsername());
+        UserDTO intraUserDTO = empService.findByAccountId(userDTO.getAccountId());
         return ResponseEntity.status(HttpStatus.OK).body(intraUserDTO);
     }
 }

@@ -11,6 +11,7 @@ import com.ls.in.global.emp.domain.dto.EmpDTO;
 import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.util.EmpMapper;
 
+import com.ls.in.global.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,12 +69,11 @@ public class DigitalApprovalServiceImpl implements DigitalApprovalService {
         List<DigitalApprovalDTO> digitalApprovalDTOList = new ArrayList<>();
         for(DigitalApproval item : digitalApprovalList ){
             DigitalApprovalDTO digitalApprovalDTO = DigitalApprovalMapper.toDto(item);
+            Integer drafterPosition = Utils.converterDepartment(digitalApprovalDTO.getEmpDTO().getDepartment().getDepartmentId());
 
-            // 기안자의 id의 부서와 position 의 부서가 같을 경우 list 추가
-           Integer drafterPosition = digitalApprovalDTO.getEmpDTO().getDepartment().getDepartmentId();
-           if(drafterPosition.equals(department)){
-               digitalApprovalDTOList.add(digitalApprovalDTO);
-           }
+            if(drafterPosition.equals(department)){
+                digitalApprovalDTOList.add(digitalApprovalDTO);
+            }
 
         }
         return digitalApprovalDTOList;

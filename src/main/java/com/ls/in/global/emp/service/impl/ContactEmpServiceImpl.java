@@ -48,6 +48,7 @@ public class ContactEmpServiceImpl implements ContactEmpService {
 
     private List<EmpDTO> getSearchList(ContactFilterDTO requestDTO) {
         List<Emp> result = contactEmpDAO.findAllByDepartment(requestDTO);
+        if(result.isEmpty()) return null;
         List<EmpDTO> responseList = new ArrayList<>();
         for(Emp emp : result) {
             EmpDTO tempDTO = EmpMapper.toDto(emp);

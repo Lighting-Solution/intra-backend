@@ -61,7 +61,6 @@ public class DocumentController {
 
 	/**
 	 * description 게시글을 생성하기 위한 EndPoint
-	 *
 	 * @param title
 	 * @param content
 	 * @param file
@@ -84,13 +83,11 @@ public class DocumentController {
 
 	/**
 	 * description 게시글의 파일을 다운로드 하기 위한 엔드포인트
-	 *
-	 * @param id DocumentBox의 ID값
+	 * @param id
 	 * @return 성공 시 다운로드, 실패 시 에러..
 	 */
 	@GetMapping("/{id}/download")
 	public ResponseEntity<Resource> downloadFile(@PathVariable Integer id) {
-		log.info("#################### 아오 다운로드 들어와?");
 		DocumentBox document = documentService.getDocumentById(id);
 		String storedPath = "src/main/resources/docs/" + document.getCategory().name().toLowerCase() + "/" + document.getEmp().getEmpId();
 		String fileName = document.getDocumentPath();

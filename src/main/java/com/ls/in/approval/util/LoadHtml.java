@@ -62,6 +62,7 @@ public class LoadHtml {
 
         String encodedHtmlContent = request.get("html");
 
+
         String htmlContent;
         String title = "";
 
@@ -84,6 +85,7 @@ public class LoadHtml {
 
         try {
             htmlContent = URLDecoder.decode(encodedHtmlContent, StandardCharsets.UTF_8.name());
+            System.out.println(htmlContent);
 
             // Jsoup을 사용하여 HTML 파싱
             Document document = Jsoup.parse(htmlContent);
