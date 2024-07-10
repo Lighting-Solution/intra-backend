@@ -159,7 +159,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         DigitalApprovalDTO digitalApprovalDTO = new DigitalApprovalDTO();
 
         // 전자 결재 테이블 data insert
-        //digitalApprovalDTO = approvalService.approvalRequest(empId, digitalApprovalName, empDTO);
+        digitalApprovalDTO = approvalService.approvalRequest(empId, digitalApprovalName, empDTO);
         Integer digitalApprovalId = digitalApprovalDTO.getDigitalApprovalId();
 
         // html 파일 PDF 저장
@@ -260,7 +260,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     public ResponseEntity<String> approvalRequestPermission(Map<String, String> request) throws IOException, DocumentException {
 
         Integer empId = Integer.parseInt(request.get("empId"));
-        //EmpDTO empDTO = empService.getEmpById(empId);
+        EmpDTO empDTO = empService.getEmpById(empId);
 
         Integer digitalApprovalId = Integer.parseInt(request.get("digitalApprovalId"));
 
