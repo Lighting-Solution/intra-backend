@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -33,4 +34,7 @@ public class Calendar {
 
     @Column(name = "endAt")
     private LocalDateTime calendarEndAt;
+
+    @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Participant> attendees;
 }

@@ -201,7 +201,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     public ResponseEntity<String> approvalRequestPermission(Map<String, String> request) throws IOException, DocumentException {
 
         Integer empId = Integer.parseInt(request.get("empId"));
-        //EmpDTO empDTO = empService.getEmpById(empId);
+        EmpDTO empDTO = empService.getEmpById(empId);
 
         Integer digitalApprovalId = Integer.parseInt(request.get("digitalApprovalId"));
         System.out.println("==========test start==========");
