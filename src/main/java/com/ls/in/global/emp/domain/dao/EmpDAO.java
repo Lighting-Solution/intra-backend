@@ -18,4 +18,5 @@ public interface EmpDAO {
     Optional<Emp> findByAccountId(String accountId);
 
     Emp findByPositionIdAndDepartmentId(int i, Integer departmentId);
+
 }

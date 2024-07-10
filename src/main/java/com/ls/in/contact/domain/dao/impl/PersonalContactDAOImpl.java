@@ -40,4 +40,14 @@ public class PersonalContactDAOImpl implements PersonalContactDAO {
             return false;
         }
     }
+
+    @Override
+    public boolean deleteAll(List<Integer> contactIds) throws DataAccessException {
+        try{
+            personalContactRepository.deleteAllById(contactIds);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

@@ -63,9 +63,10 @@ public class EmpDAOImpl implements EmpDAO {
     public Optional<Emp> findByAccountId(String accountId) {
         return empRepository.findByAccountId(accountId);
     }
-
+    
     @Override
     public Emp findByPositionIdAndDepartmentId(int i, Integer departmentId) {
         return empRepository.findByPositionIdAndDepartmentId(i, departmentId);
     }
+
 }

@@ -49,21 +49,24 @@ public class ContactControllerImpl implements ContactController {
 
     @GetMapping("/list/search")
     @Override
-    public ResponseEntity<ContactResponseDTO> getAllBySearch(@RequestParam(name = "groupId", required = false) String groupId,
+    public ResponseEntity<ContactResponseDTO> getAllBySearch(@RequestParam(name = "empId", required = false) String empId,
+                                                             @RequestParam(name = "groupId", required = false) String groupId,
                                                              @RequestParam(name = "departmentId", required = false) String departmentId,
                                                              @RequestParam(name = "filterType", required = false) String filterType,
                                                              @RequestParam(name = "filterContent", required = false) String filterContent,
-                                                             @RequestParam(name = "sortType", required = false) String sortType) {
+                                                             @RequestParam(name = "sortType", required = false) String sortType,
+                                                             @RequestParam(name = "groupType", required = false) String groupType) {
         ContactFilterDTO contactFilterDTO = ContactFilterDTO.toDTO(
                 Utils.stringToInteger(groupId),
                 Utils.stringToInteger(departmentId),
                 filterType,
                 filterContent,
-                sortType);
-        if(Utils.checkIntegerNull(contactFilterDTO.getGroupId()) && Utils.checkIntegerNull(contactFilterDTO.getDepartmentId()))
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "BAD_REQUEST");
-
+                sortType,
+                Utils.stringToInteger(empId),
+                groupType);
+        System.out.println(contactFilterDTO.toString());
         ContactResponseDTO contactResponseDTO = contactService.getAllBySearch(contactFilterDTO);
+        if(contactResponseDTO != null) System.out.println(contactResponseDTO.toString());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(contactResponseDTO);
     }
@@ -147,8 +150,8 @@ public class ContactControllerImpl implements ContactController {
 
     @DeleteMapping("/personal-contact")
     @Override
-    public ResponseEntity<String> deletePersonalContact(@PathVariable("contactId") String contactId) {
-        boolean result = personalContactService.deletePersonalContact(Utils.stringToInteger(contactId));
+    public ResponseEntity<String> deletePersonalContact(@RequestBody Map<String, Object> contactIds) {
+        boolean result = personalContactService.deletePersonalContacts(contactIds);
         if(result) return ResponseEntity.ok("success");
         return ResponseEntity.ok("fail");
     }
@@ -206,7 +209,4 @@ public class ContactControllerImpl implements ContactController {
         return ResponseEntity.ok("fail");
     }
 
-
-
-    /* 페이지, 정렬, 필터 별로 조회 만들어야댐 */
 }

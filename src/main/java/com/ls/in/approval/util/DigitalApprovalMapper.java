@@ -4,7 +4,6 @@ import com.ls.in.approval.domain.model.DigitalApproval;
 import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.global.emp.util.EmpMapper;
 
-
 public class DigitalApprovalMapper {
     public static DigitalApprovalDTO toDto(DigitalApproval digitalApproval) {
         if(digitalApproval == null) return null;
@@ -31,6 +30,7 @@ public class DigitalApprovalMapper {
         if(digitalApprovalDTO == null) return null;
         Integer digitalApprovalId = digitalApprovalDTO.getDigitalApprovalId();
         Integer drafterId = digitalApprovalDTO.getDrafterId();
+
         return DigitalApproval.builder()
                 .digitalApprovalId(digitalApprovalId)
                 .drafterId(drafterId)
