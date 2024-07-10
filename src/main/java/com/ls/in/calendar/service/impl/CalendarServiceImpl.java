@@ -31,6 +31,7 @@ public class CalendarServiceImpl implements CalendarService {
         Calendar calendar = CalendarMapper.toEntity(calendarDTO);
         calendar.setCalendarCreateAt(LocalDateTime.now());
         Calendar savedEvent = calendarDao.saveEvent(calendar);
+        System.out.println("---------------"+savedEvent+"---------------");
         return CalendarMapper.toDto(savedEvent);
     }
 

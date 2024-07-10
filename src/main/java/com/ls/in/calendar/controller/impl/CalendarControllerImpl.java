@@ -24,6 +24,9 @@ public class CalendarControllerImpl implements CalendarController {
     @Autowired
     private CalendarService calendarService;
 
+    @Autowired
+    private ParticipantService participantService;
+
     @GetMapping("/events")
     public List<CalendarDTO> getAllEvents() {
         return calendarService.getAllEvents();
@@ -36,18 +39,29 @@ public class CalendarControllerImpl implements CalendarController {
 
     @PostMapping("/events")
     public CalendarDTO createEvent(@RequestBody CalendarDTO calendarDTO) {
-        // Convert string dates to LocalDateTime
+        // Convert the event date from String to LocalDateTime
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        LocalDateTime startAt = calendarDTO.getCalendarStartAt();
-        LocalDateTime endAt = calendarDTO.getCalendarEndAt();
+        LocalDateTime start = calendarDTO.getCalendarStartAt();
+        LocalDateTime end = calendarDTO.getCalendarEndAt();
+        calendarDTO.setCalendarStartAt(start);
+        calendarDTO.setCalendarEndAt(end);
 
-        // Set the converted LocalDateTime back to the DTO
-        calendarDTO.setCalendarStartAt(startAt);
-        calendarDTO.setCalendarEndAt(endAt);
+        // Create or update the event in the database
+        CalendarDTO savedEvent = calendarService.createOrUpdateEvent(calendarDTO);
 
-        System.out.println("======" + calendarDTO + "=======");
-        return calendarService.createOrUpdateEvent(calendarDTO);
+        // Add participants to the event
+        List<ParticipantDTO> attendees = calendarDTO.getAttendees();
+        if (attendees != null) {
+            for (ParticipantDTO participantDTO : attendees) {
+                if (participantDTO.getCalendarDTO() == null) {
+                    participantDTO.setCalendarDTO(new CalendarDTO()); // 예외 처리 방지
+                }
+                participantDTO.getCalendarDTO().setCalendarId(savedEvent.getCalendarId());
+                participantService.addParticipantToCalendar(participantDTO);
+            }
+        }
 
+        return savedEvent;
     }
 
     @PutMapping("/events/{id}")

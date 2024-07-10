@@ -26,7 +26,7 @@ public class ParticipantControllerImpl implements ParticipantController {
     public ResponseEntity<EmpByDepartmentDTO> getAllParticipantsByDepartment() {
         try {
             EmpByDepartmentDTO responseDTO = empService.getAllByDepartment();
-            System.out.println("---" +responseDTO + "---");
+            System.out.println("getAllParticipantsByDepartment : " + responseDTO);
             return ResponseEntity.ok(responseDTO);
         } catch (EmpNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -35,12 +35,27 @@ public class ParticipantControllerImpl implements ParticipantController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addParticipantToCalendar(@RequestBody ParticipantDTO participantDTO) {
+
+        System.out.println("par-controller: " +participantDTO);
         try {
+            if (participantDTO == null) {
+                return ResponseEntity.badRequest().body("ParticipantDTO cannot be null");
+            }
+
+
             participantService.addParticipantToCalendar(participantDTO);
+            System.out.println("par-controller: " +participantDTO);
+            EmpByDepartmentDTO responseDTO = empService.getAllByDepartment();
+            System.out.println("[[[[[[[[[[["+responseDTO+"]]]]]]]]]]");
             return ResponseEntity.ok("Participant added successfully.");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid request: " + e.getMessage());
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add participant: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error: " + e.getMessage());
         }
     }
+
 
 }
