@@ -9,6 +9,8 @@ import com.ls.in.approval.dto.ManagerDTO;
 import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
+import com.ls.in.document.dto.DocumentInitDTO;
+import com.ls.in.document.service.DocumentService;
 import com.ls.in.global.emp.domain.dto.DepartmentDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
 import com.ls.in.global.emp.domain.model.DepartmentType;
@@ -41,6 +43,7 @@ import java.util.Map;
 public class DigitalApprovalControllerImpl implements DigitalApprovalController {
 
     private final DigitalApprovalService approvalService;
+    private final DocumentService documentService;
 
     private final LoadHtml loadHtml = new LoadHtml();
 
@@ -48,9 +51,10 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     private final DepartmentService departmentService;
 
     @Autowired
-    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService, DepartmentService departmentService) {
+    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService, DocumentService documentService, DepartmentService departmentService) {
         this.approvalService = approvalService;
         this.empService = empService;
+        this.documentService = documentService;
         this.departmentService = departmentService;
     }
 
@@ -83,7 +87,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     @Override
     @PostMapping("/request")
     public ResponseEntity<String> approvalRequest(Map<String, String> request) throws IOException, DocumentException {
-        System.out.println("test : " + request);
+
         // 로그인한 사원 ID
         Integer empId = Integer.parseInt(request.get("empId"));
 
@@ -292,8 +296,14 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
 
 
                 // 내문서함으로 전송 (기안자 id, 문서경로)
-                /* 꼭 해야함  */
-
+                /* 꼭 해야함 -> 꼭 했음돵 ㅎㅎ */
+                String fileName = "signed" + digitalApprovalId + ".pdf";
+                DocumentInitDTO documentInitDTO = new DocumentInitDTO("전자결재문서" + digitalApprovalId,
+                        "전자결재내용" + digitalApprovalId,
+                        fileName,
+                        "approval",
+                        drafterId);
+                documentService.saveDocument(documentInitDTO);
                 // DB ceo_status update
                 approvalService.updateStatus(digitalApprovalId, "ceo");
             }
