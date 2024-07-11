@@ -27,37 +27,34 @@ public class NoticeController {
 
     @GetMapping("/{id}")
     public Optional<NoticePostDTO> getNoticeById(@PathVariable Integer id) {
+        System.out.println("empid" + id);
         return noticeService.getNoticeById(id);
     }
 
     @PostMapping("/hits/{id}")
     public void incrementNoticeHits(@PathVariable Integer id) {
+
         noticeService.incrementNoticeHits(id);
     }
 
     @PostMapping("/create")
     public String createNotice(
-            @RequestParam String accountId,
-            @RequestParam String accountPw,
             @RequestPart("noticePostDTO") NoticePostDTO noticePostDTO,
             @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
-            noticeService.createNotice(noticePostDTO, accountId, accountPw, file);
+            noticeService.createNotice(noticePostDTO, file);
             return "Notice created";
         } catch (RuntimeException e) {
             return e.getMessage();
         }
     }
-
     @PutMapping("/update/{id}")
     public String updateNotice(
             @PathVariable Integer id,
-            @RequestParam String accountId,
-            @RequestParam String accountPw,
             @RequestPart("noticePostDTO") NoticePostDTO noticePostDTO,
             @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
-            noticeService.updateNotice(id, noticePostDTO, accountId, accountPw, file);
+            noticeService.updateNotice(id, noticePostDTO, file);
             return "Notice updated";
         } catch (RuntimeException e) {
             return e.getMessage();
@@ -65,9 +62,9 @@ public class NoticeController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteNotice(@PathVariable Integer id, @RequestParam String accountId, @RequestParam String accountPw) {
+    public String deleteNotice(@PathVariable Integer id) {
         try {
-            noticeService.deleteNotice(id, accountId, accountPw);
+            noticeService.deleteNotice(id);
             return "Notice deleted";
         } catch (RuntimeException e) {
             return e.getMessage();

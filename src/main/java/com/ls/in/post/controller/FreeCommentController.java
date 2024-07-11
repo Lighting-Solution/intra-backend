@@ -24,21 +24,23 @@ public class FreeCommentController {
     }
 
     @PostMapping
-    public FreeCommentDTO addComment(@PathVariable Integer freePostId, @RequestParam String accountId, @RequestParam String accountPw, @RequestBody FreeCommentDTO freeCommentDTO) {
+    public FreeCommentDTO addComment(@PathVariable Integer freePostId, @RequestParam Integer empId, @RequestBody FreeCommentDTO freeCommentDTO) {
         freeCommentDTO.setFreePostId(freePostId);
-        return freeCommentService.addComment(freeCommentDTO, accountId, accountPw);
+        freeCommentDTO.setEmpId(empId); // Add empId to the DTO
+        return freeCommentService.addComment(freeCommentDTO);
     }
 
     @PutMapping("/{commentId}")
-    public FreeCommentDTO updateComment(@PathVariable Integer freePostId, @PathVariable Integer commentId, @RequestParam String accountId, @RequestParam String accountPw, @RequestBody FreeCommentDTO freeCommentDTO) {
+    public FreeCommentDTO updateComment(@PathVariable Integer freePostId, @PathVariable Integer commentId, @RequestParam Integer empId, @RequestBody FreeCommentDTO freeCommentDTO) {
         freeCommentDTO.setFreePostId(freePostId);
         freeCommentDTO.setFreeCommentId(commentId);
-        return freeCommentService.updateComment(freeCommentDTO, accountId, accountPw);
+        freeCommentDTO.setEmpId(empId); // Add empId to the DTO
+        return freeCommentService.updateComment(freeCommentDTO);
     }
 
     @DeleteMapping("/{commentId}")
-    public String deleteComment(@PathVariable Integer freePostId, @PathVariable Integer commentId, @RequestParam String accountId, @RequestParam String accountPw) {
-        freeCommentService.deleteComment(freePostId, commentId, accountId, accountPw);
+    public String deleteComment(@PathVariable Integer freePostId, @PathVariable Integer commentId, @RequestParam Integer empId) {
+        freeCommentService.deleteComment(freePostId, commentId, empId);
         return "Comment deleted";
     }
 }

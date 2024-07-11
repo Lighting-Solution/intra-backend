@@ -25,11 +25,10 @@ public class FreePostService {
         this.empRepository = empRepository;
     }
 
-    public Emp findEmpByAccountIdAndPw(String accountId, String accountPw) {
-        return empRepository.findByAccountIdAndAccountPw(accountId, accountPw)
+    public Emp findEmpById(Integer empId) {
+        return empRepository.findById(empId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
-
     public List<FreePostDTO> getAllPosts() {
         return freePostRepository.findAll().stream()
                 .map(this::convertToDTO)
@@ -40,23 +39,16 @@ public class FreePostService {
         return freePostRepository.findById(id).map(this::convertToDTO);
     }
 
-    public FreePost createPost(FreePostDTO freePostDTO, String accountId, String accountPw) {
-        Emp emp = empRepository.findByAccountId(accountId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public FreePost createPost(FreePostDTO freePostDTO) {
         FreePost freePost = convertToEntity(freePostDTO);
-        freePost.setEmp(emp);
         freePost.setFreePostCreateAt(LocalDateTime.now());
         freePost.setFreePostUpdateAt(LocalDateTime.now());
         return freePostRepository.save(freePost);
     }
 
-    public FreePost updatePost(Integer id, FreePostDTO freePostDTO, String accountId, String accountPw) {
+    public FreePost updatePost(Integer id, FreePostDTO freePostDTO) {
         FreePost freePost = freePostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
-
-        if (!freePost.getEmp().getAccountId().equals(accountId)) {
-            throw new RuntimeException("You can only edit your own posts");
-        }
 
         if (freePostDTO.getFreePostTitle() != null) {
             freePost.setFreePostTitle(freePostDTO.getFreePostTitle());
@@ -68,13 +60,10 @@ public class FreePostService {
         return freePostRepository.save(freePost);
     }
 
-    public void deletePost(Integer id, String accountId, String accountPw) {
+    public void deletePost(Integer id) {
         FreePost freePost = freePostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        if (!freePost.getEmp().getAccountId().equals(accountId)) {
-            throw new RuntimeException("You can only delete your own posts");
-        }
         freePostRepository.delete(freePost);
     }
 
@@ -120,7 +109,6 @@ public class FreePostService {
         freePost.setFreePostGood(freePostDTO.getFreePostGood());
         freePost.setFreePostHits(freePostDTO.getFreePostHits());
 
-
         Emp emp = Emp.builder()
                 .empId(freePostDTO.getEmpId())
                 .build();
@@ -128,5 +116,4 @@ public class FreePostService {
         freePost.setEmp(emp);
         return freePost;
     }
-
 }

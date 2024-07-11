@@ -34,24 +34,10 @@ public class FreePostController {
         return freePostService.getPostById(id);
     }
 
-    @GetMapping("/emps")
-    public ResponseEntity<EmpDTO> getWriterInfo(@RequestParam String accountId, @RequestParam String accountPw) {
-        Emp emp = freePostService.findEmpByAccountIdAndPw(accountId, accountPw);
-        if (emp != null) {
-            EmpDTO empDTO = new EmpDTO(emp.getEmpId(), emp.getEmpName(), emp.getAccountId(), emp.getAccountPw());
-            return ResponseEntity.ok(empDTO);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
     @PostMapping("/create")
-    public String createPost(
-            @RequestParam String accountId,
-            @RequestParam String accountPw,
-            @RequestBody FreePostDTO freePostDTO) {
+    public String createPost(@RequestBody FreePostDTO freePostDTO) {
         try {
-            freePostService.createPost(freePostDTO, accountId, accountPw);
+            freePostService.createPost(freePostDTO);
             return "Post created";
         } catch (RuntimeException e) {
             return e.getMessage();
@@ -59,13 +45,9 @@ public class FreePostController {
     }
 
     @PutMapping("/update/{id}")
-    public String updatePost(
-            @PathVariable Integer id,
-            @RequestParam String accountId,
-            @RequestParam String accountPw,
-            @RequestBody FreePostDTO freePostDTO) {
+    public String updatePost(@PathVariable Integer id, @RequestBody FreePostDTO freePostDTO) {
         try {
-            freePostService.updatePost(id, freePostDTO, accountId, accountPw);
+            freePostService.updatePost(id, freePostDTO);
             return "Post updated";
         } catch (RuntimeException e) {
             return e.getMessage();
@@ -73,9 +55,9 @@ public class FreePostController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deletePost(@PathVariable Integer id, @RequestParam String accountId, @RequestParam String accountPw) {
+    public String deletePost(@PathVariable Integer id) {
         try {
-            freePostService.deletePost(id, accountId, accountPw);
+            freePostService.deletePost(id);
             return "Post deleted";
         } catch (RuntimeException e) {
             return e.getMessage();
@@ -91,5 +73,14 @@ public class FreePostController {
     public void incrementLike(@PathVariable Integer id) {
         freePostService.incrementPostGood(id); // 좋아요 증가
     }
+    @GetMapping("/emp")
+    public ResponseEntity<EmpDTO> getWriterInfo(@RequestParam Integer empId) {
+        Emp emp = freePostService.findEmpById(empId);
+        if (emp != null) {
+            EmpDTO empDTO = new EmpDTO(emp.getEmpId(), emp.getEmpName());
+            return ResponseEntity.ok(empDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }
-

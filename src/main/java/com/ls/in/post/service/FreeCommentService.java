@@ -37,9 +37,9 @@ public class FreeCommentService {
                 .collect(Collectors.toList());
     }
 
-    public FreeCommentDTO addComment(FreeCommentDTO freeCommentDTO, String accountId, String accountPw) {
+    public FreeCommentDTO addComment(FreeCommentDTO freeCommentDTO) {
         Optional<FreePost> freePostOpt = freePostRepository.findById(freeCommentDTO.getFreePostId());
-        Optional<Emp> empOpt = empRepository.findByAccountIdAndAccountPw(accountId, accountPw);
+        Optional<Emp> empOpt = empRepository.findById(freeCommentDTO.getEmpId());
 
         if (freePostOpt.isPresent() && empOpt.isPresent()) {
             Emp emp = empOpt.get();
@@ -58,9 +58,9 @@ public class FreeCommentService {
         }
     }
 
-    public FreeCommentDTO updateComment(FreeCommentDTO freeCommentDTO, String accountId, String accountPw) {
+    public FreeCommentDTO updateComment(FreeCommentDTO freeCommentDTO) {
         Optional<FreeComment> freeCommentOpt = freeCommentRepository.findById(freeCommentDTO.getFreeCommentId());
-        Optional<Emp> empOpt = empRepository.findByAccountIdAndAccountPw(accountId, accountPw);
+        Optional<Emp> empOpt = empRepository.findById(freeCommentDTO.getEmpId());
 
         if (freeCommentOpt.isPresent() && empOpt.isPresent()) {
             Emp emp = empOpt.get();
@@ -80,9 +80,9 @@ public class FreeCommentService {
         }
     }
 
-    public void deleteComment(Integer freePostId, Integer commentId, String accountId, String accountPw) {
+    public void deleteComment(Integer freePostId, Integer commentId, Integer empId) {
         Optional<FreeComment> freeCommentOpt = freeCommentRepository.findById(commentId);
-        Optional<Emp> empOpt = empRepository.findByAccountIdAndAccountPw(accountId, accountPw);
+        Optional<Emp> empOpt = empRepository.findById(empId);
 
         if (freeCommentOpt.isPresent() && empOpt.isPresent()) {
             Emp emp = empOpt.get();
