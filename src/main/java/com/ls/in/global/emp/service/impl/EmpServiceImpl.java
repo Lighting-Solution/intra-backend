@@ -66,6 +66,10 @@ public class EmpServiceImpl implements EmpService {
         userDTO.setEmpId(emp.getEmpId());
         userDTO.setPositionId(emp.getPosition().getPositionId());
         userDTO.setEmpName(emp.getEmpName());
+        userDTO.setEmpAdmin(emp.isEmpAdmin());
+        userDTO.setDepartmentName(emp.getDepartment().getDepartmentName());
+        userDTO.setEmpEmail(emp.getEmpEmail());
+
         if(emp.getPosition().getPositionId().equals(1)){
            userDTO.setDepartmentId(0);
         } else {

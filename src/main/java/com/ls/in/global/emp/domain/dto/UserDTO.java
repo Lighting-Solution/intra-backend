@@ -14,4 +14,7 @@ public class UserDTO {
     private Integer positionId;
     private String empName;
     private Integer departmentId;
+    private Boolean empAdmin;
+    private String departmentName;
+    private String empEmail;
 }
