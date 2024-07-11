@@ -355,4 +355,52 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
         }
     }
 
+
+    // sercurity 서버로 보낼 pdf 파일
+    /*
+    @PostMapping("/sendPdfToSecurity/{digitalApprovalId}")
+    public ResponseEntity<String> sendPdfToSecurity(@PathVariable Integer digitalApprovalId) {
+        DigitalApprovalDTO digitalApprovalDTO = approvalService.getDrafterId(digitalApprovalId);
+        boolean digitalApprovalType = digitalApprovalDTO.isDigitalApprovalType();
+
+        Path pdfPath;
+        if(digitalApprovalType){
+            pdfPath = Paths.get("src/main/resources/approvalReject/signed" + digitalApprovalId + ".pdf");
+        } else {
+            pdfPath = Paths.get("src/main/resources/approvalWaiting/signed" + digitalApprovalId + ".pdf");
+        }
+
+        if (!Files.exists(pdfPath)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PDF not found");
+        }
+
+        try {
+            byte[] pdfBytes = Files.readAllBytes(pdfPath);
+            String securityServerUrl = "http://security-server-url/api/v1/receivePdf";
+
+            OkHttpClient client = new OkHttpClient();
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("file", pdfPath.getFileName().toString(),
+                            RequestBody.create(MediaType.parse("application/pdf"), pdfBytes))
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(securityServerUrl)
+                    .post(requestBody)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
+
+            return ResponseEntity.ok("PDF sent to security server successfully");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending PDF to security server");
+        }
+    }
+
+     */
+
 }
