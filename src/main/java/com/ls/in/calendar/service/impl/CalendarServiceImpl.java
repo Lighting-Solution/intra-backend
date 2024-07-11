@@ -8,7 +8,7 @@ import com.ls.in.calendar.util.CalendarMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +29,20 @@ public class CalendarServiceImpl implements CalendarService {
 
     public CalendarDTO createOrUpdateEvent(CalendarDTO calendarDTO) {
         Calendar calendar = CalendarMapper.toEntity(calendarDTO);
+
+        LocalDateTime startDateTime = calendarDTO.getCalendarStartAt();
+        LocalDateTime endDateTime = calendarDTO.getCalendarEndAt();
+
+        Instant startInstant = startDateTime.toInstant(ZoneOffset.UTC);
+        Instant endInstant = endDateTime.toInstant(ZoneOffset.UTC);
+
+        ZonedDateTime startUTC = startInstant.atZone(ZoneOffset.UTC);
+        ZonedDateTime endUTC = endInstant.atZone(ZoneOffset.UTC);
+
+        // UTC로 설정된 시간을 LocalDateTime으로 변환하여 저장
+        calendar.setCalendarStartAt(LocalDateTime.ofInstant(startInstant, ZoneId.systemDefault()));
+        calendar.setCalendarEndAt(LocalDateTime.ofInstant(endInstant, ZoneId.systemDefault()));
+
         calendar.setCalendarCreateAt(LocalDateTime.now());
         Calendar savedEvent = calendarDao.saveEvent(calendar);
         System.out.println("---------------"+savedEvent+"---------------");
