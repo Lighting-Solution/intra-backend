@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,5 +18,6 @@ public class ChatMessageDTO {
 	private Integer empId;
 	private String writer;
 	private String message;
+	private String fileUrl;
 	private String sendTime;
 }

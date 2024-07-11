@@ -39,6 +39,12 @@ public class CalendarControllerImpl implements CalendarController {
 
     @PostMapping("/events")
     public CalendarDTO createEvent(@RequestBody CalendarDTO calendarDTO) {
+        if (calendarDTO == null) {
+            throw new IllegalArgumentException("CalendarDTO cannot be null");
+        }
+
+        System.out.println("Received calendarDTO: " + calendarDTO);
+
         // Convert the event date from String to LocalDateTime
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime start = calendarDTO.getCalendarStartAt();
@@ -48,9 +54,11 @@ public class CalendarControllerImpl implements CalendarController {
 
         // Create or update the event in the database
         CalendarDTO savedEvent = calendarService.createOrUpdateEvent(calendarDTO);
+        System.out.println("================== savedEvent : "+ savedEvent  + "=================");
 
         // Add participants to the event
         List<ParticipantDTO> attendees = calendarDTO.getAttendees();
+        System.out.println(attendees);
         if (attendees != null) {
             for (ParticipantDTO participantDTO : attendees) {
                 if (participantDTO.getCalendarDTO() == null) {
