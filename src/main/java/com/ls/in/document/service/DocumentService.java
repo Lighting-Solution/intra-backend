@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -52,9 +53,12 @@ public class DocumentService {
 		// myDepartment 문서. 부서별로 열람 가능. 이후 해당 코드로 로직 변경
 		if (documentDTO.getCategoryName().equalsIgnoreCase(loginEmpDepartment))
 			return docs;
+		// 대표이사
+		if (loginEmp.getPosition().getPositionId() == 1)
+			return docs;
 		// 내가 해당 부서에서 작성한 게시글
-		List<DocumentBox> myDocs = docs.stream().filter(doc -> doc.getEmp().getEmpId().intValue() == loginEmp.getEmpId().intValue()).toList();
-		return new PageImpl<>(myDocs, pageable, myDocs.size());
+		List<DocumentBox> myDocs = new ArrayList<>();
+		return new PageImpl<>(myDocs, pageable, 0);
 	}
 
 	private String getEmpDepartment(Emp emp) {
@@ -70,7 +74,9 @@ public class DocumentService {
 
 	private Page<DocumentBox> getApprovalDocuments(Emp loginEmp, Page<DocumentBox> docs, Pageable pageable) {
 		String positionName = loginEmp.getPosition().getPositionName();
+
 		if (positionName.equals("대표이사")) {
+			System.out.println("docs = " + docs);
 			return docs;
 		}
 		Stream<DocumentBox> filteredStream = docs.stream();
