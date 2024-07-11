@@ -10,13 +10,10 @@ import com.ls.in.approval.service.DigitalApprovalService;
 import com.ls.in.approval.util.LoadHtml;
 
 import com.ls.in.document.dto.DocumentInitDTO;
-import com.ls.in.document.service.DocumentService;
+import com.ls.in.document.service.impl.DocumentServiceImpl;
 import com.ls.in.global.emp.domain.dto.DepartmentDTO;
 import com.ls.in.global.emp.domain.dto.EmpDTO;
-import com.ls.in.global.emp.domain.model.Emp;
 import com.ls.in.global.emp.service.EmpService;
-import org.apache.xpath.operations.Bool;
-import com.ls.in.global.emp.domain.model.DepartmentType;
 import com.ls.in.global.emp.service.DepartmentService;
 import com.ls.in.global.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +42,7 @@ import java.util.Map;
 public class DigitalApprovalControllerImpl implements DigitalApprovalController {
 
     private final DigitalApprovalService approvalService;
-    private final DocumentService documentService;
+    private final DocumentServiceImpl documentService;
 
     private final LoadHtml loadHtml = new LoadHtml();
 
@@ -53,7 +50,7 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     private final DepartmentService departmentService;
 
     @Autowired
-    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService, DocumentService documentService, DepartmentService departmentService) {
+    public DigitalApprovalControllerImpl(DigitalApprovalService approvalService, EmpService empService, DocumentServiceImpl documentService, DepartmentService departmentService) {
         this.approvalService = approvalService;
         this.empService = empService;
         this.documentService = documentService;

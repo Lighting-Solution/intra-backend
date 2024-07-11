@@ -1,4 +1,4 @@
-package com.ls.in.document.service;
+package com.ls.in.document.service.impl;
 
 import com.ls.in.document.domain.model.DocumentBox;
 import org.springframework.core.io.Resource;
@@ -12,17 +12,12 @@ import java.io.IOException;
 import java.nio.file.*;
 
 @Service
-public class FileStorageService {
+public class FileStorageServiceImpl {
 
-	public FileStorageService() {
+	public FileStorageServiceImpl() {
 	}
 
-	/**
-	 * 파일을 Stream 으로 저장하는 메서드
-	 * @param file
-	 * @param writerEmpId
-	 * @return
-	 */
+
 	public String storeFile(MultipartFile file, DocumentBox documentBox) {
 		if (file == null)
 			return "";
@@ -77,12 +72,7 @@ public class FileStorageService {
 		}
 	}
 
-	/**
-	 * 파일을 다운로드 할 수 있게 하는 메서드
-	 * @param storedPath
-	 * @param fileName
-	 * @return
-	 */
+
 	public ResponseEntity<Resource> getResourceResponse(String storedPath, String fileName) {
 		try {
 			Path filePath = Paths.get(storedPath).resolve(fileName).normalize();
