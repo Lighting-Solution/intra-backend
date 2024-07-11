@@ -1,6 +1,7 @@
 package com.ls.in.document.service.impl;
 
 import com.ls.in.document.domain.model.DocumentBox;
+import com.ls.in.document.service.FileService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +13,7 @@ import java.io.IOException;
 import java.nio.file.*;
 
 @Service
-public class FileStorageServiceImpl {
+public class FileStorageServiceImpl implements FileService {
 
 	public FileStorageServiceImpl() {
 	}

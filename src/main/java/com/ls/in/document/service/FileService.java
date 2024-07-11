@@ -10,7 +10,7 @@ public interface FileService {
 	/**
 	 * 파일을 Stream 으로 저장하는 메서드
 	 * @param file
-	 * @param writerEmpId
+	 * @param documentBox
 	 * @return
 	 */
 	public String storeFile(MultipartFile file, DocumentBox documentBox);
