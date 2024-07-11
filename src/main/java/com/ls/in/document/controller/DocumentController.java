@@ -118,6 +118,7 @@ public class DocumentController {
 
 	@DeleteMapping("/delete/{id}")
 	public String deleteDocument(@PathVariable Integer id) {
+		log.info("# DELETE MAPPING:{}",id);
 		DocumentBox documentBox = documentService.getDocumentById(id);
 		fileStorageService.deleteFile(documentBox);
 		documentService.deleteDocument(documentBox);

@@ -50,8 +50,8 @@ public class FileStorageService {
 
 	public void deleteFile(DocumentBox documentBox) {
 		String fileName = documentBox.getDocumentPath();
-		String category = documentBox.getCategory().name();
-
+		if (fileName == null)
+			return ;
 		// 파일 경로를 생성합니다.
 		Path fileStorageLocation = Paths.get("src/main/resources/docs/" + documentBox.getDocumentId()).toAbsolutePath().normalize();
 		Path filePath = fileStorageLocation.resolve(fileName).normalize();
