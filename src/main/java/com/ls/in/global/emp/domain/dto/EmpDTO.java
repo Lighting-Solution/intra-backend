@@ -28,11 +28,11 @@ public class EmpDTO {
     private DepartmentDTO department;
     private String accountId;
     private String accountPw;
-    public EmpDTO(int empId, String empName, String accountId, String accountPw) {
+
+    public EmpDTO(int empId, String empName) {
         this.empId = empId;
         this.empName = empName;
-        this.accountId = accountId;
-        this.accountPw = accountPw;
+
     }
 
 

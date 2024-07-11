@@ -51,76 +51,63 @@ public class NoticeService {
         return noticePostRepository.findById(id);
     }
 
-    public NoticePost createNotice(NoticePostDTO noticePostDTO, String accountId, String accountPw, MultipartFile file) {
-        if (isAdmin(accountId, accountPw)) {
-            NoticePost noticePost = convertToEntity(noticePostDTO);
-            noticePost.setNoticeCreatedAt(LocalDateTime.now());
-            noticePost.setNoticeUpdatedAt(LocalDateTime.now());
-            noticePost = noticePostRepository.save(noticePost);
+    public NoticePost createNotice(NoticePostDTO noticePostDTO, MultipartFile file) {
+        NoticePost noticePost = convertToEntity(noticePostDTO);
+        noticePost.setNoticeCreatedAt(LocalDateTime.now());
+        noticePost.setNoticeUpdatedAt(LocalDateTime.now());
+        noticePost = noticePostRepository.save(noticePost);
 
-            if (file != null && !file.isEmpty()) {
-                saveFile(file, noticePost);
-            }
-
-            return noticePost;
-        } else {
-            throw new RuntimeException("Access denied");
+        if (file != null && !file.isEmpty()) {
+            saveFile(file, noticePost);
         }
+
+        return noticePost;
     }
 
-    public NoticePost updateNotice(Integer id, NoticePostDTO noticePostDTO, String accountId, String accountPw, MultipartFile file) {
-        if (isAdmin(accountId, accountPw)) {
-            NoticePost noticePost = noticePostRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Notice not found"));
+    public NoticePost updateNotice(Integer id, NoticePostDTO noticePostDTO, MultipartFile file) {
+        NoticePost noticePost = noticePostRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notice not found"));
 
-            if (noticePostDTO.getNoticeTitle() != null) {
-                noticePost.setNoticeTitle(noticePostDTO.getNoticeTitle());
-            }
-            if (noticePostDTO.getNoticeContent() != null) {
-                noticePost.setNoticeContent(noticePostDTO.getNoticeContent());
-            }
-            if (noticePostDTO.getImportantNotice() != null) {
-                noticePost.setImportantNotice(noticePostDTO.getImportantNotice());
-            }
-            noticePost.setNoticeUpdatedAt(LocalDateTime.now());
-
-            // 기존 조회수와 좋아요 수를 그대로 유지
-            noticePost.setNoticeHits(noticePost.getNoticeHits());
-            noticePost.setNoticeGood(noticePost.getNoticeGood());
-
-            noticePost = noticePostRepository.save(noticePost);
-
-            // 파일이 있는 경우 처리
-            if (file != null && !file.isEmpty()) {
-                saveFile(file, noticePost);
-            }
-
-            return noticePost;
-        } else {
-            throw new RuntimeException("Access denied");
+        if (noticePostDTO.getNoticeTitle() != null) {
+            noticePost.setNoticeTitle(noticePostDTO.getNoticeTitle());
         }
+        if (noticePostDTO.getNoticeContent() != null) {
+            noticePost.setNoticeContent(noticePostDTO.getNoticeContent());
+        }
+        if (noticePostDTO.getImportantNotice() != null) {
+            noticePost.setImportantNotice(noticePostDTO.getImportantNotice());
+        }
+        noticePost.setNoticeUpdatedAt(LocalDateTime.now());
+
+        // 기존 조회수와 좋아요 수를 그대로 유지
+        noticePost.setNoticeHits(noticePost.getNoticeHits());
+        noticePost.setNoticeGood(noticePost.getNoticeGood());
+
+        noticePost = noticePostRepository.save(noticePost);
+
+        // 파일이 있는 경우 처리
+        if (file != null && !file.isEmpty()) {
+            saveFile(file, noticePost);
+        }
+
+        return noticePost;
     }
 
 
 
-    public void deleteNotice(Integer id, String accountId, String accountPw) {
-        if (isAdmin(accountId, accountPw)) {
-            // 먼저 관련 파일들을 삭제
-            List<PostFile> files = postFileRepository.findByNoticePost_NoticePostId(id);
-            for (PostFile file : files) {
-                File fileToDelete = new File(uploadDir + File.separator + file.getFilePath());
-                if (fileToDelete.exists()) {
-                    fileToDelete.delete();
-                }
-                postFileRepository.delete(file);
+    public void deleteNotice(Integer id) {
+        // 먼저 관련 파일들을 삭제
+        List<PostFile> files = postFileRepository.findByNoticePost_NoticePostId(id);
+        for (PostFile file : files) {
+            File fileToDelete = new File(uploadDir + File.separator + file.getFilePath());
+            if (fileToDelete.exists()) {
+                fileToDelete.delete();
             }
-            // 그 후 게시글을 삭제
-            noticePostRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Access denied");
+            postFileRepository.delete(file);
         }
+        // 그 후 게시글을 삭제
+        noticePostRepository.deleteById(id);
     }
-
     public void incrementNoticeHits(Integer id) {
         Optional<NoticePost> noticePostOpt = noticePostRepository.findById(id);
         if (noticePostOpt.isPresent()) {
