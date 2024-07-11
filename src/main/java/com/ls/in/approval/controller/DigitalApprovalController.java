@@ -2,8 +2,6 @@ package com.ls.in.approval.controller;
 
 import com.lowagie.text.DocumentException;
 
-import com.ls.in.approval.domain.model.DigitalApproval;
-
 import com.ls.in.approval.dto.DigitalApprovalDTO;
 import com.ls.in.calendar.dto.ParticipantDTO;
 import org.springframework.core.io.Resource;
@@ -42,10 +40,10 @@ public interface DigitalApprovalController {
 
     /**
      * @apiNote digitalApprovalId 를 조회해서 결재 대기 문서 조회
-     * @param empId
+     * @param request
      * @return
      */
-    ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList();
+    ResponseEntity<List<DigitalApprovalDTO>> getApprovalWaitingList(@RequestParam Map<String, String> request);
 
     /**
      * @apiNote empId를 조회해서 sign PDF에 서명 및 날짜 추가
@@ -60,7 +58,6 @@ public interface DigitalApprovalController {
      * @return
      */
     ResponseEntity<String> approvalRequestReject(@RequestBody Map<String, String> request) throws IOException, DocumentException;
-
 }
 
 

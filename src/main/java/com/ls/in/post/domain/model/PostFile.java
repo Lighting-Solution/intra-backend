@@ -9,21 +9,23 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name= "postFile")
+@Table(name= "post_file")
 public class PostFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "file_id")
-    private Integer postFileId;
+    private Integer fileId;
 
-    @Column(name = "name")
-    private String postFileName;
-
-    @Column(name = "path")
-    private String postFilePath;
-
-    @ManyToOne
-    @JoinColumn(name = "nPost_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_post_id")
     private NoticePost noticePost;
+
+    @Column(name = "file_name")
+    private String fileName;
+
+    @Column(name = "file_path")
+    private String filePath;
+
+
 }

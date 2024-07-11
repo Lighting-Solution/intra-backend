@@ -52,10 +52,10 @@ public class RoomController {
 	 * Note: Spring Security가 구축되지 않아서 넣은 임의의 PK값.
 	 * @return List<ChatRoomDTO>
 	 */
-	@GetMapping(value = "/api/rooms")
-	public List<ChatRoomDTO> rooms(){
+	@GetMapping(value = "/api/rooms/{id}")
+	public List<ChatRoomDTO> rooms(@PathVariable Integer id){
 		log.info("# 채팅방 목록 가져오기");
-		return roomService.getRooms(1);
+		return roomService.getRooms(id);
 	}
 
 
@@ -67,7 +67,7 @@ public class RoomController {
 	 */
 	@PostMapping("/api/room")
 	public String createChatRoom(@RequestBody ChatRoomCreationRequest group) {
-		log.info("Employee IDs: {}", group.getEmpIds());
+		log.info("Employe	e IDs: {}", group.getEmpIds());
 		roomService.createChattingRoom(group);
 		return "Chat room created successfully!";
 	}

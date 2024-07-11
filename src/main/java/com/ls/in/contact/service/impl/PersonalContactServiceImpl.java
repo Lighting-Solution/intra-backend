@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service("personalContactService")
 public class PersonalContactServiceImpl implements PersonalContactService {
@@ -58,7 +59,8 @@ public class PersonalContactServiceImpl implements PersonalContactService {
     }
 
     @Override
-    public boolean deletePersonalContact(int contactId) throws PersonalContactNotFoundException {
-        return personalContactDAO.deleteById(contactId);
+    public boolean deletePersonalContacts(Map<String, Object> contactIds) throws PersonalContactNotFoundException {
+        List<Integer> idList = (List<Integer>) contactIds.get("contactId");
+        return personalContactDAO.deleteAll(idList);
     }
 }

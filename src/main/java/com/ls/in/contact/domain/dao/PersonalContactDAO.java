@@ -9,4 +9,5 @@ public interface PersonalContactDAO {
     PersonalContact save(PersonalContact personalContact) throws DataAccessException;
     List<PersonalContact> findAllByEmpId(Integer id) throws DataAccessException;
     boolean deleteById(Integer contactId) throws DataAccessException;
+    boolean deleteAll(List<Integer> contactIds) throws DataAccessException;
 }
