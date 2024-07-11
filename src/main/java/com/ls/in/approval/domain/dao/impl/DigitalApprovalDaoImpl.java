@@ -4,7 +4,6 @@ import com.ls.in.approval.domain.dao.DigitalApprovalDao;
 import com.ls.in.approval.domain.model.DigitalApproval;
 import com.ls.in.approval.repository.DigitalApprovalRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

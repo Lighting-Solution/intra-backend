@@ -20,6 +20,7 @@ import com.ls.in.global.emp.domain.model.DepartmentType;
 import com.ls.in.global.emp.service.DepartmentService;
 import com.ls.in.global.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -356,51 +357,27 @@ public class DigitalApprovalControllerImpl implements DigitalApprovalController 
     }
 
 
-    // sercurity 서버로 보낼 pdf 파일
-    /*
-    @PostMapping("/sendPdfToSecurity/{digitalApprovalId}")
-    public ResponseEntity<String> sendPdfToSecurity(@PathVariable Integer digitalApprovalId) {
-        DigitalApprovalDTO digitalApprovalDTO = approvalService.getDrafterId(digitalApprovalId);
-        boolean digitalApprovalType = digitalApprovalDTO.isDigitalApprovalType();
-
-        Path pdfPath;
-        if(digitalApprovalType){
-            pdfPath = Paths.get("src/main/resources/approvalReject/signed" + digitalApprovalId + ".pdf");
-        } else {
-            pdfPath = Paths.get("src/main/resources/approvalWaiting/signed" + digitalApprovalId + ".pdf");
-        }
-
-        if (!Files.exists(pdfPath)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PDF not found");
-        }
-
+    // sercurity 서버로 보낼 pdf
+    @GetMapping("/getPdfForSecureServer/{digitalApprovalId}")
+    public ResponseEntity<ByteArrayResource> getPdfForSecureServer(@PathVariable Integer digitalApprovalId) {
         try {
+            Path pdfPath = Paths.get("src/main/resources/approvalWaiting/signed" + digitalApprovalId + ".pdf");
             byte[] pdfBytes = Files.readAllBytes(pdfPath);
-            String securityServerUrl = "http://security-server-url/api/v1/receivePdf";
 
-            OkHttpClient client = new OkHttpClient();
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("file", pdfPath.getFileName().toString(),
-                            RequestBody.create(MediaType.parse("application/pdf"), pdfBytes))
-                    .build();
+            ByteArrayResource resource = new ByteArrayResource(pdfBytes) {
+                @Override
+                public String getFilename() {
+                    return "signed" + digitalApprovalId + ".pdf";
+                }
+            };
 
-            Request request = new Request.Builder()
-                    .url(securityServerUrl)
-                    .post(requestBody)
-                    .build();
-
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
-            }
-
-            return ResponseEntity.ok("PDF sent to security server successfully");
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending PDF to security server");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
-     */
 
 }
