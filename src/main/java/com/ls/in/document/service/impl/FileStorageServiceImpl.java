@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
 @Service
@@ -78,11 +80,12 @@ public class FileStorageServiceImpl implements FileService {
 		try {
 			Path filePath = Paths.get(storedPath).resolve(fileName).normalize();
 			Resource resource = new UrlResource(filePath.toUri());
+			String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
 
 			if (resource.exists()) {
 				return ResponseEntity.ok()
 						.contentType(org.springframework.http.MediaType.APPLICATION_OCTET_STREAM)
-						.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+						.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")
 						.body(resource);
 			} else {
 				return ResponseEntity.notFound().build();

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface StompChatController {
 	/**
 	 * description: enter메서드는 초대했을 때 동작하는 메서드다.
@@ -18,7 +20,8 @@ public interface StompChatController {
 
 	public void message(ChatMessageDTO message);
 
-	public String handleFileUpload(@RequestParam("file") MultipartFile file);
+	public List<String> handleFileUpload(@RequestParam("files") MultipartFile[] files);
+
 
 	public ResponseEntity<Resource> downloadFile(@PathVariable String filePath);
 }
