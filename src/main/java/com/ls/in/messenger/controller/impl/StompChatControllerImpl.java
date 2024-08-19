@@ -101,18 +101,17 @@ public class StompChatControllerImpl implements StompChatController {
 		if (files.length == 0) {
 			throw new RuntimeException("Failed to store empty file.");
 		}
-
 		log.info("# 채팅방 업로드 POST");
-
-
 		List<String> uploadedFilesInfo = new ArrayList<>();
 		Path fileStorageLocation = Paths.get("src/main/resources/message/").toAbsolutePath();
 
-		ExecutorService executor = Executors.newFixedThreadPool(files.length);
+		int numberOfThreads = files.length;
+		if (files.length > Runtime.getRuntime().availableProcessors())
+			numberOfThreads = Runtime.getRuntime().availableProcessors();
+		ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
 		List<Future<String>> futures = new ArrayList<>();
 
-		System.out.println(Runtime.getRuntime().availableProcessors());
-		for (MultipartFile file : files){
+		for (MultipartFile file : files) {
 			Callable<String> fileSaveJob = () -> {
 				String originalFileName = file.getOriginalFilename();
 				String storedFileName = UUID.randomUUID().toString() + "_" + originalFileName;
@@ -123,10 +122,7 @@ public class StompChatControllerImpl implements StompChatController {
 				} catch (IOException e) {
 					throw new RuntimeException("Failed to store File:" + originalFileName, e);
 				}
-
-
 			};
-
 			futures.add(executor.submit(fileSaveJob));
 		}
 
@@ -137,29 +133,28 @@ public class StompChatControllerImpl implements StompChatController {
 				throw new RuntimeException("Failed to retrieve file upload result", e);
 			}
 		}
-		executor.shutdown(); // thread 종료!!
-
-		return uploadedFilesInfo; // 업로드된 파일 정보 리스트 반환
+		executor.shutdown();
+		return uploadedFilesInfo;
 	}
 
 	@GetMapping("/file/download/{filePath}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable String filePath) { // downloadFile 메소드는 서버에 저장된 파일을 클라이언트가 다운로드 하게 해줌
 		try {
 //		File file = new File(uploadDir + File.separator + filePath);// 파일 경로 설정(파일이 저장된 디렉토리 위치랑 요청경로에서 받은 파일 이름)
-		Path fileLocation = Paths.get(uploadDir).resolve(filePath);
+			Path fileLocation = Paths.get(uploadDir).resolve(filePath);
 
-		if (!Files.exists(fileLocation)) {
-			throw new RuntimeException("File not found.");
-		}
+			if (!Files.exists(fileLocation)) {
+				throw new RuntimeException("File not found.");
+			}
 
 //		Resource resource = new FileSystemResource(file);  //파일을 Resource 객체로 반환 준비
 
-		Resource resource = new UrlResource(fileLocation.toUri());
-		String encodedFileName = URLEncoder.encode(filePath, StandardCharsets.UTF_8); // 파일 이름을 URL 인코딩하여HTTP 헤더에 안전하게 포함 특수문자나 공백이 포함될 경우 문제가 발생하지 않도록 하기 위함
-		return ResponseEntity.ok() // HTTP 응답 생성
-				.contentType(MediaType.APPLICATION_OCTET_STREAM) // 응답 콘텐츠 바이너리 데이터로 설정
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")//답 헤더에 콘텐츠 디스포지션을 설정하여 파일이 첨부 파일로 다운 파일 이름은 인코딩된 파일 이름을 사용
-				.body(resource);
+			Resource resource = new UrlResource(fileLocation.toUri());
+			String encodedFileName = URLEncoder.encode(filePath, StandardCharsets.UTF_8); // 파일 이름을 URL 인코딩하여HTTP 헤더에 안전하게 포함 특수문자나 공백이 포함될 경우 문제가 발생하지 않도록 하기 위함
+			return ResponseEntity.ok() // HTTP 응답 생성
+					.contentType(MediaType.APPLICATION_OCTET_STREAM) // 응답 콘텐츠 바이너리 데이터로 설정
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")//답 헤더에 콘텐츠 디스포지션을 설정하여 파일이 첨부 파일로 다운 파일 이름은 인코딩된 파일 이름을 사용
+					.body(resource);
 		} catch (Exception e) {
 			return ResponseEntity.notFound().build();
 		}
