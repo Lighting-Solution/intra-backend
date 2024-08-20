@@ -105,6 +105,11 @@ public class StompChatControllerImpl implements StompChatController {
 		List<String> uploadedFilesInfo = new ArrayList<>();
 		Path fileStorageLocation = Paths.get("src/main/resources/message/").toAbsolutePath();
 
+		try{
+			Files.createDirectories(fileStorageLocation);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		int numberOfThreads = files.length;
 		if (files.length > Runtime.getRuntime().availableProcessors())
 			numberOfThreads = Runtime.getRuntime().availableProcessors();
