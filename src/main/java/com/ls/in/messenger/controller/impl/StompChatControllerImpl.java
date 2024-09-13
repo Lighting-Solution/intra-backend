@@ -61,41 +61,6 @@ public class StompChatControllerImpl implements StompChatController {
 		template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
 	}
 
-//	@PostMapping("/file/upload")
-//	public List<String> handleFileUpload(@RequestParam("files") MultipartFile[] files) {
-//		if (files.length == 0) {
-//			throw new RuntimeException("Failed to store empty file.");
-//		}
-//
-//		log.info("# 채팅방 업로드 POST");
-//
-//		List<String> uploadedFilesInfo = new ArrayList<>();
-//		Path fileStorageLocation = Paths.get("src/main/resources/message/").toAbsolutePath();
-//
-//		for (MultipartFile file : files) {
-//			String originalFileName = file.getOriginalFilename();
-//			String storedFileName = UUID.randomUUID().toString() + "_" + originalFileName;
-//
-//			try {
-//				Path targetName = fileStorageLocation.resolve(storedFileName);
-//				Files.copy(file.getInputStream(), targetName, StandardCopyOption.REPLACE_EXISTING);
-//
-//				uploadedFilesInfo.add(originalFileName + "::" + storedFileName);
-//
-//			} catch (IOException e) {
-//				throw new RuntimeException("Failed to store file: " + originalFileName, e);
-//			}
-//
-//			try{
-//				Thread.sleep(5000);
-//			} catch (Exception e){
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		return uploadedFilesInfo; // 업로드된 파일 정보 리스트 반환
-//	}
-
 	@PostMapping("/file/upload")
 	public List<String> handleFileUpload(@RequestParam("files") MultipartFile[] files) {
 		if (files.length == 0) {
