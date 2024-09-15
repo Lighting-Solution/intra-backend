@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 
 public class LoggingAspect {
-	@Around("execution(* com.ls.in.messenger.controller.impl.StompChatControllerImpl.*(..))")
+	@Around("execution(* com.ls.in.messenger.controller.impl.StompChatControllerImpl.*(..)) || execution(* com.ls.in.document.controller.impl.*.*(..))")
 	public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
 		long start = System.currentTimeMillis();
 		System.out.println("Start:" + joinPoint.toString());
@@ -22,7 +22,7 @@ public class LoggingAspect {
 			long finish = System.currentTimeMillis();
 			long timeMs = finish - start;
 
-			System.out.println("End : " + joinPoint.toString() + " " + timeMs);
+			System.out.println("End : " + joinPoint.toString() + " " + timeMs + "ms");
 		}
 	}
 

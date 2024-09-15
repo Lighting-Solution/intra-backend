@@ -42,7 +42,6 @@ public class DocumentServiceImpl implements DocumentService {
 		String loginEmpDepartment = getEmpDepartment(loginEmp);
 		Category category = Category.fromCategoryName(documentDTO.getCategoryName());
 
-//		Page<DocumentBox> docs = documentBoxRepository.findByCategory(category, pageable);
 		Page<DocumentBox> docs = documentBoxRepository.findAll(DocumentSpecification.getDocuments(documentDTO), PageRequest.of(documentDTO.getPage(), documentDTO.getSize()));
 
 		// PUBLIC

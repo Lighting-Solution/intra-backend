@@ -21,18 +21,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousFileChannel;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 import static java.lang.Thread.sleep;
 
@@ -60,7 +56,6 @@ public class StompChatControllerImpl implements StompChatController {
 		messageService.saveMessage(message);
 		template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
 	}
-
 	@PostMapping("/file/upload")
 	public List<String> handleFileUpload(@RequestParam("files") MultipartFile[] files) {
 		if (files.length == 0) {
@@ -103,6 +98,7 @@ public class StompChatControllerImpl implements StompChatController {
 				throw new RuntimeException("Failed to retrieve file upload result", e);
 			}
 		}
+
 		executor.shutdown();
 		return uploadedFilesInfo;
 	}

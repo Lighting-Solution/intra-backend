@@ -9,6 +9,7 @@ import com.ls.in.document.dto.DocumentInitDTO;
 import com.ls.in.document.dto.DocumentList;
 import com.ls.in.document.service.impl.DocumentServiceImpl;
 import com.ls.in.document.service.impl.FileStorageServiceImpl;
+import com.ls.in.messenger.util.MeasureExecutionTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -29,18 +30,18 @@ public class DocumentControllerImpl implements DocumentController {
 
 	@PostMapping("/api/docsList")
 	public Page<DocumentList> getDocs(@RequestBody DocumentDTO documentDTO) {
-		log.info("## documentDTO={}", documentDTO);
+//		log.info("## documentDTO={}", documentDTO);
 		Page<DocumentBox> docs = null;
-//		if (documentDTO.getSearchTerm() == null)
 		docs = documentService.getDocuments(documentDTO);
-		log.info("docs:{}", docs.toString());
-		log.info("docs.content:{}", docs.getContent());
-		log.info("docs.page:{}", docs.getTotalPages());
+//		log.info("docs:{}", docs.toString());
+//		log.info("docs.content:{}", docs.getContent());
+//		log.info("docs.page:{}", docs.getTotalPages());
 
 		return docs.map(documentService::convertToDocumentList);
 	}
 
 
+//	@MeasureExecutionTime
 	@PostMapping("/api/creation")
 	public ResponseEntity<String> createDocument(
 			@RequestParam("title") String title,
