@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.concurrent.ExecutionException;
+
 public interface DocumentController {
 	/**
 	 * description : 문서 목록을 가져오는 엔드포인트
@@ -62,7 +64,7 @@ public interface DocumentController {
 			@RequestParam("title") String title,
 			@RequestParam("content") String content,
 			@RequestParam(value = "file", required = false) MultipartFile file,
-			@RequestParam("writerEmpId") Integer writerEmpId);
+			@RequestParam("writerEmpId") Integer writerEmpId) throws ExecutionException, InterruptedException;
 
 	/**
 	 * 문서 삭제하기

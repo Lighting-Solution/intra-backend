@@ -19,6 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -54,7 +57,12 @@ public class DocumentControllerImpl implements DocumentController {
 			fileName = file.getOriginalFilename();
 		DocumentInitDTO document = new DocumentInitDTO(title, content, fileName, category, writerEmpId);
 		DocumentBox documentBox = documentService.saveDocument(document);
-		fileStorageService.storeFile(file, documentBox);
+		CompletableFuture<String> future = fileStorageService.storeFile(file, documentBox);
+		future.thenAccept(result -> {
+			System.out.println("작업 결과: " + result);
+		});
+		System.out.println("Test: 메인스레드는 ㄱㅖ속작업");
+
 		return new ResponseEntity<>("Document created successfully", HttpStatus.OK);
 	}
 
@@ -84,14 +92,13 @@ public class DocumentControllerImpl implements DocumentController {
 			@RequestParam("title") String title,
 			@RequestParam("content") String content,
 			@RequestParam(value = "file", required = false) MultipartFile file,
-			@RequestParam("writerEmpId") Integer writerEmpId) {
+			@RequestParam("writerEmpId") Integer writerEmpId) throws ExecutionException, InterruptedException {
 		// File path를 적는 로직을 작성해야함.
 
 		DocumentBox documentBox = documentService.getDocumentById(documentId);
 		String fileName = null;
 		log.info("Check Update :{}", documentBox);
 		if (file != null)
-			fileName = fileStorageService.storeFile(file, documentBox);
 		if (documentBox.getDocumentPath() != null)
 			fileStorageService.deleteFile(documentBox);
 		log.info("Check Update :{}", documentBox);

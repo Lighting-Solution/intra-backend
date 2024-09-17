@@ -5,6 +5,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface FileService {
 	public void deleteFile(DocumentBox documentBox);
 	/**
@@ -13,7 +15,7 @@ public interface FileService {
 	 * @param documentBox
 	 * @return
 	 */
-	public String storeFile(MultipartFile file, DocumentBox documentBox);
+	public CompletableFuture<String> storeFile(MultipartFile file, DocumentBox documentBox);
 
 	/**
 	 * 파일을 다운로드 할 수 있게 하는 메서드

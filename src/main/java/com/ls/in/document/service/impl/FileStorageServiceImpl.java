@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class FileStorageServiceImpl implements FileService {
@@ -21,9 +23,10 @@ public class FileStorageServiceImpl implements FileService {
 	}
 
 
-	public String storeFile(MultipartFile file, DocumentBox documentBox) {
+	@Async("taskExecutor")
+	public CompletableFuture<String> storeFile(MultipartFile file, DocumentBox documentBox) {
 		if (file == null)
-			return "";
+			return CompletableFuture.completedFuture("");
 
 		Path fileStorageLocation = Paths.get("src/main/resources/docs/" + documentBox.getDocumentId()).toAbsolutePath().normalize();
 		try {
@@ -35,12 +38,10 @@ public class FileStorageServiceImpl implements FileService {
 		String fileName = file.getOriginalFilename();
 
 		try {
-			// 파일명을 보안상의 이유로 깨끗하게 청소
-//			fileName = fileName != null ? fileName.replaceAll("[^a-zA-Z0-9\\.\\-]", "_") : "";
 			Path targetLocation = fileStorageLocation.resolve(fileName);
 			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-			return fileName;
+			return CompletableFuture.completedFuture(fileName);
 		} catch (IOException ex) {
 			throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
 		}
