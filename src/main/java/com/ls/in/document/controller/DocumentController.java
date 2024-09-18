@@ -41,7 +41,7 @@ public interface DocumentController {
 	 * @param id DocumentBox의 ID값
 	 * @return 성공 시 다운로드, 실패 시 에러..
 	 */
-	public ResponseEntity<Resource> downloadFile(@PathVariable Integer id);
+	public ResponseEntity<?> downloadFile(@PathVariable Integer id);
 
 	/**
 	 * 문서 내용 가져오기

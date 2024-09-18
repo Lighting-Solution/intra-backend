@@ -5,6 +5,7 @@ import com.ls.in.document.service.FileService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,29 @@ public class FileStorageServiceImpl implements FileService {
 		}
 	}
 
+	@Async("taskExecutor")
+	public CompletableFuture<String> storeFileVersion2(MultipartFile file) {
+		if (file == null)
+			return CompletableFuture.completedFuture("");
+
+		Path fileStorageLocation = Paths.get("src/main/resources/docs/tmp").toAbsolutePath().normalize();
+		try {
+			Files.createDirectories(fileStorageLocation);
+		} catch (Exception ex) {
+			throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
+		}
+
+		String fileName = file.getOriginalFilename();
+
+		try {
+			Path targetLocation = fileStorageLocation.resolve(fileName);
+			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+			return CompletableFuture.completedFuture(fileName);
+		} catch (IOException ex) {
+			throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
+		}
+	}
+
 	public void deleteFile(DocumentBox documentBox) {
 		String fileName = documentBox.getDocumentPath();
 		if (fileName == null)
@@ -82,7 +106,6 @@ public class FileStorageServiceImpl implements FileService {
 			Path filePath = Paths.get(storedPath).resolve(fileName).normalize();
 			Resource resource = new UrlResource(filePath.toUri());
 			String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
-
 			if (resource.exists()) {
 				return ResponseEntity.ok()
 						.contentType(org.springframework.http.MediaType.APPLICATION_OCTET_STREAM)
