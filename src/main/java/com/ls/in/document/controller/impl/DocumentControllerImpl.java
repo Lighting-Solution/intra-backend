@@ -97,6 +97,9 @@ public class DocumentControllerImpl implements DocumentController {
 		DocumentBox document = documentService.getDocumentById(id);
 		String storedPath = "src/main/resources/docs/" + id;
 		String fileName = document.getDocumentPath();
+		Path path = Paths.get(storedPath).resolve(fileName);
+		if (!Files.exists(path))
+			return new ResponseEntity<>("파일이 아직 준비되지 않았습니다. 잠시 후 다시 시도해주세요.", HttpStatus.BAD_REQUEST);
 		if (document.getCategory().name().equalsIgnoreCase("approval"))
 			storedPath = "src/main/resources/approvalComplete";
 		return fileStorageService.getResourceResponse(storedPath, fileName);
